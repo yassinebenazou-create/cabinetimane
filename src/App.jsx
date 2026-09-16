@@ -1,52 +1,56 @@
 import { useEffect, useRef, useState } from 'react'
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
 import {
-  Apple,
+  Activity,
   CalendarCheck,
   CheckCircle2,
   ChevronRight,
-  ClipboardCheck,
-  HeartPulse,
+  Dumbbell,
   Mail,
   MapPin,
+  Phone,
   Quote,
   Salad,
-  Scale,
+  Send,
   ShieldCheck,
-  Stethoscope,
-  Utensils,
+  ShieldPlus,
+  UserCheck,
 } from 'lucide-react'
 import Navbar from './components/Navbar.jsx'
 import './App.css'
 
 const services = [
   {
-    icon: Scale,
-    image: '/service-reequilibrage-alimentaire.jpg',
-    imageAlt: 'Assiette équilibrée avec légumes frais pour un rééquilibrage alimentaire',
-    title: 'Rééquilibrage alimentaire',
-    text: 'Des programmes réalistes pour retrouver une alimentation structurée, durable et adaptée à votre rythme de vie.',
+    iconImage: '/service-icon-09.png',
+    iconAlt: 'Icône perte de poids',
+    image: '/service-perte-poids-tanger.png',
+    imageAlt: 'Service de perte de poids personnalisé au cabinet de nutrition',
+    title: 'Perte de poids Casablanca',
+    text: 'Un suivi personnalisé pour perdre du poids durablement.',
   },
   {
-    icon: HeartPulse,
-    image: '/service-nutrition-clinique.jpg',
-    imageAlt: 'Consultation de nutrition clinique avec plan alimentaire personnalisé',
-    title: 'Nutrition clinique',
-    text: 'Un accompagnement nutritionnel en lien avec le diabète, les troubles digestifs, le cholestérol ou les besoins spécifiques.',
+    iconImage: '/service-icon-06.png',
+    iconAlt: 'Icône troubles alimentaires',
+    image: '/service-troubles-conduites.png',
+    imageAlt: 'Service pour les troubles des conduites alimentaires',
+    title: 'Troubles des conduites alimentaires',
+    text: 'Un accompagnement calme pour retrouver l’équilibre.',
   },
   {
-    icon: Salad,
-    image: '/service-amincissement-medical.jpg',
-    imageAlt: 'Suivi d’amincissement médical avec mesure corporelle et alimentation saine',
-    title: 'Amincissement médical',
-    text: 'Un suivi progressif centré sur la composition corporelle, les habitudes alimentaires et la stabilité des résultats.',
+    iconImage: '/service-icon-07.png',
+    iconAlt: 'Icône nutrition clinique',
+    image: '/service-maladies-chroniques.png',
+    imageAlt: 'Nutrition adaptée aux maladies chroniques',
+    title: 'Nutrition des maladies chroniques',
+    text: 'Des conseils adaptés aux besoins médicaux.',
   },
   {
-    icon: Apple,
-    image: '/service-femme-famille.jpg',
-    imageAlt: 'Famille partageant un repas sain dans un accompagnement nutritionnel',
-    title: 'Nutrition femme et famille',
-    text: 'Des conseils adaptés à la grossesse, l’allaitement, l’enfant, l’adolescent et les transitions importantes.',
+    iconImage: '/service-icon-04.png',
+    iconAlt: 'Icône analyse du corps',
+    image: '/service-analyse-corps.png',
+    imageAlt: 'Analyse du corps et suivi de composition corporelle',
+    title: 'Analyse du corps Casablanca',
+    text: 'Un bilan corporel précis pour suivre vos progrès.',
   },
 ]
 
@@ -57,6 +61,51 @@ const treatments = [
   'Coaching comportemental',
   'Suivi perte de poids',
   'Accompagnement sport et santé',
+]
+
+const whyChooseReasons = [
+  {
+    iconComponent: Salad,
+    iconAlt: 'Icône stratégie nutritionnelle',
+    title: 'StratÃ©gie nutritionnelle',
+    text: 'Des conseils clairs, adaptÃ©s Ã  votre rythme et Ã  vos objectifs.',
+    origin: 'from-left-top',
+  },
+  {
+    iconComponent: UserCheck,
+    iconAlt: 'Icône soutien individuel',
+    title: 'Soutien individuel',
+    text: 'Un accompagnement personnel, humain et ciblÃ© Ã  chaque Ã©tape.',
+    origin: 'from-left',
+  },
+  {
+    iconComponent: Activity,
+    iconAlt: 'Icône habitudes actives',
+    title: 'Habitudes actives',
+    text: 'Des repÃ¨res simples pour bouger mieux et retrouver de lâ€™Ã©nergie.',
+    origin: 'from-left-bottom',
+  },
+  {
+    iconImage: '/service-icon-09.png',
+    iconAlt: 'Icône alimentation saine',
+    title: 'Alimentation saine',
+    text: 'Un programme durable, Ã©quilibrÃ© et compatible avec votre quotidien.',
+    origin: 'from-right-top',
+  },
+  {
+    iconComponent: Dumbbell,
+    iconAlt: 'Icône programme sur mesure',
+    title: 'Programme sur mesure',
+    text: 'Des ajustements progressifs selon vos bilans et vos prÃ©fÃ©rences.',
+    origin: 'from-right',
+  },
+  {
+    iconComponent: ShieldPlus,
+    iconAlt: 'Icône meilleure santé',
+    title: 'Meilleure santÃ©',
+    text: 'Une approche calme pour renforcer votre confort et votre confiance.',
+    origin: 'from-right-bottom',
+  },
 ]
 
 const process = [
@@ -140,6 +189,29 @@ function shouldRevealImmediately() {
   )
 }
 
+function shouldReduceMotion() {
+  return (
+    typeof window !== 'undefined' &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  )
+}
+
+function getVisibleServiceCards() {
+  if (typeof window === 'undefined') {
+    return 3
+  }
+
+  if (window.innerWidth <= 640) {
+    return 1
+  }
+
+  if (window.innerWidth <= 920) {
+    return 2
+  }
+
+  return 3
+}
+
 function ScrollToHash() {
   const { hash, pathname } = useLocation()
 
@@ -168,16 +240,42 @@ function SectionIntro({ eyebrow, title, text }) {
   )
 }
 
-function ServiceCard({ icon: Icon, image, imageAlt, title, text, index }) {
+function ServiceCard({ iconImage, iconAlt, image, imageAlt, title, text, index }) {
   return (
     <article className="service-card" style={{ '--service-delay': `${index * 95}ms` }}>
       <div className="service-media">
-        <img src={image} alt={imageAlt} loading="lazy" decoding="async" />
+        <div className="service-image-frame">
+          <img src={image} alt={imageAlt} loading="lazy" decoding="async" />
+        </div>
         <span className="service-icon">
-          <Icon aria-hidden="true" size={22} strokeWidth={1.8} />
+          <img src={iconImage} alt={iconAlt} loading="lazy" decoding="async" />
         </span>
       </div>
       <div className="service-content">
+        <h3>{title}</h3>
+        <p>{text}</p>
+        <a href="#rendez-vous" className="service-read-more">
+          Lire Plus
+        </a>
+      </div>
+    </article>
+  )
+}
+
+function WhyChooseItem({ iconImage, iconComponent: Icon, iconAlt, title, text, origin, index }) {
+  return (
+    <article
+      className={`why-choice-item ${origin}`}
+      style={{ '--why-delay': `${index * 95}ms` }}
+    >
+      <span className="why-choice-icon">
+        {Icon ? (
+          <Icon aria-label={iconAlt} role="img" size={31} strokeWidth={1.85} />
+        ) : (
+          <img src={iconImage} alt={iconAlt} loading="lazy" decoding="async" />
+        )}
+      </span>
+      <div>
         <h3>{title}</h3>
         <p>{text}</p>
       </div>
@@ -189,10 +287,20 @@ function HomePage() {
   const [activeHeroVideo, setActiveHeroVideo] = useState(0)
   const [shouldSkipStatsAnimation] = useState(shouldSkipCountAnimation)
   const [shouldShowServicesImmediately] = useState(shouldRevealImmediately)
+  const [shouldShowWhyImmediately] = useState(shouldRevealImmediately)
+  const [reduceMotion] = useState(shouldReduceMotion)
   const [isAboutVisible, setIsAboutVisible] = useState(
     () => typeof window !== 'undefined' && !('IntersectionObserver' in window),
   )
   const [areServicesVisible, setAreServicesVisible] = useState(shouldShowServicesImmediately)
+  const [isWhyVisible, setIsWhyVisible] = useState(shouldShowWhyImmediately)
+  const [visibleServiceCards, setVisibleServiceCards] = useState(getVisibleServiceCards)
+  const [serviceCarouselIndex, setServiceCarouselIndex] = useState(getVisibleServiceCards)
+  const [serviceCarouselTransition, setServiceCarouselTransition] = useState(true)
+  const [serviceCarouselPaused, setServiceCarouselPaused] = useState(false)
+  const [serviceViewportWidth, setServiceViewportWidth] = useState(0)
+  const [serviceDragDelta, setServiceDragDelta] = useState(0)
+  const [isServiceDragging, setIsServiceDragging] = useState(false)
   const [hasStatsStarted, setHasStatsStarted] = useState(shouldSkipStatsAnimation)
   const [statValues, setStatValues] = useState(() =>
     shouldSkipStatsAnimation ? statTargets : initialStats,
@@ -200,6 +308,10 @@ function HomePage() {
   const aboutSectionRef = useRef(null)
   const statsRowRef = useRef(null)
   const servicesSectionRef = useRef(null)
+  const whySectionRef = useRef(null)
+  const servicesCarouselViewportRef = useRef(null)
+  const serviceDragStartXRef = useRef(0)
+  const serviceCarouselFrameRef = useRef(0)
 
   useEffect(() => {
     const switchTimer = window.setInterval(() => {
@@ -322,6 +434,168 @@ function HomePage() {
     return () => observer.disconnect()
   }, [areServicesVisible, shouldShowServicesImmediately])
 
+  useEffect(() => {
+    const section = whySectionRef.current
+
+    if (!section || isWhyVisible || shouldShowWhyImmediately) {
+      return undefined
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsWhyVisible(true)
+          observer.disconnect()
+        }
+      },
+      {
+        rootMargin: '0px 0px -14% 0px',
+        threshold: 0.2,
+      },
+    )
+
+    observer.observe(section)
+
+    return () => observer.disconnect()
+  }, [isWhyVisible, shouldShowWhyImmediately])
+
+  useEffect(() => {
+    const restoreServiceCarouselTransition = () => {
+      window.cancelAnimationFrame(serviceCarouselFrameRef.current)
+      serviceCarouselFrameRef.current = window.requestAnimationFrame(() => {
+        serviceCarouselFrameRef.current = window.requestAnimationFrame(() => {
+          setServiceCarouselTransition(true)
+        })
+      })
+    }
+
+    const updateVisibleCards = () => {
+      const nextVisibleCards = getVisibleServiceCards()
+      setVisibleServiceCards(nextVisibleCards)
+      setServiceCarouselTransition(false)
+      setServiceCarouselIndex(nextVisibleCards)
+      restoreServiceCarouselTransition()
+    }
+
+    updateVisibleCards()
+    window.addEventListener('resize', updateVisibleCards)
+
+    return () => {
+      window.removeEventListener('resize', updateVisibleCards)
+      window.cancelAnimationFrame(serviceCarouselFrameRef.current)
+    }
+  }, [])
+
+  useEffect(() => {
+    const viewport = servicesCarouselViewportRef.current
+
+    if (!viewport) {
+      return undefined
+    }
+
+    const updateViewportWidth = () => {
+      setServiceViewportWidth(viewport.clientWidth)
+    }
+
+    updateViewportWidth()
+
+    if (!('ResizeObserver' in window)) {
+      window.addEventListener('resize', updateViewportWidth)
+      return () => window.removeEventListener('resize', updateViewportWidth)
+    }
+
+    const resizeObserver = new ResizeObserver(updateViewportWidth)
+    resizeObserver.observe(viewport)
+
+    return () => resizeObserver.disconnect()
+  }, [])
+
+  useEffect(() => {
+    if (reduceMotion || serviceCarouselPaused || isServiceDragging) {
+      return undefined
+    }
+
+    const autoSlideTimer = window.setInterval(() => {
+      setServiceCarouselTransition(true)
+      setServiceCarouselIndex((current) => current + 1)
+    }, 4000)
+
+    return () => window.clearInterval(autoSlideTimer)
+  }, [isServiceDragging, reduceMotion, serviceCarouselPaused])
+
+  const serviceGap = 18
+  const serviceSlideWidth =
+    serviceViewportWidth > 0
+      ? (serviceViewportWidth - serviceGap * (visibleServiceCards - 1)) / visibleServiceCards
+      : 0
+  const serviceSlideStep = serviceSlideWidth + serviceGap
+  const serviceCarouselOffset = serviceCarouselIndex * serviceSlideStep
+  const serviceCarouselSlides = [
+    ...services.slice(-visibleServiceCards),
+    ...services,
+    ...services.slice(0, visibleServiceCards),
+  ]
+
+  const handleServiceCarouselTransitionEnd = () => {
+    const resetCarouselPosition = (nextIndex) => {
+      window.cancelAnimationFrame(serviceCarouselFrameRef.current)
+      setServiceCarouselTransition(false)
+      setServiceCarouselIndex(nextIndex)
+      serviceCarouselFrameRef.current = window.requestAnimationFrame(() => {
+        serviceCarouselFrameRef.current = window.requestAnimationFrame(() => {
+          setServiceCarouselTransition(true)
+        })
+      })
+    }
+
+    if (serviceCarouselIndex >= services.length + visibleServiceCards) {
+      resetCarouselPosition(visibleServiceCards)
+      return
+    }
+
+    if (serviceCarouselIndex < visibleServiceCards) {
+      resetCarouselPosition(services.length + visibleServiceCards - 1)
+    }
+  }
+
+  const handleServicePointerDown = (event) => {
+    if (event.pointerType === 'mouse' && event.button !== 0) {
+      return
+    }
+
+    setIsServiceDragging(true)
+    setServiceCarouselTransition(false)
+    setServiceDragDelta(0)
+    serviceDragStartXRef.current = event.clientX
+    event.currentTarget.setPointerCapture?.(event.pointerId)
+  }
+
+  const handleServicePointerMove = (event) => {
+    if (!isServiceDragging) {
+      return
+    }
+
+    setServiceDragDelta(event.clientX - serviceDragStartXRef.current)
+  }
+
+  const handleServicePointerEnd = () => {
+    if (!isServiceDragging) {
+      return
+    }
+
+    const dragThreshold = Math.max(44, serviceSlideStep * 0.18)
+    setServiceCarouselTransition(!reduceMotion)
+
+    if (serviceDragDelta <= -dragThreshold) {
+      setServiceCarouselIndex((current) => current + 1)
+    } else if (serviceDragDelta >= dragThreshold) {
+      setServiceCarouselIndex((current) => current - 1)
+    }
+
+    setServiceDragDelta(0)
+    setIsServiceDragging(false)
+  }
+
   return (
     <>
       <Navbar />
@@ -419,10 +693,84 @@ function HomePage() {
               title="Des accompagnements adaptés à votre santé, votre objectif et votre quotidien."
               text="Le cabinet propose un suivi complet pour améliorer votre alimentation, votre silhouette et votre confort de vie."
             />
-            <div className="services-grid">
-              {services.map((service, index) => (
-                <ServiceCard key={service.title} index={index} {...service} />
-              ))}
+            <div
+              className="services-carousel"
+              onMouseEnter={() => setServiceCarouselPaused(true)}
+              onMouseLeave={() => setServiceCarouselPaused(false)}
+            >
+              <div
+                className="services-carousel-viewport"
+                ref={servicesCarouselViewportRef}
+                onPointerCancel={handleServicePointerEnd}
+                onPointerDown={handleServicePointerDown}
+                onPointerLeave={handleServicePointerEnd}
+                onPointerMove={handleServicePointerMove}
+                onPointerUp={handleServicePointerEnd}
+              >
+                <div
+                  className="services-carousel-track"
+                  onTransitionEnd={handleServiceCarouselTransitionEnd}
+                  style={{
+                    gap: `${serviceGap}px`,
+                    transform: `translate3d(${-(serviceCarouselOffset - serviceDragDelta)}px, 0, 0)`,
+                    transitionDuration:
+                      serviceCarouselTransition && !reduceMotion && !isServiceDragging
+                        ? '720ms'
+                        : '0ms',
+                  }}
+                >
+                  {serviceCarouselSlides.map((service, index) => (
+                    <div
+                      className="service-carousel-slide"
+                      key={`${service.title}-${index}`}
+                      style={{
+                        flexBasis:
+                          serviceSlideWidth > 0
+                            ? `${serviceSlideWidth}px`
+                            : `calc((100% - ${serviceGap * (visibleServiceCards - 1)}px) / ${visibleServiceCards})`,
+                      }}
+                    >
+                      <ServiceCard index={index % services.length} {...service} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          className={`why-choice-section section-pad why-choice-reveal${
+            isWhyVisible ? ' is-visible' : ''
+          }`}
+          id="pourquoi-nous-choisir"
+          ref={whySectionRef}
+        >
+          <div className="container">
+            <div className="why-choice-heading">
+              <span>Pourquoi nous choisir</span>
+              <h2>Cabinet Imane Oulhint</h2>
+              <p>Une prise en charge nutritionnelle claire, humaine et pensÃ©e pour durer.</p>
+            </div>
+
+            <div className="why-choice-layout">
+              <div className="why-choice-column why-choice-column-left">
+                {whyChooseReasons.slice(0, 3).map((reason, index) => (
+                  <WhyChooseItem key={reason.title} index={index} {...reason} />
+                ))}
+              </div>
+
+              <div className="why-choice-brand" aria-hidden="true">
+                <div className="why-choice-brand-mark">
+                  <img src="/imane-logo-navbar-clean.png" alt="" />
+                </div>
+              </div>
+
+              <div className="why-choice-column why-choice-column-right">
+                {whyChooseReasons.slice(3).map((reason, index) => (
+                  <WhyChooseItem key={reason.title} index={index + 3} {...reason} />
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -572,22 +920,117 @@ function HomePage() {
 
       <footer className="site-footer">
         <div className="container footer-grid">
-          <div>
-            <img src="/imane-oulhint-logo.png" alt="Logo Cabinet Imane Oulhint" />
-            <p>Cabinet de Diététique, Nutrition et Amincissement.</p>
+          <div className="footer-brand">
+            <img src="/imane-logo-navbar-clean.png" alt="Logo Cabinet Imane Oulhint" />
+            <p>
+              Que votre objectif soit de retrouver votre équilibre alimentaire, d’améliorer votre
+              santé ou d’être accompagnée dans une perte de poids durable, le cabinet vous guide
+              avec une approche claire, médicale et personnalisée.
+            </p>
+            <form className="footer-newsletter" onSubmit={(event) => event.preventDefault()}>
+              <label className="sr-only" htmlFor="footer-newsletter-email">
+                Adresse email pour la newsletter
+              </label>
+              <input id="footer-newsletter-email" type="email" placeholder="Newsletter..." />
+              <button type="submit" aria-label="S’inscrire à la newsletter">
+                <Send aria-hidden="true" size={24} />
+              </button>
+            </form>
           </div>
+
+          <div className="footer-column">
+            <h2>Liens Utiles</h2>
+            <nav className="footer-links" aria-label="Liens utiles">
+              <a href="#cabinet">
+                <ChevronRight aria-hidden="true" size={18} />
+                À propos
+              </a>
+              <a href="#services">
+                <ChevronRight aria-hidden="true" size={18} />
+                Services
+              </a>
+              <a href="#consultation">
+                <ChevronRight aria-hidden="true" size={18} />
+                Consultation
+              </a>
+              <a href="#rendez-vous">
+                <ChevronRight aria-hidden="true" size={18} />
+                Contact
+              </a>
+            </nav>
+          </div>
+
+          <div className="footer-column">
+            <h2>Services</h2>
+            <div className="footer-services">
+              <span>
+                <img src="/service-icon-09.png" alt="" aria-hidden="true" />
+                Perte de poids Casablanca
+              </span>
+              <span>
+                <img src="/service-icon-06.png" alt="" aria-hidden="true" />
+                Troubles des conduites alimentaires
+              </span>
+              <span>
+                <img src="/service-icon-07.png" alt="" aria-hidden="true" />
+                Nutrition des maladies chroniques
+              </span>
+              <span>
+                <img src="/service-icon-04.png" alt="" aria-hidden="true" />
+                Analyse du corps Casablanca
+              </span>
+            </div>
+          </div>
+
+          <div className="footer-column footer-contact-column">
+            <h2>Contact Infos</h2>
+            <div className="footer-contact-list">
+              <span>
+                <Mail aria-hidden="true" size={28} />
+                contact@cabinet-imane.ma
+              </span>
+              <span>
+                <Phone aria-hidden="true" size={28} />
+                +212 600 000 000
+              </span>
+              <span>
+                <MapPin aria-hidden="true" size={28} />
+                Casablanca, Maroc
+              </span>
+            </div>
+
+            <h2 className="footer-hours-title">Heures d'ouverture</h2>
+            <div className="footer-hours">
+              <div>
+                <strong>Lundi - Vendredi</strong>
+                <span>09:00 - 19:00</span>
+              </div>
+              <div>
+                <strong>Samedi</strong>
+                <span>09:00 - 13:00</span>
+              </div>
+              <div>
+                <strong>Dimanche</strong>
+                <span>Fermé</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="container footer-bottom">
+          <p>© 2026 Cabinet Imane Oulhint. Tous droits réservés.</p>
           <div>
             <span>
-              <Stethoscope aria-hidden="true" size={17} />
-              Nutrition clinique
+              <img src="/service-icon-09.png" alt="" aria-hidden="true" />
+              Perte de poids
             </span>
             <span>
-              <Utensils aria-hidden="true" size={17} />
-              Plans alimentaires
+              <img src="/service-icon-07.png" alt="" aria-hidden="true" />
+              Nutrition médicale
             </span>
             <span>
-              <ClipboardCheck aria-hidden="true" size={17} />
-              Suivi personnalisé
+              <img src="/service-icon-04.png" alt="" aria-hidden="true" />
+              Analyse du corps
             </span>
           </div>
         </div>

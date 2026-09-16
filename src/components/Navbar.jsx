@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { CalendarCheck, Menu, X } from 'lucide-react'
 
@@ -21,13 +21,25 @@ function isActive(item, location) {
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const location = useLocation()
 
+  useEffect(() => {
+    const updateHeaderState = () => {
+      setScrolled(window.scrollY > 24)
+    }
+
+    updateHeaderState()
+    window.addEventListener('scroll', updateHeaderState, { passive: true })
+
+    return () => window.removeEventListener('scroll', updateHeaderState)
+  }, [])
+
   return (
-    <header className="site-header">
+    <header className={`site-header${scrolled ? ' scrolled' : ''}${menuOpen ? ' menu-open' : ''}`}>
       <div className="nav-container">
         <Link className="brand-link" to="/" aria-label="Accueil Cabinet Imane Oulhint">
-          <img src="/imane-logo-navbar.png" alt="Logo Cabinet Imane Oulhint" />
+          <img src="/imane-logo-navbar-clean.png" alt="Logo Cabinet Imane Oulhint" />
         </Link>
 
         <nav className="desktop-nav" aria-label="Navigation principale">
