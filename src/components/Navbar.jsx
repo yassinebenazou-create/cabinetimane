@@ -39,7 +39,10 @@ export default function Navbar() {
     <header className={`site-header${scrolled ? ' scrolled' : ''}${menuOpen ? ' menu-open' : ''}`}>
       <div className="nav-container">
         <Link className="brand-link" to="/" aria-label="Accueil Cabinet Imane Oulhint">
-          <img src="/imane-logo-navbar-clean.png" alt="Logo Cabinet Imane Oulhint" />
+          <img
+            src="/imane-logo-new.png"
+            alt="Imane Oulhint, Diététicienne Nutritionniste"
+          />
         </Link>
 
         <nav className="desktop-nav" aria-label="Navigation principale">

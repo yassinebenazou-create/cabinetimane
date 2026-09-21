@@ -1,20 +1,25 @@
 import { useEffect, useRef, useState } from 'react'
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
 import {
-  Activity,
+  Apple,
   CalendarCheck,
   CheckCircle2,
   ChevronRight,
-  Dumbbell,
+  ClipboardList,
+  Clock,
+  FileText,
+  Heart,
+  Leaf,
   Mail,
   MapPin,
+  MessageSquare,
   Phone,
-  Quote,
-  Salad,
   Send,
   ShieldCheck,
-  ShieldPlus,
-  UserCheck,
+  Star,
+  TrendingUp,
+  UserRound,
+  UsersRound,
 } from 'lucide-react'
 import Navbar from './components/Navbar.jsx'
 import './App.css'
@@ -65,21 +70,21 @@ const treatments = [
 
 const whyChooseReasons = [
   {
-    iconComponent: Salad,
+    iconImage: '/service-icon-07.png',
     iconAlt: 'Icône stratégie nutritionnelle',
     title: 'StratÃ©gie nutritionnelle',
     text: 'Des conseils clairs, adaptÃ©s Ã  votre rythme et Ã  vos objectifs.',
     origin: 'from-left-top',
   },
   {
-    iconComponent: UserCheck,
+    iconImage: '/service-icon-06.png',
     iconAlt: 'Icône soutien individuel',
     title: 'Soutien individuel',
     text: 'Un accompagnement personnel, humain et ciblÃ© Ã  chaque Ã©tape.',
     origin: 'from-left',
   },
   {
-    iconComponent: Activity,
+    iconImage: '/service-icon-04.png',
     iconAlt: 'Icône habitudes actives',
     title: 'Habitudes actives',
     text: 'Des repÃ¨res simples pour bouger mieux et retrouver de lâ€™Ã©nergie.',
@@ -93,14 +98,14 @@ const whyChooseReasons = [
     origin: 'from-right-top',
   },
   {
-    iconComponent: Dumbbell,
+    iconImage: '/service-icon-07.png',
     iconAlt: 'Icône programme sur mesure',
     title: 'Programme sur mesure',
     text: 'Des ajustements progressifs selon vos bilans et vos prÃ©fÃ©rences.',
     origin: 'from-right',
   },
   {
-    iconComponent: ShieldPlus,
+    iconImage: '/service-icon-04.png',
     iconAlt: 'Icône meilleure santé',
     title: 'Meilleure santÃ©',
     text: 'Une approche calme pour renforcer votre confort et votre confiance.',
@@ -111,33 +116,30 @@ const whyChooseReasons = [
 const process = [
   {
     step: '01',
+    icon: CalendarCheck,
+    detailIcon: Clock,
     title: 'Bilan initial',
     text: 'Analyse de vos objectifs, habitudes, antécédents, rythme quotidien et mesures de référence.',
+    detailTitle: 'Environ 1h',
+    detailText: 'Pour mieux vous connaître',
   },
   {
     step: '02',
+    icon: ClipboardList,
+    detailIcon: Apple,
     title: 'Programme personnalisé',
     text: 'Création d’un plan clair, souple et compatible avec votre culture alimentaire et vos contraintes.',
+    detailTitle: 'Des conseils adaptés',
+    detailText: 'Simples et réalistes',
   },
   {
     step: '03',
+    icon: TrendingUp,
+    detailIcon: Heart,
     title: 'Suivi régulier',
     text: 'Ajustements, motivation et contrôle des résultats pour avancer avec méthode et sérénité.',
-  },
-]
-
-const testimonials = [
-  {
-    name: 'Salma B.',
-    text: 'Un accompagnement très professionnel. J’ai appris à mieux manger sans frustration et les résultats sont restés stables.',
-  },
-  {
-    name: 'Nadia E.',
-    text: 'Le suivi est précis, humain et rassurant. Chaque rendez-vous m’a donné des actions simples à appliquer.',
-  },
-  {
-    name: 'Youssef A.',
-    text: 'Programme clair, conseils adaptés au travail et au sport. J’ai retrouvé de l’énergie au quotidien.',
+    detailTitle: 'Un accompagnement continu',
+    detailText: 'Pour des résultats durables',
   },
 ]
 
@@ -262,18 +264,14 @@ function ServiceCard({ iconImage, iconAlt, image, imageAlt, title, text, index }
   )
 }
 
-function WhyChooseItem({ iconImage, iconComponent: Icon, iconAlt, title, text, origin, index }) {
+function WhyChooseItem({ iconImage, iconAlt, title, text, origin, index }) {
   return (
     <article
       className={`why-choice-item ${origin}`}
       style={{ '--why-delay': `${index * 95}ms` }}
     >
       <span className="why-choice-icon">
-        {Icon ? (
-          <Icon aria-label={iconAlt} role="img" size={31} strokeWidth={1.85} />
-        ) : (
-          <img src={iconImage} alt={iconAlt} loading="lazy" decoding="async" />
-        )}
+        <img src={iconImage} alt={iconAlt} loading="lazy" decoding="async" />
       </span>
       <div>
         <h3>{title}</h3>
@@ -294,6 +292,7 @@ function HomePage() {
   )
   const [areServicesVisible, setAreServicesVisible] = useState(shouldShowServicesImmediately)
   const [isWhyVisible, setIsWhyVisible] = useState(shouldShowWhyImmediately)
+  const [isProcessVisible, setIsProcessVisible] = useState(shouldRevealImmediately)
   const [visibleServiceCards, setVisibleServiceCards] = useState(getVisibleServiceCards)
   const [serviceCarouselIndex, setServiceCarouselIndex] = useState(getVisibleServiceCards)
   const [serviceCarouselTransition, setServiceCarouselTransition] = useState(true)
@@ -309,6 +308,7 @@ function HomePage() {
   const statsRowRef = useRef(null)
   const servicesSectionRef = useRef(null)
   const whySectionRef = useRef(null)
+  const processSectionRef = useRef(null)
   const servicesCarouselViewportRef = useRef(null)
   const serviceDragStartXRef = useRef(0)
   const serviceCarouselFrameRef = useRef(0)
@@ -458,6 +458,35 @@ function HomePage() {
 
     return () => observer.disconnect()
   }, [isWhyVisible, shouldShowWhyImmediately])
+
+  useEffect(() => {
+    const section = processSectionRef.current
+
+    if (!section || isProcessVisible) {
+      return undefined
+    }
+
+    if (!('IntersectionObserver' in window)) {
+      return undefined
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsProcessVisible(true)
+          observer.disconnect()
+        }
+      },
+      {
+        rootMargin: '0px 0px -12% 0px',
+        threshold: 0.16,
+      },
+    )
+
+    observer.observe(section)
+
+    return () => observer.disconnect()
+  }, [isProcessVisible])
 
   useEffect(() => {
     const restoreServiceCarouselTransition = () => {
@@ -616,9 +645,7 @@ function HomePage() {
               />
             ))}
           </div>
-          <div className="hero-overlay" />
           <div className="hero-content container reveal">
-            <span className="hero-kicker">Cabinet de diététique, nutrition et amincissement</span>
             <h1>
               <span>Nutrition personnalisée</span>
               <span>pour retrouver</span>
@@ -762,7 +789,7 @@ function HomePage() {
 
               <div className="why-choice-brand" aria-hidden="true">
                 <div className="why-choice-brand-mark">
-                  <img src="/imane-logo-navbar-clean.png" alt="" />
+                  <img src="/imane-logo-new.png" alt="" />
                 </div>
               </div>
 
@@ -803,46 +830,119 @@ function HomePage() {
           </div>
         </section>
 
-        <section className="process-section section-pad soft-band" id="consultation">
-          <div className="container">
-            <SectionIntro
-              eyebrow="Consultation"
-              title="Un parcours simple, lisible et motivant."
-              text="Chaque étape vous aide à comprendre vos besoins et à transformer vos habitudes avec méthode."
-            />
+        <section
+          className={`process-section section-pad process-reveal${isProcessVisible ? ' is-visible' : ''}`}
+          id="consultation"
+          ref={processSectionRef}
+        >
+          <img
+            className="process-decor-overlay"
+            src="/process-decor-overlay.png"
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
+          />
+          <p className="process-side-note" aria-hidden="true">
+            Mieux manger
+            <span>pour mieux vivre</span>
+          </p>
+
+          <div className="container process-container">
+            <header className="process-intro">
+              <span className="process-eyebrow">Consultation</span>
+              <h2>
+                Votre accompagnement,
+                <em>étape par étape.</em>
+              </h2>
+              <p>
+                Du premier bilan au suivi régulier, chaque rendez-vous s’inscrit dans une démarche
+                claire, personnalisée et durable.
+              </p>
+            </header>
+
             <div className="process-grid">
-              {process.map((item) => (
-                <article className="process-item" key={item.step}>
-                  <span>{item.step}</span>
-                  <h3>{item.title}</h3>
-                  <p>{item.text}</p>
+              {process.map(
+                ({ step, icon: Icon, detailIcon: DetailIcon, title, text, detailTitle, detailText }, index) => (
+                <article
+                  className="process-item"
+                  key={step}
+                  style={{ '--process-delay': `${index * 130}ms` }}
+                >
+                  <div className="process-marker">
+                    <Icon aria-hidden="true" size={28} strokeWidth={1.8} />
+                    <span>{step}</span>
+                  </div>
+                  <div className="process-content">
+                    <h3>{title}</h3>
+                    <p>{text}</p>
+                    <div className="process-detail">
+                      <DetailIcon aria-hidden="true" size={22} strokeWidth={1.8} />
+                      <span>
+                        <strong>{detailTitle}</strong>
+                        <small>{detailText}</small>
+                      </span>
+                    </div>
+                  </div>
                 </article>
-              ))}
+              ),
+              )}
             </div>
+
+            <p className="process-signature">
+              Chaque petit pas compte
+              <Heart aria-hidden="true" size={18} strokeWidth={1.7} />
+            </p>
           </div>
         </section>
 
         <section className="results-section section-pad" id="resultats">
-          <div className="container results-grid">
-            <div>
-              <SectionIntro
-                eyebrow="Résultats Patients"
-                title="Des résultats construits avec patience, écoute et régularité."
-                text="Le suivi met l’accent sur la progression durable : mieux manger, mieux comprendre son corps et retrouver confiance."
+          <img
+            className="reviews-leaf-frame"
+            src="/reviews-leaf-frame.png"
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
+          />
+
+          <div className="container reviews-shell">
+            <header className="reviews-heading">
+              <span className="reviews-eyebrow">Avis patients</span>
+              <h2>
+                Leur <em>expérience</em> au cabinet
+              </h2>
+              <p>Des témoignages authentiques partagés par nos patients sur Google Maps.</p>
+
+              <div className="reviews-trust-row" aria-label="Les engagements du cabinet">
+                <span>
+                  <Leaf aria-hidden="true" />
+                  Des résultats concrets
+                </span>
+                <span>
+                  <Heart aria-hidden="true" />
+                  Un accompagnement bienveillant
+                </span>
+                <span>
+                  <UsersRound aria-hidden="true" />
+                  Une approche personnalisée
+                </span>
+                <span>
+                  <Star aria-hidden="true" />
+                  Une confiance durable
+                </span>
+              </div>
+            </header>
+
+            <p className="reviews-thank-you" aria-hidden="true">
+              Merci
+              <span>pour votre confiance</span>
+              <Heart />
+            </p>
+
+            <div className="elfsight-reviews-wrap">
+              <div
+                className="elfsight-app-8d2e4218-00b5-4e1e-9e88-708da47c0c9c"
+                data-elfsight-app-lazy
               />
-              <a className="text-link" href="#rendez-vous">
-                Commencer mon accompagnement
-                <ChevronRight aria-hidden="true" size={17} />
-              </a>
-            </div>
-            <div className="testimonial-stack">
-              {testimonials.map((testimonial) => (
-                <article className="testimonial-card" key={testimonial.name}>
-                  <Quote aria-hidden="true" size={20} />
-                  <p>{testimonial.text}</p>
-                  <strong>{testimonial.name}</strong>
-                </article>
-              ))}
             </div>
           </div>
         </section>
@@ -866,54 +966,124 @@ function HomePage() {
         </section>
 
         <section className="booking-section section-pad" id="rendez-vous">
-          <div className="container booking-grid">
-            <div>
-              <SectionIntro
-                eyebrow="Contact"
-                title="Prenez rendez-vous pour un bilan personnalisé."
-                text="Un premier échange permet de comprendre votre objectif et de définir le type de suivi le plus adapté."
-              />
-              <div className="contact-list">
-                <span>
-                  <MapPin aria-hidden="true" size={19} />
-                  Casablanca, Maroc
-                </span>
-                <span>
-                  <Mail aria-hidden="true" size={19} />
-                  contact@cabinet-imane.ma
-                </span>
-                <span>
-                  <CalendarCheck aria-hidden="true" size={19} />
-                  Consultations sur rendez-vous
-                </span>
-              </div>
+          <div className="container booking-panel">
+            <div className="booking-main">
+              <header className="booking-heading">
+                <span>Contact</span>
+                <h2>Contactez-nous</h2>
+                <p>
+                  Une question ou envie de prendre rendez-vous ? Laissez-nous vos coordonnées,
+                  nous vous répondrons rapidement.
+                </p>
+              </header>
+
+              <form className="booking-form">
+                <label>
+                  <span>
+                    Nom <b aria-hidden="true">*</b>
+                  </span>
+                  <span className="booking-field">
+                    <UserRound aria-hidden="true" size={21} />
+                    <input type="text" name="name" placeholder="Votre nom" required />
+                  </span>
+                </label>
+                <label>
+                  <span>
+                    Email <b aria-hidden="true">*</b>
+                  </span>
+                  <span className="booking-field">
+                    <Mail aria-hidden="true" size={21} />
+                    <input type="email" name="email" placeholder="votre@email.com" required />
+                  </span>
+                </label>
+                <label>
+                  <span>Sujet</span>
+                  <span className="booking-field">
+                    <FileText aria-hidden="true" size={21} />
+                    <input type="text" name="subject" placeholder="Objet de votre demande" />
+                  </span>
+                </label>
+                <label>
+                  <span>
+                    Tél <b aria-hidden="true">*</b>
+                  </span>
+                  <span className="booking-field">
+                    <Phone aria-hidden="true" size={21} />
+                    <input type="tel" name="phone" placeholder="+212 6XX XX XX XX" required />
+                  </span>
+                </label>
+                <label>
+                  <span>
+                    Message <b aria-hidden="true">*</b>
+                  </span>
+                  <span className="booking-field booking-message-field">
+                    <MessageSquare aria-hidden="true" size={21} />
+                    <textarea
+                      name="message"
+                      placeholder="Écrivez votre message ici..."
+                      rows="5"
+                      required
+                    />
+                  </span>
+                </label>
+                <button type="submit" className="primary-button">
+                  Prendre rendez-vous
+                  <ChevronRight aria-hidden="true" size={18} />
+                </button>
+              </form>
             </div>
-            <form className="booking-form">
-              <label>
-                Nom complet
-                <input type="text" name="name" placeholder="Votre nom" />
-              </label>
-              <label>
-                Téléphone
-                <input type="tel" name="phone" placeholder="+212 ..." />
-              </label>
-              <label>
-                Objectif principal
-                <select name="goal" defaultValue="">
-                  <option value="" disabled>
-                    Choisir un objectif
-                  </option>
-                  <option>Perte de poids</option>
-                  <option>Nutrition clinique</option>
-                  <option>Rééquilibrage alimentaire</option>
-                  <option>Suivi familial</option>
-                </select>
-              </label>
-              <button type="submit" className="primary-button">
-                Prendre rendez-vous
-                <ChevronRight aria-hidden="true" size={18} />
-              </button>
-            </form>
+
+            <aside className="booking-aside" aria-labelledby="booking-contact-title">
+              <span className="booking-aside-kicker">Nos coordonnées</span>
+              <h2 id="booking-contact-title">Toujours à votre écoute</h2>
+              <p>
+                Le cabinet reste disponible pour répondre à vos questions et vous accompagner dans
+                votre démarche.
+              </p>
+
+              <div className="booking-contact-list">
+                <div>
+                  <span className="booking-contact-icon">
+                    <Phone aria-hidden="true" size={23} />
+                  </span>
+                  <span>
+                    <strong>Téléphone</strong>
+                    <a href="tel:+212600000000">+212 600 000 000</a>
+                    <small>Disponible vendredi et samedi</small>
+                  </span>
+                </div>
+                <div>
+                  <span className="booking-contact-icon">
+                    <Mail aria-hidden="true" size={23} />
+                  </span>
+                  <span>
+                    <strong>Email</strong>
+                    <a href="mailto:contact@cabinet-imane.ma">contact@cabinet-imane.ma</a>
+                    <small>Réponse sous 24h</small>
+                  </span>
+                </div>
+                <div>
+                  <span className="booking-contact-icon">
+                    <MapPin aria-hidden="true" size={23} />
+                  </span>
+                  <span>
+                    <strong>Adresse</strong>
+                    <b>Casablanca, Maroc</b>
+                    <small>Consultations sur rendez-vous</small>
+                  </span>
+                </div>
+                <div>
+                  <span className="booking-contact-icon">
+                    <Clock aria-hidden="true" size={23} />
+                  </span>
+                  <span>
+                    <strong>Horaires</strong>
+                    <b>Vendredi · 9h - 12h30 / 14h30 - 18h</b>
+                    <small>Samedi · 9h - 12h30</small>
+                  </span>
+                </div>
+              </div>
+            </aside>
           </div>
         </section>
       </main>
@@ -921,7 +1091,10 @@ function HomePage() {
       <footer className="site-footer">
         <div className="container footer-grid">
           <div className="footer-brand">
-            <img src="/imane-logo-navbar-clean.png" alt="Logo Cabinet Imane Oulhint" />
+            <img
+              src="/imane-logo-footer.png"
+              alt="Imane Oulhint, Diététicienne Nutritionniste"
+            />
             <p>
               Que votre objectif soit de retrouver votre équilibre alimentaire, d’améliorer votre
               santé ou d’être accompagnée dans une perte de poids durable, le cabinet vous guide
@@ -1002,16 +1175,12 @@ function HomePage() {
             <h2 className="footer-hours-title">Heures d'ouverture</h2>
             <div className="footer-hours">
               <div>
-                <strong>Lundi - Vendredi</strong>
-                <span>09:00 - 19:00</span>
+                <strong>Vendredi</strong>
+                <span>9h - 12h30 / 14h30 - 18h</span>
               </div>
               <div>
                 <strong>Samedi</strong>
-                <span>09:00 - 13:00</span>
-              </div>
-              <div>
-                <strong>Dimanche</strong>
-                <span>Fermé</span>
+                <span>9h - 12h30</span>
               </div>
             </div>
           </div>

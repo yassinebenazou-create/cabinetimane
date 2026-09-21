@@ -1,15 +1,33 @@
 :root {
-  --ink: #14251b;
-  --muted: #667269;
-  --green-950: #0c321b;
-  --green-900: #21482c;
-  --green-800: #2f653d;
-  --green-700: #3f7f4b;
-  --green-300: #b7d9b4;
-  --soft-green: #f3faf3;
-  --paper: #ffffff;
-  --line: #e3eee2;
-  --shadow-soft: 0 26px 60px rgba(24, 48, 32, 0.12);
+  /* Exact Imane Oulhint logo colors */
+  --brand-green: #65a00c;
+  --brand-blue: #042c88;
+
+  /* Supporting brand shades */
+  --green-dark: #4f7e09;
+  --green-light: #f3f8e9;
+  --green-soft: #c7dda3;
+  --blue-dark: #03236d;
+  --blue-light: #f0f4fc;
+
+  --background: #fafbf8;
+  --white: #ffffff;
+  --text: #17202a;
+  --text-muted: #667085;
+  --border: #e2e7dd;
+
+  /* Existing component aliases now point to the brand system */
+  --ink: var(--text);
+  --muted: var(--text-muted);
+  --green-950: var(--green-dark);
+  --green-900: var(--green-dark);
+  --green-800: var(--green-dark);
+  --green-700: var(--brand-green);
+  --green-300: var(--green-soft);
+  --soft-green: var(--green-light);
+  --paper: var(--white);
+  --line: var(--border);
+  --shadow-soft: 0 26px 60px rgba(4, 44, 136, 0.1);
   color: var(--ink);
   background: var(--paper);
   font-family:
@@ -38,13 +56,15 @@ body {
 body,
 button,
 input,
-select {
+select,
+textarea {
   font-family: inherit;
 }
 
 button,
 input,
-select {
+select,
+textarea {
   font: inherit;
 }
 
