@@ -1804,8 +1804,10 @@ function ContactPage() {
   const phoneHref = 'tel:+212528234949'
   const whatsappHref = 'https://wa.me/212528234949'
   const address = 'Agadir Bay, Bloc D, 1er étage, N°107, Technopole II, Agadir'
-  const mapsHref =
-    'https://www.google.com/maps/search/?api=1&query=Cabinet+Imane+Oulhint+Agadir+Bay'
+  const mapsPlaceHref =
+    'https://www.google.com/maps/place/Cabinet+de+di%C3%A9t%C3%A9tique+nutrition+et+amincissement,+IMANE+OULHINT/@30.4023229,-9.5841706,17z/data=!4m6!3m5!1s0xdb3b7de5424372b:0xafdffa32df4af541!8m2!3d30.4023229!4d-9.5863593!16s%2Fg%2F11jyd_nvlj'
+  const mapsDirectionsHref =
+    'https://www.google.com/maps/dir/?api=1&destination=30.4023229%2C-9.5863593&travelmode=driving'
 
   return (
     <main className="route-page contact-page" ref={pageRef}>
@@ -1864,7 +1866,7 @@ function ContactPage() {
             <span className="contact-info-icon"><MapPin aria-hidden="true" size={24} /></span>
             <div>
               <h2>Adresse</h2>
-              <a href={mapsHref} target="_blank" rel="noopener noreferrer">{address}</a>
+              <a href={mapsPlaceHref} target="_blank" rel="noopener noreferrer">{address}</a>
               <small>Consultations sur rendez-vous</small>
             </div>
           </article>
@@ -1943,7 +1945,7 @@ function ContactPage() {
             <div className="contact-map-frame">
               <iframe
                 title="Localisation du Cabinet Imane Oulhint à Agadir"
-                src="https://www.google.com/maps?q=Cabinet%20Imane%20Oulhint%20Agadir%20Bay&output=embed"
+                src="https://www.google.com/maps?q=30.4023229%2C-9.5863593&z=17&output=embed"
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 allowFullScreen
@@ -1954,7 +1956,7 @@ function ContactPage() {
               <div>
                 <strong>Cabinet Imane Oulhint</strong>
                 <p>{address}</p>
-                <a href={mapsHref} target="_blank" rel="noopener noreferrer">
+                <a href={mapsDirectionsHref} target="_blank" rel="noopener noreferrer">
                   Voir l’itinéraire
                   <ExternalLink aria-hidden="true" size={15} />
                 </a>

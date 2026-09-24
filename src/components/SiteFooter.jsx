@@ -107,7 +107,13 @@ export default function SiteFooter() {
             </span>
             <span>
               <MapPin aria-hidden="true" size={28} />
-              Agadir Bay, Bloc D, 1er étage, N°107, Technopole II
+              <a
+                href="https://www.google.com/maps/place/Cabinet+de+di%C3%A9t%C3%A9tique+nutrition+et+amincissement,+IMANE+OULHINT/@30.4023229,-9.5841706,17z/data=!4m6!3m5!1s0xdb3b7de5424372b:0xafdffa32df4af541!8m2!3d30.4023229!4d-9.5863593!16s%2Fg%2F11jyd_nvlj"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Agadir Bay, Bloc D, 1er étage, N°107, Technopole II
+              </a>
             </span>
           </div>
 
