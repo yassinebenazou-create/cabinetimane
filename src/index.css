@@ -42,15 +42,26 @@
   box-sizing: border-box;
 }
 
+html,
+body,
+#root {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 104px;
 }
 
 body {
-  margin: 0;
   min-width: 320px;
   background: var(--paper);
+}
+
+main {
+  width: 100%;
 }
 
 body,

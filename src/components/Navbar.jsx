@@ -4,19 +4,23 @@ import { CalendarCheck, Menu, X } from 'lucide-react'
 
 const navItems = [
   { label: 'Accueil', href: '/' },
-  { label: 'Services', href: '/#services' },
-  { label: 'Consultation', href: '/#consultation' },
-  { label: 'Résultats Patients', href: '/#resultats' },
-  { label: 'FAQ', href: '/#faq' },
-  { label: 'Contact', href: '/#rendez-vous' },
+  { label: 'Services', href: '/services' },
+  { label: 'Consultation', href: '/consultation' },
+  { label: 'Résultats Patients', href: '/resultats-patients' },
+  { label: 'FAQ', href: '/faq' },
+  { label: 'Contact', href: '/contact' },
 ]
 
 function isActive(item, location) {
   if (item.href === '/') {
-    return location.pathname === '/' && !location.hash
+    return location.pathname === '/'
   }
 
-  return location.hash && item.href.endsWith(location.hash)
+  if (item.href === '/services') {
+    return location.pathname.startsWith('/services')
+  }
+
+  return location.pathname === item.href
 }
 
 export default function Navbar() {
@@ -38,7 +42,12 @@ export default function Navbar() {
   return (
     <header className={`site-header${scrolled ? ' scrolled' : ''}${menuOpen ? ' menu-open' : ''}`}>
       <div className="nav-container">
-        <Link className="brand-link" to="/" aria-label="Accueil Cabinet Imane Oulhint">
+        <Link
+          className="brand-link"
+          to="/"
+          aria-label="Accueil Cabinet Imane Oulhint"
+          onClick={() => setMenuOpen(false)}
+        >
           <img
             src="/imane-logo-new.png"
             alt="Imane Oulhint, Diététicienne Nutritionniste"
@@ -57,10 +66,10 @@ export default function Navbar() {
           ))}
         </nav>
 
-        <a className="nav-cta" href="#rendez-vous">
+        <Link className="nav-cta" to="/contact">
           <CalendarCheck aria-hidden="true" size={17} />
           Prendre rendez-vous
-        </a>
+        </Link>
 
         <button
           className="menu-toggle"
@@ -85,9 +94,9 @@ export default function Navbar() {
               {item.label}
             </Link>
           ))}
-          <a className="mobile-cta" href="#rendez-vous" onClick={() => setMenuOpen(false)}>
+          <Link className="mobile-cta" to="/contact" onClick={() => setMenuOpen(false)}>
             Prendre rendez-vous
-          </a>
+          </Link>
         </nav>
       </div>
     </header>

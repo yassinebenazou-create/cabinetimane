@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
-import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
+import { BrowserRouter, Link, Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import {
   Apple,
   CalendarCheck,
   CheckCircle2,
+  ChevronDown,
   ChevronRight,
   ClipboardList,
   Clock,
+  ExternalLink,
   FileText,
   Heart,
   Leaf,
@@ -22,40 +24,91 @@ import {
   UsersRound,
 } from 'lucide-react'
 import Navbar from './components/Navbar.jsx'
+import SiteFooter, { FloatingContact } from './components/SiteFooter.jsx'
+import services from './data/services.js'
+import ServiceDetailPage from './pages/ServiceDetailPage.jsx'
 import './App.css'
 
-const services = [
+const instagramHighlights = [
   {
-    iconImage: '/service-icon-09.png',
-    iconAlt: 'Icône perte de poids',
-    image: '/service-perte-poids-tanger.png',
-    imageAlt: 'Service de perte de poids personnalisé au cabinet de nutrition',
-    title: 'Perte de poids Casablanca',
-    text: 'Un suivi personnalisé pour perdre du poids durablement.',
+    title: 'Résultats',
+    image: '/instagram-highlight-01.jpg',
+    url: 'https://www.instagram.com/stories/highlights/18035105875901523/?hl=ar',
   },
   {
-    iconImage: '/service-icon-06.png',
-    iconAlt: 'Icône troubles alimentaires',
-    image: '/service-troubles-conduites.png',
-    imageAlt: 'Service pour les troubles des conduites alimentaires',
-    title: 'Troubles des conduites alimentaires',
-    text: 'Un accompagnement calme pour retrouver l’équilibre.',
+    title: 'Témoignages',
+    image: '/instagram-highlight-02.jpg',
+    url: 'https://www.instagram.com/stories/highlights/18014261108105056/?hl=ar',
   },
   {
-    iconImage: '/service-icon-07.png',
-    iconAlt: 'Icône nutrition clinique',
-    image: '/service-maladies-chroniques.png',
-    imageAlt: 'Nutrition adaptée aux maladies chroniques',
-    title: 'Nutrition des maladies chroniques',
-    text: 'Des conseils adaptés aux besoins médicaux.',
+    title: 'Résultats',
+    image: '/instagram-highlight-03.jpg',
+    url: 'https://www.instagram.com/stories/highlights/17942293193603930/?hl=ar',
   },
   {
-    iconImage: '/service-icon-04.png',
-    iconAlt: 'Icône analyse du corps',
-    image: '/service-analyse-corps.png',
-    imageAlt: 'Analyse du corps et suivi de composition corporelle',
-    title: 'Analyse du corps Casablanca',
-    text: 'Un bilan corporel précis pour suivre vos progrès.',
+    title: 'Résultats',
+    image: '/instagram-highlight-04.jpg',
+    url: 'https://www.instagram.com/stories/highlights/17960852024529661/?hl=ar',
+  },
+  {
+    title: 'Résultats',
+    image: '/instagram-highlight-05.jpg',
+    url: 'https://www.instagram.com/stories/highlights/17926621049422685/?hl=ar',
+  },
+  {
+    title: 'Quotes',
+    image: '/instagram-highlight-06.jpg',
+    url: 'https://www.instagram.com/stories/highlights/17897427104563212/?hl=ar',
+  },
+  {
+    title: 'Résultats',
+    image: '/instagram-highlight-07.jpg',
+    url: 'https://www.instagram.com/stories/highlights/17923731941310702/?hl=ar',
+  },
+  {
+    title: 'Résultats',
+    image: '/instagram-highlight-08.jpg',
+    url: 'https://www.instagram.com/stories/highlights/17943372475928065/?hl=ar',
+  },
+  {
+    title: 'À la une',
+    image: '/instagram-highlight-09.jpg',
+    url: 'https://www.instagram.com/stories/highlights/18333175978210127/?hl=ar',
+  },
+  {
+    title: 'À la une',
+    image: '/instagram-highlight-10.jpg',
+    url: 'https://www.instagram.com/stories/highlights/18035500648788743/?hl=ar',
+  },
+  {
+    title: 'Amincissement',
+    image: '/instagram-highlight-11.jpg',
+    url: 'https://www.instagram.com/stories/highlights/18085824854131146/?hl=ar',
+  },
+  {
+    title: 'À la une',
+    image: '/instagram-highlight-12.jpg',
+    url: 'https://www.instagram.com/stories/highlights/17874303045469923/?hl=ar',
+  },
+  {
+    title: 'My patients ❤️',
+    image: '/instagram-highlight-13.jpg',
+    url: 'https://www.instagram.com/stories/highlights/17939826025951136/?hl=ar',
+  },
+  {
+    title: '⭐️⭐️⭐️⭐️⭐️',
+    image: '/instagram-highlight-14.jpg',
+    url: 'https://www.instagram.com/stories/highlights/17897079648082806/?hl=ar',
+  },
+  {
+    title: 'À la une',
+    image: '/imane-logo-new.png',
+    url: 'https://www.instagram.com/stories/highlights/18291986620303194/?hl=ar',
+  },
+  {
+    title: 'À la une',
+    image: '/imane-logo-new.png',
+    url: 'https://www.instagram.com/stories/highlights/18111509882506675/?hl=ar',
   },
 ]
 
@@ -72,42 +125,42 @@ const whyChooseReasons = [
   {
     iconImage: '/service-icon-07.png',
     iconAlt: 'Icône stratégie nutritionnelle',
-    title: 'StratÃ©gie nutritionnelle',
-    text: 'Des conseils clairs, adaptÃ©s Ã  votre rythme et Ã  vos objectifs.',
+    title: 'Stratégie nutritionnelle',
+    text: 'Des conseils clairs, adaptés à votre rythme et à vos objectifs.',
     origin: 'from-left-top',
   },
   {
     iconImage: '/service-icon-06.png',
     iconAlt: 'Icône soutien individuel',
     title: 'Soutien individuel',
-    text: 'Un accompagnement personnel, humain et ciblÃ© Ã  chaque Ã©tape.',
+    text: 'Un accompagnement personnel, humain et ciblé à chaque étape.',
     origin: 'from-left',
   },
   {
     iconImage: '/service-icon-04.png',
     iconAlt: 'Icône habitudes actives',
     title: 'Habitudes actives',
-    text: 'Des repÃ¨res simples pour bouger mieux et retrouver de lâ€™Ã©nergie.',
+    text: 'Des repères simples pour bouger mieux et retrouver de l’énergie.',
     origin: 'from-left-bottom',
   },
   {
     iconImage: '/service-icon-09.png',
     iconAlt: 'Icône alimentation saine',
     title: 'Alimentation saine',
-    text: 'Un programme durable, Ã©quilibrÃ© et compatible avec votre quotidien.',
+    text: 'Un programme durable, équilibré et compatible avec votre quotidien.',
     origin: 'from-right-top',
   },
   {
     iconImage: '/service-icon-07.png',
     iconAlt: 'Icône programme sur mesure',
     title: 'Programme sur mesure',
-    text: 'Des ajustements progressifs selon vos bilans et vos prÃ©fÃ©rences.',
+    text: 'Des ajustements progressifs selon vos bilans et vos préférences.',
     origin: 'from-right',
   },
   {
     iconImage: '/service-icon-04.png',
     iconAlt: 'Icône meilleure santé',
-    title: 'Meilleure santÃ©',
+    title: 'Meilleure santé',
     text: 'Une approche calme pour renforcer votre confort et votre confiance.',
     origin: 'from-right-bottom',
   },
@@ -145,20 +198,99 @@ const process = [
 
 const faqs = [
   {
-    question: 'Combien de temps dure une première consultation ?',
+    question: 'Où trouver une diététicienne nutritionniste à Agadir ?',
     answer:
-      'La première consultation dure généralement 45 à 60 minutes afin de réaliser un bilan complet et de définir vos objectifs.',
+      'Le cabinet Imane Oulhint accueille les personnes à Agadir souhaitant bénéficier d’un accompagnement nutritionnel personnalisé. Le suivi est adapté aux objectifs, aux habitudes alimentaires et aux besoins de chaque personne.',
   },
   {
-    question: 'Le programme est-il strict ?',
+    question: 'Comment se déroule une consultation diététique à Agadir ?',
     answer:
-      'Non. Le plan est personnalisé, progressif et pensé pour rester compatible avec votre vie sociale, vos goûts et votre santé.',
+      'La première consultation permet de faire le point sur vos habitudes alimentaires, votre mode de vie et vos objectifs. Un accompagnement personnalisé peut ensuite être mis en place selon vos besoins et votre évolution.',
   },
   {
-    question: 'Proposez-vous un suivi après le premier rendez-vous ?',
+    question: 'Le cabinet propose-t-il un accompagnement pour la perte de poids ?',
     answer:
-      'Oui. Les consultations de suivi permettent d’ajuster le programme, mesurer les progrès et renforcer les habitudes durables.',
+      'Oui. Le cabinet propose un suivi nutritionnel personnalisé pour les personnes souhaitant perdre du poids progressivement, avec des recommandations adaptées à leur situation et à leurs habitudes.',
   },
+  {
+    question: 'Peut-on consulter pour une prise de poids ?',
+    answer:
+      'Oui. Un accompagnement nutritionnel peut également être proposé aux personnes souhaitant prendre du poids de manière encadrée et améliorer leur alimentation.',
+  },
+  {
+    question: 'Qu’est-ce qu’un rééquilibrage alimentaire ?',
+    answer:
+      'Le rééquilibrage alimentaire vise à améliorer progressivement les habitudes alimentaires sans se limiter à un régime temporaire. L’accompagnement est adapté au rythme, aux besoins et aux objectifs de chaque personne.',
+  },
+  {
+    question: 'Le suivi nutritionnel est-il personnalisé ?',
+    answer:
+      'Oui. Les recommandations sont adaptées à chaque personne en fonction de ses objectifs, de ses habitudes alimentaires, de son mode de vie et de son évolution au cours du suivi.',
+  },
+  {
+    question: 'Le cabinet propose-t-il le drainage lymphatique à Agadir ?',
+    answer:
+      'Oui. Le drainage lymphatique fait partie des prestations proposées par le cabinet. Il est possible de contacter le cabinet pour obtenir plus d’informations et prendre rendez-vous.',
+  },
+  {
+    question: 'Le cabinet propose-t-il des séances de pressothérapie à Agadir ?',
+    answer:
+      'Oui. Des séances de pressothérapie sont proposées au cabinet. Contactez directement le cabinet pour obtenir davantage d’informations sur la prestation et les modalités de rendez-vous.',
+  },
+  {
+    question: 'Combien de séances sont nécessaires pour un suivi nutritionnel ?',
+    answer:
+      'Le nombre de consultations dépend des objectifs et de l’évolution de chaque personne. La fréquence du suivi peut être déterminée après la première consultation.',
+  },
+  {
+    question: 'Faut-il prendre rendez-vous avant de venir au cabinet ?',
+    answer:
+      'Il est recommandé de prendre rendez-vous à l’avance afin de confirmer la disponibilité du cabinet et l’horaire de votre consultation ou de votre soin.',
+  },
+  {
+    question: 'Comment prendre rendez-vous avec le cabinet Imane Oulhint à Agadir ?',
+    answer:
+      'Le rendez-vous peut être demandé directement par téléphone ou WhatsApp, en utilisant les coordonnées indiquées sur ce site.',
+  },
+  {
+    question: 'Où se trouve le cabinet Imane Oulhint à Agadir ?',
+    answer:
+      'Le cabinet est situé à Agadir. Pour connaître son adresse exacte et préparer votre itinéraire, consultez les informations Google Maps du cabinet ou contactez-nous directement.',
+  },
+]
+
+const faqStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map(({ question, answer }) => ({
+    '@type': 'Question',
+    name: question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: answer,
+    },
+  })),
+}
+
+const scrollRevealGroups = [
+  '.about-section .section-intro > span, .about-section .section-intro > h2, .about-section .section-intro > p',
+  '.about-section .trust-row > div',
+  '.treatments-section .section-intro > span, .treatments-section .section-intro > h2, .treatments-section .section-intro > p',
+  '.treatments-section .check-list > span',
+  '.treatments-section .feature-panel',
+  '.process-section .process-intro > span, .process-section .process-intro > h2, .process-section .process-intro > p',
+  '.process-section .process-signature',
+  '.results-section .reviews-heading > span, .results-section .reviews-heading > h2, .results-section .reviews-heading > p',
+  '.results-section .reviews-trust-row > span',
+  '.results-section .elfsight-reviews-wrap',
+  '.faq-section .section-intro > span, .faq-section .section-intro > h2, .faq-section .section-intro > p',
+  '.faq-section .faq-list > .faq-item',
+  '.booking-section .booking-heading > span, .booking-section .booking-heading > h2, .booking-section .booking-heading > p',
+  '.booking-section .booking-form > label, .booking-section .booking-form > button',
+  '.booking-section .booking-aside > span, .booking-section .booking-aside > h2, .booking-section .booking-aside > p',
+  '.booking-section .booking-contact-list > div',
+  '.site-footer .footer-grid > *',
+  '.site-footer .footer-bottom',
 ]
 
 const heroVideos = ['/hero-nutrition-1.mp4', '/hero-nutrition-2.mp4', '/hero-nutrition-3.mp4']
@@ -198,6 +330,44 @@ function shouldReduceMotion() {
   )
 }
 
+function useRoutePageReveal(pageRef) {
+  useEffect(() => {
+    const page = pageRef.current
+    if (!page) {
+      return undefined
+    }
+
+    const targets = Array.from(page.querySelectorAll('[data-page-reveal]'))
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    targets.forEach((target, index) => {
+      target.style.setProperty('--page-reveal-delay', `${(index % 4) * 90}ms`)
+    })
+
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      targets.forEach((target) => target.classList.add('is-page-visible'))
+      return undefined
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) {
+            return
+          }
+
+          entry.target.classList.add('is-page-visible')
+          observer.unobserve(entry.target)
+        })
+      },
+      { rootMargin: '0px 0px -8% 0px', threshold: 0.18 },
+    )
+
+    targets.forEach((target) => observer.observe(target))
+    return () => observer.disconnect()
+  }, [pageRef])
+}
+
 function getVisibleServiceCards() {
   if (typeof window === 'undefined') {
     return 3
@@ -219,7 +389,7 @@ function ScrollToHash() {
 
   useEffect(() => {
     if (!hash) {
-      window.scrollTo({ top: 0, behavior: 'smooth' })
+      window.scrollTo({ top: 0, behavior: 'auto' })
       return
     }
 
@@ -232,6 +402,30 @@ function ScrollToHash() {
   return null
 }
 
+function PageSeo({ title, description }) {
+  useEffect(() => {
+    document.title = title
+    document.querySelector('meta[name="description"]')?.setAttribute('content', description)
+  }, [description, title])
+
+  return null
+}
+
+function SiteLayout() {
+  const { pathname } = useLocation()
+
+  return (
+    <>
+      <Navbar />
+      <div className="page-route-shell" key={pathname}>
+        <Outlet />
+      </div>
+      <SiteFooter />
+      <FloatingContact />
+    </>
+  )
+}
+
 function SectionIntro({ eyebrow, title, text }) {
   return (
     <div className="section-intro">
@@ -242,23 +436,120 @@ function SectionIntro({ eyebrow, title, text }) {
   )
 }
 
-function ServiceCard({ iconImage, iconAlt, image, imageAlt, title, text, index }) {
+function ServicesIntro() {
+  const title =
+    'Des accompagnements adaptés à votre santé, votre objectif et votre quotidien.'
+
   return (
-    <article className="service-card" style={{ '--service-delay': `${index * 95}ms` }}>
+    <div className="section-intro services-intro">
+      <span className="services-eyebrow">Services</span>
+      <h2 aria-label={title}>
+        <span className="services-title-line" aria-hidden="true">
+          <span>Des accompagnements adaptés</span>
+        </span>
+        <span className="services-title-line" aria-hidden="true">
+          <span>à votre santé, votre objectif</span>
+        </span>
+        <span className="services-title-line" aria-hidden="true">
+          <span>et votre quotidien.</span>
+        </span>
+      </h2>
+      <p>
+        Le cabinet propose un suivi complet pour améliorer votre alimentation, votre silhouette
+        et votre confort de vie.
+      </p>
+    </div>
+  )
+}
+
+function ServiceCard({
+  iconImage,
+  iconAlt,
+  image,
+  imageFit,
+  imageAlt,
+  cardTitle,
+  cardText,
+  slug,
+  revealIndex,
+  onNavigate,
+  pageReveal = false,
+}) {
+  return (
+    <Link
+      className="service-card"
+      to={`/services/${slug}`}
+      aria-label={`Découvrir le service ${cardTitle}`}
+      draggable="false"
+      onClick={onNavigate}
+      data-page-reveal={pageReveal || undefined}
+      style={{ '--service-delay': `${Math.max(0, revealIndex) * 95}ms` }}
+    >
       <div className="service-media">
         <div className="service-image-frame">
-          <img src={image} alt={imageAlt} loading="lazy" decoding="async" />
+          <img
+            className={imageFit === 'contain' ? 'service-image-contain' : undefined}
+            src={image}
+            alt={imageAlt}
+            draggable="false"
+            loading="lazy"
+            decoding="async"
+          />
         </div>
         <span className="service-icon">
-          <img src={iconImage} alt={iconAlt} loading="lazy" decoding="async" />
+          <img
+            src={iconImage}
+            alt={iconAlt}
+            draggable="false"
+            loading="lazy"
+            decoding="async"
+          />
         </span>
       </div>
       <div className="service-content">
-        <h3>{title}</h3>
-        <p>{text}</p>
-        <a href="#rendez-vous" className="service-read-more">
-          Lire Plus
-        </a>
+        <h3>{cardTitle}</h3>
+        <p>{cardText}</p>
+        <span className="service-read-more">
+          Lire plus
+          <ChevronRight aria-hidden="true" size={17} />
+        </span>
+      </div>
+    </Link>
+  )
+}
+
+function FaqItem({ faq, index, isOpen, onToggle, pageReveal = false }) {
+  const questionId = `faq-question-${index + 1}`
+  const answerId = `faq-answer-${index + 1}`
+
+  return (
+    <article
+      className={`faq-item${isOpen ? ' is-open' : ''}`}
+      data-page-reveal={pageReveal || undefined}
+    >
+      <h3>
+        <button
+          id={questionId}
+          className="faq-question"
+          type="button"
+          aria-expanded={isOpen}
+          aria-controls={answerId}
+          onClick={onToggle}
+        >
+          <span>{faq.question}</span>
+          <ChevronDown className="faq-chevron" aria-hidden="true" size={21} />
+        </button>
+      </h3>
+      <div
+        id={answerId}
+        className="faq-answer"
+        role="region"
+        aria-labelledby={questionId}
+        aria-hidden={!isOpen}
+      >
+        <div className="faq-answer-inner">
+          <p>{faq.answer}</p>
+        </div>
       </div>
     </article>
   )
@@ -300,6 +591,7 @@ function HomePage() {
   const [serviceViewportWidth, setServiceViewportWidth] = useState(0)
   const [serviceDragDelta, setServiceDragDelta] = useState(0)
   const [isServiceDragging, setIsServiceDragging] = useState(false)
+  const [openFaqIndex, setOpenFaqIndex] = useState(null)
   const [hasStatsStarted, setHasStatsStarted] = useState(shouldSkipStatsAnimation)
   const [statValues, setStatValues] = useState(() =>
     shouldSkipStatsAnimation ? statTargets : initialStats,
@@ -311,6 +603,7 @@ function HomePage() {
   const processSectionRef = useRef(null)
   const servicesCarouselViewportRef = useRef(null)
   const serviceDragStartXRef = useRef(0)
+  const serviceDidDragRef = useRef(false)
   const serviceCarouselFrameRef = useRef(0)
 
   useEffect(() => {
@@ -489,6 +782,71 @@ function HomePage() {
   }, [isProcessVisible])
 
   useEffect(() => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    if (prefersReducedMotion || !('IntersectionObserver' in window)) {
+      return undefined
+    }
+
+    const revealTargets = []
+
+    scrollRevealGroups.forEach((selector) => {
+      document.querySelectorAll(selector).forEach((element, index) => {
+        element.style.setProperty('--scroll-reveal-delay', `${(index % 4) * 90}ms`)
+        revealTargets.push(element)
+      })
+    })
+
+    revealTargets.forEach((element) => element.classList.add('scroll-reveal-item'))
+
+    const animationEndHandlers = new Map()
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) {
+            return
+          }
+
+          const element = entry.target
+          observer.unobserve(element)
+          element.classList.add('is-scroll-visible')
+
+          const handleAnimationEnd = (event) => {
+            if (event.target !== element || event.animationName !== 'scroll-reveal-up') {
+              return
+            }
+
+            element.removeEventListener('animationend', handleAnimationEnd)
+            element.classList.remove('scroll-reveal-item', 'is-scroll-visible')
+            element.style.removeProperty('--scroll-reveal-delay')
+            animationEndHandlers.delete(element)
+          }
+
+          animationEndHandlers.set(element, handleAnimationEnd)
+          element.addEventListener('animationend', handleAnimationEnd)
+        })
+      },
+      {
+        rootMargin: '0px 0px -4% 0px',
+        threshold: 0.18,
+      },
+    )
+
+    revealTargets.forEach((element) => observer.observe(element))
+
+    return () => {
+      observer.disconnect()
+      animationEndHandlers.forEach((handler, element) => {
+        element.removeEventListener('animationend', handler)
+      })
+      revealTargets.forEach((element) => {
+        element.classList.remove('scroll-reveal-item', 'is-scroll-visible')
+        element.style.removeProperty('--scroll-reveal-delay')
+      })
+    }
+  }, [])
+
+  useEffect(() => {
     const restoreServiceCarouselTransition = () => {
       window.cancelAnimationFrame(serviceCarouselFrameRef.current)
       serviceCarouselFrameRef.current = window.requestAnimationFrame(() => {
@@ -595,8 +953,8 @@ function HomePage() {
     setIsServiceDragging(true)
     setServiceCarouselTransition(false)
     setServiceDragDelta(0)
+    serviceDidDragRef.current = false
     serviceDragStartXRef.current = event.clientX
-    event.currentTarget.setPointerCapture?.(event.pointerId)
   }
 
   const handleServicePointerMove = (event) => {
@@ -604,7 +962,11 @@ function HomePage() {
       return
     }
 
-    setServiceDragDelta(event.clientX - serviceDragStartXRef.current)
+    const nextDragDelta = event.clientX - serviceDragStartXRef.current
+    if (Math.abs(nextDragDelta) > 8) {
+      serviceDidDragRef.current = true
+    }
+    setServiceDragDelta(nextDragDelta)
   }
 
   const handleServicePointerEnd = () => {
@@ -626,10 +988,11 @@ function HomePage() {
   }
 
   return (
-    <>
-      <Navbar />
-
-      <main>
+      <main className="route-page home-page">
+        <PageSeo
+          title="Cabinet Imane Oulhint | Diététicienne Nutritionniste à Agadir"
+          description="Cabinet Imane Oulhint à Agadir : accompagnement nutritionnel personnalisé, services de bien-être et suivi adapté à vos objectifs."
+        />
         <section className="hero-section" id="accueil">
           <div className="hero-video-stack" aria-hidden="true">
             {heroVideos.map((video, index) => (
@@ -656,13 +1019,13 @@ function HomePage() {
               personnalisés, une approche médicale calme et un suivi durable.
             </p>
             <div className="hero-actions">
-              <a className="primary-button" href="#rendez-vous">
+              <Link className="primary-button" to="/contact">
                 Prendre rendez-vous
                 <ChevronRight aria-hidden="true" size={18} />
-              </a>
-              <a className="ghost-button" href="#services">
+              </Link>
+              <Link className="ghost-button" to="/services">
                 Découvrir les services
-              </a>
+              </Link>
             </div>
           </div>
         </section>
@@ -715,11 +1078,7 @@ function HomePage() {
           ref={servicesSectionRef}
         >
           <div className="container">
-            <SectionIntro
-              eyebrow="Services"
-              title="Des accompagnements adaptés à votre santé, votre objectif et votre quotidien."
-              text="Le cabinet propose un suivi complet pour améliorer votre alimentation, votre silhouette et votre confort de vie."
-            />
+            <ServicesIntro />
             <div
               className="services-carousel"
               onMouseEnter={() => setServiceCarouselPaused(true)}
@@ -749,7 +1108,7 @@ function HomePage() {
                   {serviceCarouselSlides.map((service, index) => (
                     <div
                       className="service-carousel-slide"
-                      key={`${service.title}-${index}`}
+                      key={`${service.slug}-${index}`}
                       style={{
                         flexBasis:
                           serviceSlideWidth > 0
@@ -757,11 +1116,28 @@ function HomePage() {
                             : `calc((100% - ${serviceGap * (visibleServiceCards - 1)}px) / ${visibleServiceCards})`,
                       }}
                     >
-                      <ServiceCard index={index % services.length} {...service} />
+                      <ServiceCard
+                        revealIndex={Math.min(
+                          visibleServiceCards - 1,
+                          Math.max(0, index - visibleServiceCards),
+                        )}
+                        onNavigate={(event) => {
+                          if (serviceDidDragRef.current) {
+                            event.preventDefault()
+                          }
+                        }}
+                        {...service}
+                      />
                     </div>
                   ))}
                 </div>
               </div>
+            </div>
+            <div className="section-route-action">
+              <Link className="outline-route-button" to="/services">
+                Découvrir tous les services
+                <ChevronRight aria-hidden="true" size={18} />
+              </Link>
             </div>
           </div>
         </section>
@@ -777,7 +1153,7 @@ function HomePage() {
             <div className="why-choice-heading">
               <span>Pourquoi nous choisir</span>
               <h2>Cabinet Imane Oulhint</h2>
-              <p>Une prise en charge nutritionnelle claire, humaine et pensÃ©e pour durer.</p>
+              <p>Une prise en charge nutritionnelle claire, humaine et pensée pour durer.</p>
             </div>
 
             <div className="why-choice-layout">
@@ -892,6 +1268,12 @@ function HomePage() {
               Chaque petit pas compte
               <Heart aria-hidden="true" size={18} strokeWidth={1.7} />
             </p>
+            <div className="section-route-action">
+              <Link className="outline-route-button" to="/consultation">
+                Découvrir la consultation
+                <ChevronRight aria-hidden="true" size={18} />
+              </Link>
+            </div>
           </div>
         </section>
 
@@ -911,6 +1293,47 @@ function HomePage() {
                 Leur <em>expérience</em> au cabinet
               </h2>
               <p>Des témoignages authentiques partagés par nos patients sur Google Maps.</p>
+
+              <div className="instagram-highlights" role="group" aria-label="Highlights Instagram du cabinet">
+                <div className="instagram-highlights-track">
+                  {[0, 1].map((copyIndex) => (
+                    <div
+                      className="instagram-highlight-set"
+                      aria-hidden={copyIndex === 1 ? true : undefined}
+                      key={`highlight-set-${copyIndex}`}
+                    >
+                      {instagramHighlights.map((highlight, index) => (
+                        <a
+                          className="instagram-highlight-link"
+                          href={highlight.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={`Voir le Highlight Instagram « ${highlight.title} » ${index + 1}`}
+                          tabIndex={copyIndex === 1 ? -1 : undefined}
+                          key={`${copyIndex}-${highlight.url}`}
+                        >
+                          <span className="instagram-highlight-cover">
+                            <img
+                              src={highlight.image}
+                              alt={
+                                copyIndex === 0
+                                  ? `Aperçu du Highlight Instagram « ${highlight.title} »`
+                                  : ''
+                              }
+                              loading="lazy"
+                              decoding="async"
+                            />
+                            <span className="instagram-highlight-external" aria-hidden="true">
+                              <ExternalLink size={11} strokeWidth={2} />
+                            </span>
+                          </span>
+                          <span className="instagram-highlight-title">{highlight.title}</span>
+                        </a>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
 
               <div className="reviews-trust-row" aria-label="Les engagements du cabinet">
                 <span>
@@ -944,23 +1367,52 @@ function HomePage() {
                 data-elfsight-app-lazy
               />
             </div>
+            <div className="section-route-action">
+              <Link className="outline-route-button" to="/resultats-patients">
+                Voir tous les résultats
+                <ChevronRight aria-hidden="true" size={18} />
+              </Link>
+            </div>
           </div>
         </section>
 
-        <section className="faq-section section-pad soft-band" id="faq">
+        <section
+          className="faq-section section-pad soft-band"
+          id="faq"
+          aria-labelledby="faq-heading"
+        >
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
+          />
           <div className="container faq-grid">
-            <SectionIntro
-              eyebrow="FAQ"
-              title="Les questions fréquentes avant votre rendez-vous."
-              text="Quelques réponses pour vous aider à préparer votre première consultation au cabinet."
-            />
+            <div className="section-intro">
+              <span>FAQ</span>
+              <h2 id="faq-heading">Questions fréquentes sur votre accompagnement à Agadir</h2>
+              <p>
+                Retrouvez les réponses aux questions fréquentes concernant les consultations
+                diététiques, le suivi nutritionnel et les soins proposés au cabinet Imane Oulhint à
+                Agadir.
+              </p>
+            </div>
             <div className="faq-list">
-              {faqs.map((faq) => (
-                <details key={faq.question}>
-                  <summary>{faq.question}</summary>
-                  <p>{faq.answer}</p>
-                </details>
+              {faqs.slice(0, 4).map((faq, index) => (
+                <FaqItem
+                  faq={faq}
+                  index={index}
+                  isOpen={openFaqIndex === index}
+                  key={faq.question}
+                  onToggle={() =>
+                    setOpenFaqIndex((currentIndex) => (currentIndex === index ? null : index))
+                  }
+                />
               ))}
+            </div>
+            <div className="section-route-action">
+              <Link className="outline-route-button" to="/faq">
+                Voir toutes les questions
+                <ChevronRight aria-hidden="true" size={18} />
+              </Link>
             </div>
           </div>
         </section>
@@ -1087,132 +1539,466 @@ function HomePage() {
           </div>
         </section>
       </main>
+  )
+}
 
-      <footer className="site-footer">
-        <div className="container footer-grid">
-          <div className="footer-brand">
-            <img
-              src="/imane-logo-footer.png"
-              alt="Imane Oulhint, Diététicienne Nutritionniste"
+function InnerPageHeader({ eyebrow, title, text }) {
+  return (
+    <section className="inner-page-hero">
+      <div className="container inner-page-hero-content">
+        <span data-page-reveal>{eyebrow}</span>
+        <h1 data-page-reveal>{title}</h1>
+        <p data-page-reveal>{text}</p>
+      </div>
+    </section>
+  )
+}
+
+function ServicesPage() {
+  const pageRef = useRef(null)
+  useRoutePageReveal(pageRef)
+
+  return (
+    <main className="route-page inner-page services-page" ref={pageRef}>
+      <PageSeo
+        title="Services de nutrition et bien-être | Cabinet Imane Oulhint"
+        description="Découvrez les services de nutrition, les bilans et les soins de bien-être proposés par le cabinet Imane Oulhint à Agadir."
+      />
+      <InnerPageHeader
+        eyebrow="Services"
+        title="Des accompagnements adaptés à chaque parcours"
+        text="Nutrition, suivi corporel et soins de bien-être : découvrez les services proposés au cabinet Imane Oulhint à Agadir."
+      />
+      <section className="section-pad services-directory" aria-label="Tous les services">
+        <div className="container services-directory-grid">
+          {services.map((service, index) => (
+            <ServiceCard key={service.slug} revealIndex={index} pageReveal {...service} />
+          ))}
+        </div>
+      </section>
+    </main>
+  )
+}
+
+function ConsultationPage() {
+  const pageRef = useRef(null)
+  useRoutePageReveal(pageRef)
+
+  return (
+    <main className="route-page inner-page consultation-page" ref={pageRef}>
+      <PageSeo
+        title="Consultation diététique à Agadir | Cabinet Imane Oulhint"
+        description="Découvrez le déroulement d’une consultation diététique personnalisée au cabinet Imane Oulhint à Agadir, du bilan initial au suivi régulier."
+      />
+      <InnerPageHeader
+        eyebrow="Consultation"
+        title="Votre accompagnement, étape par étape"
+        text="Du premier bilan au suivi régulier, chaque rendez-vous s’inscrit dans une démarche claire, personnalisée et durable."
+      />
+      <section className="process-section section-pad inner-process-section" aria-label="Étapes de la consultation">
+        <div className="container process-container">
+          <div className="process-grid">
+            {process.map(
+              ({ step, icon: Icon, detailIcon: DetailIcon, title, text, detailTitle, detailText }) => (
+                <article className="process-item" data-page-reveal key={step}>
+                  <div className="process-marker">
+                    <Icon aria-hidden="true" size={28} strokeWidth={1.8} />
+                    <span>{step}</span>
+                  </div>
+                  <div className="process-content">
+                    <h2>{title}</h2>
+                    <p>{text}</p>
+                    <div className="process-detail">
+                      <DetailIcon aria-hidden="true" size={22} strokeWidth={1.8} />
+                      <span>
+                        <strong>{detailTitle}</strong>
+                        <small>{detailText}</small>
+                      </span>
+                    </div>
+                  </div>
+                </article>
+              ),
+            )}
+          </div>
+          <p className="process-signature" data-page-reveal>
+            Chaque petit pas compte
+            <Heart aria-hidden="true" size={18} strokeWidth={1.7} />
+          </p>
+          <div className="section-route-action" data-page-reveal>
+            <Link className="primary-button" to="/contact">
+              Prendre rendez-vous
+              <ChevronRight aria-hidden="true" size={18} />
+            </Link>
+          </div>
+        </div>
+      </section>
+    </main>
+  )
+}
+
+function ResultsPage() {
+  const pageRef = useRef(null)
+  useRoutePageReveal(pageRef)
+
+  return (
+    <main className="route-page inner-page results-page" ref={pageRef}>
+      <PageSeo
+        title="Résultats patients | Cabinet Imane Oulhint à Agadir"
+        description="Découvrez les retours, avis Google et contenus partagés par les patients du cabinet Imane Oulhint à Agadir."
+      />
+      <InnerPageHeader
+        eyebrow="Résultats patients"
+        title="Leur expérience au cabinet"
+        text="Des témoignages authentiques et des parcours partagés par les patients du cabinet Imane Oulhint."
+      />
+      <section className="results-section section-pad results-page-content">
+        <img
+          className="reviews-leaf-frame"
+          src="/reviews-leaf-frame.png"
+          alt=""
+          aria-hidden="true"
+          loading="lazy"
+        />
+        <div className="container reviews-shell">
+          <header className="reviews-heading">
+            <div className="reviews-title-group" data-page-reveal>
+              <span className="reviews-eyebrow">Sur Instagram</span>
+              <h2>Les moments partagés</h2>
+              <p>Retrouvez les Highlights du cabinet et ouvrez chaque contenu directement sur Instagram.</p>
+            </div>
+            <div className="instagram-highlights" role="group" aria-label="Highlights Instagram du cabinet" data-page-reveal>
+              <div className="instagram-highlights-track">
+                {[0, 1].map((copyIndex) => (
+                  <div
+                    className="instagram-highlight-set"
+                    aria-hidden={copyIndex === 1 ? true : undefined}
+                    key={`results-highlight-set-${copyIndex}`}
+                  >
+                    {instagramHighlights.map((highlight, index) => (
+                      <a
+                        className="instagram-highlight-link"
+                        href={highlight.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`Voir le Highlight Instagram « ${highlight.title} » ${index + 1}`}
+                        tabIndex={copyIndex === 1 ? -1 : undefined}
+                        key={`${copyIndex}-${highlight.url}`}
+                      >
+                        <span className="instagram-highlight-cover">
+                          <img
+                            src={highlight.image}
+                            alt={copyIndex === 0 ? `Aperçu du Highlight Instagram « ${highlight.title} »` : ''}
+                            loading="lazy"
+                            decoding="async"
+                          />
+                          <span className="instagram-highlight-external" aria-hidden="true">
+                            <ExternalLink size={11} strokeWidth={2} />
+                          </span>
+                        </span>
+                        <span className="instagram-highlight-title">{highlight.title}</span>
+                      </a>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="reviews-trust-row" aria-label="Les engagements du cabinet" data-page-reveal>
+              <span><Leaf aria-hidden="true" />Des résultats concrets</span>
+              <span><Heart aria-hidden="true" />Un accompagnement bienveillant</span>
+              <span><UsersRound aria-hidden="true" />Une approche personnalisée</span>
+              <span><Star aria-hidden="true" />Une confiance durable</span>
+            </div>
+          </header>
+          <div className="elfsight-reviews-wrap" data-page-reveal>
+            <div
+              className="elfsight-app-8d2e4218-00b5-4e1e-9e88-708da47c0c9c"
+              data-elfsight-app-lazy
             />
+          </div>
+        </div>
+      </section>
+    </main>
+  )
+}
+
+function FaqPage() {
+  const [openIndex, setOpenIndex] = useState(null)
+  const pageRef = useRef(null)
+  useRoutePageReveal(pageRef)
+
+  return (
+    <main className="route-page inner-page faq-page" ref={pageRef}>
+      <PageSeo
+        title="Questions fréquentes | Cabinet Imane Oulhint à Agadir"
+        description="Retrouvez les réponses aux questions fréquentes sur les consultations diététiques, le suivi nutritionnel et les soins proposés à Agadir."
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
+      />
+      <InnerPageHeader
+        eyebrow="FAQ"
+        title="Questions fréquentes sur votre accompagnement à Agadir"
+        text="Préparez votre rendez-vous et retrouvez les informations essentielles sur les consultations et les soins du cabinet."
+      />
+      <section className="faq-section section-pad soft-band faq-page-content">
+        <div className="container">
+          <div className="faq-list">
+            {faqs.map((faq, index) => (
+              <FaqItem
+                faq={faq}
+                index={index}
+                isOpen={openIndex === index}
+                pageReveal
+                key={faq.question}
+                onToggle={() => setOpenIndex((current) => (current === index ? null : index))}
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+    </main>
+  )
+}
+
+function ContactPage() {
+  const pageRef = useRef(null)
+
+  useEffect(() => {
+    const page = pageRef.current
+    if (!page) {
+      return undefined
+    }
+
+    const targets = Array.from(page.querySelectorAll('[data-contact-reveal]'))
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    targets.forEach((target, index) => {
+      target.style.setProperty('--contact-reveal-delay', `${(index % 4) * 70}ms`)
+    })
+
+    if (reduceMotion || !('IntersectionObserver' in window)) {
+      targets.forEach((target) => target.classList.add('is-contact-visible'))
+      return undefined
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) {
+            return
+          }
+
+          entry.target.classList.add('is-contact-visible')
+          observer.unobserve(entry.target)
+        })
+      },
+      { rootMargin: '0px 0px -8% 0px', threshold: 0.18 },
+    )
+
+    targets.forEach((target) => observer.observe(target))
+    return () => observer.disconnect()
+  }, [])
+
+  const phoneDisplay = '+212 528 23 49 49'
+  const phoneHref = 'tel:+212528234949'
+  const whatsappHref = 'https://wa.me/212528234949'
+  const address = 'Agadir Bay, Bloc D, 1er étage, N°107, Technopole II, Agadir'
+  const mapsHref =
+    'https://www.google.com/maps/search/?api=1&query=Cabinet+Imane+Oulhint+Agadir+Bay'
+
+  return (
+    <main className="route-page contact-page" ref={pageRef}>
+      <PageSeo
+        title="Contact | Cabinet Imane Oulhint - Agadir"
+        description="Contactez le Cabinet Imane Oulhint à Agadir pour toute demande d’information ou prise de rendez-vous."
+      />
+
+      <section className="contact-hero" aria-labelledby="contact-page-title">
+        <div className="container contact-hero-grid">
+          <div className="contact-hero-copy" data-contact-reveal>
+            <nav className="contact-breadcrumb" aria-label="Fil d’Ariane">
+              <Link to="/">Accueil</Link>
+              <ChevronRight aria-hidden="true" size={16} />
+              <span aria-current="page">Contact</span>
+            </nav>
+            <span className="contact-eyebrow">Contact</span>
+            <h1 id="contact-page-title">Contactez-moi</h1>
             <p>
-              Que votre objectif soit de retrouver votre équilibre alimentaire, d’améliorer votre
-              santé ou d’être accompagnée dans une perte de poids durable, le cabinet vous guide
-              avec une approche claire, médicale et personnalisée.
+              Une question ? Un besoin d’information ? Je suis à votre écoute pour vous accompagner
+              et répondre à vos questions.
             </p>
-            <form className="footer-newsletter" onSubmit={(event) => event.preventDefault()}>
-              <label className="sr-only" htmlFor="footer-newsletter-email">
-                Adresse email pour la newsletter
+          </div>
+
+          <div className="contact-hero-media" data-contact-reveal>
+            <img
+              src="/images/contact-office.png"
+              alt="Bureau d’accueil lumineux du Cabinet Imane Oulhint"
+              decoding="async"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className="contact-details-section" aria-label="Coordonnées du cabinet">
+        <div className="container contact-details-grid">
+          <article className="contact-info-card" data-contact-reveal>
+            <span className="contact-info-icon"><Phone aria-hidden="true" size={24} /></span>
+            <div>
+              <h2>Téléphone / WhatsApp</h2>
+              <a href={phoneHref}>{phoneDisplay}</a>
+              <small>Pour vos questions et prises de rendez-vous</small>
+            </div>
+          </article>
+
+          <article className="contact-info-card" data-contact-reveal>
+            <span className="contact-info-icon"><Mail aria-hidden="true" size={24} /></span>
+            <div>
+              <h2>Email</h2>
+              <a href="#contact-form">Écrire via le formulaire</a>
+              <small>Aucune adresse email publique n’est renseignée</small>
+            </div>
+          </article>
+
+          <article className="contact-info-card" data-contact-reveal>
+            <span className="contact-info-icon"><MapPin aria-hidden="true" size={24} /></span>
+            <div>
+              <h2>Adresse</h2>
+              <a href={mapsHref} target="_blank" rel="noopener noreferrer">{address}</a>
+              <small>Consultations sur rendez-vous</small>
+            </div>
+          </article>
+
+          <article className="contact-info-card" data-contact-reveal>
+            <span className="contact-info-icon"><Clock aria-hidden="true" size={24} /></span>
+            <div>
+              <h2>Horaires</h2>
+              <p>Lundi - Vendredi</p>
+              <small>9h - 12h30 / 14h30 - 18h</small>
+              <p>Samedi</p>
+              <small>9h - 12h30</small>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section className="contact-workspace" aria-label="Formulaire et localisation">
+        <div className="container contact-workspace-grid">
+          <section className="contact-form-panel" id="contact-form" data-contact-reveal>
+            <header className="contact-section-heading">
+              <span>Votre demande</span>
+              <h2>Envoyez-moi un message</h2>
+              <p>Remplissez le formulaire ci-dessous et je vous répondrai dans les plus brefs délais.</p>
+            </header>
+
+            <form className="contact-form" onSubmit={(event) => event.preventDefault()}>
+              <label>
+                <span>Nom <b aria-hidden="true">*</b></span>
+                <span className="contact-field">
+                  <UserRound aria-hidden="true" size={20} />
+                  <input type="text" name="name" autoComplete="name" placeholder="Votre nom" required />
+                </span>
               </label>
-              <input id="footer-newsletter-email" type="email" placeholder="Newsletter..." />
-              <button type="submit" aria-label="S’inscrire à la newsletter">
-                <Send aria-hidden="true" size={24} />
+              <label>
+                <span>Email <b aria-hidden="true">*</b></span>
+                <span className="contact-field">
+                  <Mail aria-hidden="true" size={20} />
+                  <input type="email" name="email" autoComplete="email" placeholder="votre@email.com" required />
+                </span>
+              </label>
+              <label>
+                <span>Téléphone <b aria-hidden="true">*</b></span>
+                <span className="contact-field">
+                  <Phone aria-hidden="true" size={20} />
+                  <input type="tel" name="phone" autoComplete="tel" placeholder="Votre numéro" required />
+                </span>
+              </label>
+              <label>
+                <span>Sujet <b aria-hidden="true">*</b></span>
+                <span className="contact-field">
+                  <FileText aria-hidden="true" size={20} />
+                  <input type="text" name="subject" placeholder="Objet de votre demande" required />
+                </span>
+              </label>
+              <label className="contact-message-label">
+                <span>Message <b aria-hidden="true">*</b></span>
+                <span className="contact-field contact-message-field">
+                  <MessageSquare aria-hidden="true" size={20} />
+                  <textarea name="message" placeholder="Écrivez votre message ici..." rows="5" required />
+                </span>
+              </label>
+              <button type="submit" className="contact-submit-button">
+                <Send aria-hidden="true" size={19} />
+                Envoyer le message
               </button>
             </form>
-          </div>
+          </section>
 
-          <div className="footer-column">
-            <h2>Liens Utiles</h2>
-            <nav className="footer-links" aria-label="Liens utiles">
-              <a href="#cabinet">
-                <ChevronRight aria-hidden="true" size={18} />
-                À propos
-              </a>
-              <a href="#services">
-                <ChevronRight aria-hidden="true" size={18} />
-                Services
-              </a>
-              <a href="#consultation">
-                <ChevronRight aria-hidden="true" size={18} />
-                Consultation
-              </a>
-              <a href="#rendez-vous">
-                <ChevronRight aria-hidden="true" size={18} />
-                Contact
-              </a>
-            </nav>
-          </div>
-
-          <div className="footer-column">
-            <h2>Services</h2>
-            <div className="footer-services">
-              <span>
-                <img src="/service-icon-09.png" alt="" aria-hidden="true" />
-                Perte de poids Casablanca
-              </span>
-              <span>
-                <img src="/service-icon-06.png" alt="" aria-hidden="true" />
-                Troubles des conduites alimentaires
-              </span>
-              <span>
-                <img src="/service-icon-07.png" alt="" aria-hidden="true" />
-                Nutrition des maladies chroniques
-              </span>
-              <span>
-                <img src="/service-icon-04.png" alt="" aria-hidden="true" />
-                Analyse du corps Casablanca
-              </span>
+          <section className="contact-location-panel" data-contact-reveal>
+            <header className="contact-section-heading">
+              <span>Localisation</span>
+              <h2>Notre localisation</h2>
+              <p>Retrouvez facilement le cabinet à Agadir.</p>
+            </header>
+            <div className="contact-map-frame">
+              <iframe
+                title="Localisation du Cabinet Imane Oulhint à Agadir"
+                src="https://www.google.com/maps?q=Cabinet%20Imane%20Oulhint%20Agadir%20Bay&output=embed"
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                allowFullScreen
+              />
             </div>
-          </div>
-
-          <div className="footer-column footer-contact-column">
-            <h2>Contact Infos</h2>
-            <div className="footer-contact-list">
-              <span>
-                <Mail aria-hidden="true" size={28} />
-                contact@cabinet-imane.ma
-              </span>
-              <span>
-                <Phone aria-hidden="true" size={28} />
-                +212 600 000 000
-              </span>
-              <span>
-                <MapPin aria-hidden="true" size={28} />
-                Casablanca, Maroc
-              </span>
-            </div>
-
-            <h2 className="footer-hours-title">Heures d'ouverture</h2>
-            <div className="footer-hours">
+            <div className="contact-location-card">
+              <span className="contact-info-icon"><MapPin aria-hidden="true" size={23} /></span>
               <div>
-                <strong>Vendredi</strong>
-                <span>9h - 12h30 / 14h30 - 18h</span>
-              </div>
-              <div>
-                <strong>Samedi</strong>
-                <span>9h - 12h30</span>
+                <strong>Cabinet Imane Oulhint</strong>
+                <p>{address}</p>
+                <a href={mapsHref} target="_blank" rel="noopener noreferrer">
+                  Voir l’itinéraire
+                  <ExternalLink aria-hidden="true" size={15} />
+                </a>
               </div>
             </div>
-          </div>
+          </section>
         </div>
+      </section>
 
-        <div className="container footer-bottom">
-          <p>© 2026 Cabinet Imane Oulhint. Tous droits réservés.</p>
+      <section className="contact-whatsapp-section" data-contact-reveal>
+        <div className="container contact-whatsapp-panel">
           <div>
-            <span>
-              <img src="/service-icon-09.png" alt="" aria-hidden="true" />
-              Perte de poids
-            </span>
-            <span>
-              <img src="/service-icon-07.png" alt="" aria-hidden="true" />
-              Nutrition médicale
-            </span>
-            <span>
-              <img src="/service-icon-04.png" alt="" aria-hidden="true" />
-              Analyse du corps
-            </span>
+            <span>Contact direct</span>
+            <h2>Une question rapide ?</h2>
+            <p>Vous pouvez aussi nous contacter directement via WhatsApp.</p>
           </div>
+          <a href={whatsappHref} target="_blank" rel="noopener noreferrer">
+            <img src="/whatsapp-icon.png" alt="" aria-hidden="true" />
+            Discuter sur WhatsApp
+          </a>
         </div>
-      </footer>
+      </section>
 
-      <a
-        className="floating-contact"
-        href="https://wa.me/212600000000"
-        aria-label="Contacter le cabinet sur WhatsApp"
-      >
-        <img src="/whatsapp-icon.png" alt="" aria-hidden="true" />
-      </a>
-    </>
+      <section className="contact-trust-section" aria-label="Nos engagements">
+        <div className="container contact-trust-grid">
+          <article data-contact-reveal>
+            <CalendarCheck aria-hidden="true" size={30} />
+            <div><h2>Rendez-vous personnalisé</h2><p>Un temps d’échange adapté à vos besoins.</p></div>
+          </article>
+          <article data-contact-reveal>
+            <Heart aria-hidden="true" size={30} />
+            <div><h2>Écoute et conseils</h2><p>Une approche attentive et professionnelle.</p></div>
+          </article>
+          <article data-contact-reveal>
+            <ShieldCheck aria-hidden="true" size={30} />
+            <div><h2>Confidentialité</h2><p>Vos informations sont traitées avec discrétion.</p></div>
+          </article>
+          <article data-contact-reveal>
+            <ClipboardList aria-hidden="true" size={30} />
+            <div><h2>Suivi sur mesure</h2><p>Un accompagnement ajusté à votre évolution.</p></div>
+          </article>
+        </div>
+      </section>
+    </main>
   )
 }
 
@@ -1221,8 +2007,16 @@ function App() {
     <BrowserRouter>
       <ScrollToHash />
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="*" element={<HomePage />} />
+        <Route element={<SiteLayout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/services" element={<ServicesPage />} />
+          <Route path="/services/:serviceSlug" element={<ServiceDetailPage />} />
+          <Route path="/consultation" element={<ConsultationPage />} />
+          <Route path="/resultats-patients" element={<ResultsPage />} />
+          <Route path="/faq" element={<FaqPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   )
