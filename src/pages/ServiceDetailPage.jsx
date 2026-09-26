@@ -17,7 +17,9 @@ import {
   UsersRound,
 } from 'lucide-react'
 import { Link, Navigate, useParams } from 'react-router-dom'
-import services from '../data/services.js'
+import services, { serviceAliases } from '../data/services.js'
+import { useLanguage } from '../i18n/language.js'
+import { localizeService } from '../i18n/services.ar.js'
 
 function Reveal({ as: Tag = 'div', delay = 0, className = '', children, ...props }) {
   return (
@@ -56,15 +58,29 @@ function BenefitIcon({ name }) {
 export default function ServiceDetailPage() {
   const { serviceSlug } = useParams()
   const pageRef = useRef(null)
-  const service = services.find((item) => item.slug === serviceSlug)
+  const { language, translate } = useLanguage()
+  const sourceService = services.find((item) => item.slug === serviceSlug)
+  const service = useMemo(
+    () => localizeService(sourceService, language),
+    [language, sourceService],
+  )
+  const aliasTarget = serviceAliases[serviceSlug]
   const relatedServices = useMemo(() => {
     if (!service) {
       return []
     }
 
     return service.relatedSlugs
-      .map((slug) => services.find((item) => item.slug === slug))
+      .map((slug) => localizeService(services.find((item) => item.slug === slug), language))
       .filter(Boolean)
+  }, [language, service])
+
+  useEffect(() => {
+    if (!service) {
+      return
+    }
+
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
   }, [service])
 
   useEffect(() => {
@@ -76,14 +92,16 @@ export default function ServiceDetailPage() {
     const description = document.querySelector('meta[name="description"]')
     const previousDescription = description?.getAttribute('content') ?? ''
 
-    document.title = `${service.name} à Agadir | Cabinet Imane Oulhint`
+    document.title = language === 'ar'
+      ? `${service.name} في أكادير | عيادة إيمان أولحينت`
+      : `${service.name} à Agadir | Cabinet Imane Oulhint`
     description?.setAttribute('content', service.metaDescription)
 
     return () => {
       document.title = previousTitle
       description?.setAttribute('content', previousDescription)
     }
-  }, [service])
+  }, [language, service])
 
   useEffect(() => {
     const page = pageRef.current
@@ -117,6 +135,10 @@ export default function ServiceDetailPage() {
     return () => observer.disconnect()
   }, [service])
 
+  if (aliasTarget) {
+    return <Navigate to={`/services/${aliasTarget}`} replace />
+  }
+
   if (!service) {
     return <Navigate to="/services" replace />
   }
@@ -124,38 +146,43 @@ export default function ServiceDetailPage() {
   return (
       <main className="service-detail-page route-page" ref={pageRef}>
         <section className="service-detail-hero" aria-labelledby="service-detail-title">
-          <div className="container service-detail-hero-grid">
-            <Reveal className="service-detail-hero-copy">
-              <nav className="service-breadcrumb" aria-label="Fil d’Ariane">
-                <Link to="/">Accueil</Link>
+          <div
+            className="container service-detail-hero-grid service-detail-hero-enter"
+            key={service.slug}
+          >
+            <div className="service-detail-hero-copy">
+              <nav className="service-breadcrumb service-hero-enter-meta" aria-label={translate('Fil d’Ariane')}>
+                <Link to="/">{translate('Accueil')}</Link>
                 <ChevronRight aria-hidden="true" size={15} />
-                <Link to="/services">Services</Link>
+                <Link to="/services">{translate('Services')}</Link>
                 <ChevronRight aria-hidden="true" size={15} />
                 <span aria-current="page">{service.name}</span>
               </nav>
-              <span className="service-detail-eyebrow">Service</span>
-              <h1 id="service-detail-title">{service.name}</h1>
-              <p>{service.heroIntro}</p>
-              <Link className="primary-button service-detail-primary" to="/contact">
-                <CalendarCheck aria-hidden="true" size={19} />
-                Prendre rendez-vous
-              </Link>
-            </Reveal>
+              <span className="service-detail-eyebrow service-hero-enter-meta">{translate('Service')}</span>
+              <h1 className="service-hero-enter-title" id="service-detail-title">{service.name}</h1>
+              <p className="service-hero-enter-description">{service.heroIntro}</p>
+              <span className="service-hero-enter-cta">
+                <Link className="primary-button service-detail-primary" to="/contact">
+                  <CalendarCheck aria-hidden="true" size={19} />
+                  {translate('Prendre rendez-vous')}
+                </Link>
+              </span>
+            </div>
 
-            <Reveal as="figure" className="service-detail-hero-media" delay={100}>
+            <figure className="service-detail-hero-media service-hero-enter-media">
               <img
                 className={service.imageFit === 'contain' ? 'is-contain' : undefined}
                 src={service.image}
                 alt={service.imageAlt}
               />
-            </Reveal>
+            </figure>
           </div>
         </section>
 
         <section className="service-detail-section service-detail-intro-section">
           <div className="container service-detail-narrow">
             <Reveal>
-              <span className="service-detail-kicker">Le service</span>
+              <span className="service-detail-kicker">{translate('Le service')}</span>
               <h2>{service.introTitle}</h2>
               <p className="service-detail-lead">{service.introduction}</p>
             </Reveal>
@@ -165,8 +192,10 @@ export default function ServiceDetailPage() {
         <section className="service-detail-section service-detail-soft">
           <div className="container service-guidance-grid">
             <Reveal className="service-guidance-card service-audience-card">
-              <span className="service-detail-kicker">À qui s’adresse ce service ?</span>
-              <h2>Pour qui ?</h2>
+              <span className="service-detail-kicker">
+                {translate(service.audienceTitle ? 'Informations du bilan' : 'À qui s’adresse ce service ?')}
+              </span>
+              <h2>{service.audienceTitle ?? translate('Pour qui ?')}</h2>
               <div className="service-audience-list">
                 {service.audience.map((item) => (
                   <div className="service-audience-row" key={item}>
@@ -177,8 +206,8 @@ export default function ServiceDetailPage() {
               </div>
             </Reveal>
             <Reveal className="service-guidance-card service-process-card" delay={90}>
-              <span className="service-detail-kicker">Votre parcours</span>
-              <h2>Comment se déroule l’accompagnement ?</h2>
+              <span className="service-detail-kicker">{translate('Votre parcours')}</span>
+              <h2>{translate('Comment se déroule l’accompagnement ?')}</h2>
               <div className="service-process-list">
                 {service.steps.map((step, index) => (
                   <article className="service-process-step" key={step.title}>
@@ -197,8 +226,8 @@ export default function ServiceDetailPage() {
         <section className="service-detail-section service-key-points-section">
           <div className="container">
             <Reveal className="service-detail-heading service-key-points-heading">
-              <span className="service-detail-kicker">L’essentiel</span>
-              <h2>Les points clés</h2>
+              <span className="service-detail-kicker">{translate('L’essentiel')}</span>
+              <h2>{translate('Les points clés')}</h2>
             </Reveal>
             <div className="service-key-points-grid">
               {service.benefits.map((benefit, index) => (
@@ -220,13 +249,13 @@ export default function ServiceDetailPage() {
         <section className="service-detail-appointment">
           <Reveal className="container service-detail-appointment-inner">
             <div>
-              <span className="service-detail-kicker">Votre prochain pas</span>
-              <h2>Besoin d’un accompagnement personnalisé ?</h2>
-              <p>Contactez le cabinet Imane Oulhint pour demander votre rendez-vous à Agadir.</p>
+              <span className="service-detail-kicker">{translate('Votre prochain pas')}</span>
+              <h2>{translate('Besoin d’un accompagnement personnalisé ?')}</h2>
+              <p>{translate('Contactez le cabinet Imane Oulhint pour demander votre rendez-vous à Agadir.')}</p>
             </div>
             <Link className="service-detail-cta-button" to="/contact">
               <CalendarCheck aria-hidden="true" size={20} />
-              Prendre rendez-vous
+              {translate('Prendre rendez-vous')}
             </Link>
           </Reveal>
         </section>
@@ -234,8 +263,8 @@ export default function ServiceDetailPage() {
         <section className="service-detail-section service-related-section">
           <div className="container">
             <Reveal className="service-detail-heading">
-              <span className="service-detail-kicker">Nos services</span>
-              <h2>Découvrir aussi</h2>
+              <span className="service-detail-kicker">{translate('Nos services')}</span>
+              <h2>{translate('Découvrir aussi')}</h2>
             </Reveal>
             <div className="service-related-grid">
               {relatedServices.map((related, index) => (
@@ -253,7 +282,7 @@ export default function ServiceDetailPage() {
                       <strong>{related.name}</strong>
                       <small>{related.cardText}</small>
                       <span>
-                        Lire plus
+                        {translate('Lire plus')}
                         <ChevronRight aria-hidden="true" size={17} />
                       </span>
                     </span>

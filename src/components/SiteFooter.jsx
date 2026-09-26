@@ -1,5 +1,7 @@
-import { ChevronRight, MapPin, Phone, Send } from 'lucide-react'
+import { ChevronRight, MapPin, MessageCircle, Phone } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { cabinet, defaultWhatsAppMessage, getWhatsAppUrl, openingHours } from '../data/site.js'
+import { useLanguage } from '../i18n/language.js'
 
 export function FacebookIcon() {
   return (
@@ -22,79 +24,97 @@ export function InstagramIcon() {
   )
 }
 
+export function TikTokIcon() {
+  return (
+    <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M14.3 2h3.1c.2 1.7 1.2 3.2 2.7 4v3.2a8.3 8.3 0 0 1-2.7-.7v6.4A7.1 7.1 0 1 1 11.3 8v3.3a3.8 3.8 0 1 0 3 3.7V2Z"
+      />
+    </svg>
+  )
+}
+
 export default function SiteFooter() {
+  const { localize, translate } = useLanguage()
+  const localizedHours = localize(openingHours)
+  const whatsappUrl = getWhatsAppUrl(translate(defaultWhatsAppMessage))
+
   return (
     <footer className="site-footer">
       <div className="container footer-grid">
         <div className="footer-brand">
-          <img src="/imane-logo-footer.png" alt="Imane Oulhint, Diététicienne Nutritionniste" />
+          <img
+            src="/imane-logo-footer.png"
+            alt={translate('Imane Oulhint, Diététicienne Nutritionniste')}
+          />
           <p>
-            Que votre objectif soit de retrouver votre équilibre alimentaire, d’améliorer votre
-            santé ou d’être accompagnée dans une perte de poids durable, le cabinet vous guide avec
-            une approche claire, médicale et personnalisée.
+            {translate(
+              'Imane Oulhint, Diététicienne Nutritionniste, propose à Agadir des solutions nutritionnelles personnalisées selon les besoins de chaque personne.',
+            )}
           </p>
-          <form className="footer-newsletter" onSubmit={(event) => event.preventDefault()}>
-            <label className="sr-only" htmlFor="footer-newsletter-email">
-              Adresse email pour la newsletter
-            </label>
-            <input id="footer-newsletter-email" type="email" placeholder="Newsletter..." />
-            <button type="submit" aria-label="S’inscrire à la newsletter">
-              <Send aria-hidden="true" size={24} />
-            </button>
-          </form>
+          <a
+            className="footer-whatsapp-link"
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <MessageCircle aria-hidden="true" size={20} />
+            {translate('Prendre rendez-vous sur WhatsApp')}
+          </a>
         </div>
 
         <div className="footer-column">
-          <h2>Liens Utiles</h2>
-          <nav className="footer-links" aria-label="Liens utiles">
+          <h2>{translate('Liens Utiles')}</h2>
+          <nav className="footer-links" aria-label={translate('Liens utiles')}>
             <Link to="/">
               <ChevronRight aria-hidden="true" size={18} />
-              À propos
+              {translate('À propos')}
             </Link>
             <Link to="/services">
               <ChevronRight aria-hidden="true" size={18} />
-              Services
+              {translate('Services')}
             </Link>
             <Link to="/consultation">
               <ChevronRight aria-hidden="true" size={18} />
-              Consultation
+              {translate('Consultation')}
             </Link>
             <Link to="/contact">
               <ChevronRight aria-hidden="true" size={18} />
-              Contact
+              {translate('Contact')}
             </Link>
           </nav>
         </div>
 
         <div className="footer-column">
-          <h2>Services</h2>
+          <h2>{translate('Services')}</h2>
           <div className="footer-services">
             <Link to="/services/perte-de-poids">
               <img src="/service-icon-09.png" alt="" aria-hidden="true" />
-              Perte de poids
-            </Link>
-            <Link to="/services/troubles-des-conduites-alimentaires">
-              <img src="/service-icon-06.png" alt="" aria-hidden="true" />
-              Troubles des conduites alimentaires
+              {translate('Gestion du poids')}
             </Link>
             <Link to="/services/nutrition-maladies-chroniques">
-              <img src="/service-icon-07.png" alt="" aria-hidden="true" />
-              Nutrition des maladies chroniques
+              <img src="/service-icon-06.png" alt="" aria-hidden="true" />
+              {translate('Nutrition clinique')}
             </Link>
-            <Link to="/services/analyse-du-corps">
+            <Link to="/services/bilan-corporel-tanita">
+              <img src="/service-icon-07.png" alt="" aria-hidden="true" />
+              {translate('Bilan corporel – TANITA')}
+            </Link>
+            <Link to="/services/bilan-oligoscan">
               <img src="/service-icon-04.png" alt="" aria-hidden="true" />
-              Analyse du corps
+              {translate('Bilan Oligoscan')}
             </Link>
           </div>
         </div>
 
         <div className="footer-column footer-contact-column">
-          <h2>Contact Infos</h2>
+          <h2>{translate('Contact Infos')}</h2>
           <div className="footer-contact-list">
             <span>
               <InstagramIcon />
               <a
-                href="https://www.instagram.com/cabinet_oulhint/?hl=ar"
+                href={cabinet.instagramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -103,56 +123,70 @@ export default function SiteFooter() {
             </span>
             <span>
               <Phone aria-hidden="true" size={28} />
-              <a href="tel:+212528234949">+212 528 23 49 49</a>
+              <a href={cabinet.phoneHref}>{cabinet.phoneDisplay}</a>
+            </span>
+            <span>
+              <MessageCircle aria-hidden="true" size={28} />
+              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+                WhatsApp {cabinet.whatsappDisplay}
+              </a>
             </span>
             <span>
               <MapPin aria-hidden="true" size={28} />
               <a
-                href="https://www.google.com/maps/place/Cabinet+de+di%C3%A9t%C3%A9tique+nutrition+et+amincissement,+IMANE+OULHINT/@30.4023229,-9.5841706,17z/data=!4m6!3m5!1s0xdb3b7de5424372b:0xafdffa32df4af541!8m2!3d30.4023229!4d-9.5863593!16s%2Fg%2F11jyd_nvlj"
+                href={cabinet.mapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Agadir Bay, Bloc D, 1er étage, N°107, Technopole II
+                {translate(cabinet.address)}
               </a>
             </span>
           </div>
 
-          <h2 className="footer-hours-title">Heures d'ouverture</h2>
+          <h2 className="footer-hours-title">{translate("Heures d'ouverture")}</h2>
           <div className="footer-hours">
-            <div>
-              <strong>Lundi - Vendredi</strong>
-              <span>9h - 12h30 / 14h30 - 18h</span>
-            </div>
-            <div>
-              <strong>Samedi</strong>
-              <span>9h - 12h30</span>
-            </div>
+            {localizedHours.map((item) => (
+              <div key={item.days}>
+                <strong>{item.days}</strong>
+                <span>{item.hours}</span>
+              </div>
+            ))}
           </div>
         </div>
       </div>
 
       <div className="container footer-bottom">
-        <p>© 2026 Cabinet Imane Oulhint. Tous droits réservés.</p>
-        <nav className="footer-social-links" aria-label="Réseaux sociaux">
+        <p>{translate('© 2026 Cabinet Imane Oulhint. Tous droits réservés.')}</p>
+        <nav className="footer-social-links" aria-label={translate('Réseaux sociaux')}>
           <a
             className="footer-social-link"
-            href="https://www.facebook.com/p/cabinet_oulhint-100085624656022/"
+            href={cabinet.facebookUrl}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Suivre le cabinet Imane Oulhint sur Facebook"
+            aria-label={translate('Suivre le cabinet Imane Oulhint sur Facebook')}
             title="Facebook"
           >
             <FacebookIcon />
           </a>
           <a
             className="footer-social-link"
-            href="https://www.instagram.com/cabinet_oulhint/?hl=ar"
+            href={cabinet.instagramUrl}
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Suivre le cabinet Imane Oulhint sur Instagram"
+            aria-label={translate('Suivre le cabinet Imane Oulhint sur Instagram')}
             title="Instagram"
           >
             <InstagramIcon />
+          </a>
+          <a
+            className="footer-social-link"
+            href={cabinet.tiktokUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={translate('Suivre le cabinet Imane Oulhint sur TikTok')}
+            title="TikTok"
+          >
+            <TikTokIcon />
           </a>
         </nav>
       </div>
@@ -161,11 +195,15 @@ export default function SiteFooter() {
 }
 
 export function FloatingContact() {
+  const { translate } = useLanguage()
+
   return (
     <a
       className="floating-contact"
-      href="https://wa.me/212528234949"
-      aria-label="Contacter le cabinet sur WhatsApp"
+      href={getWhatsAppUrl(translate(defaultWhatsAppMessage))}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={translate('Contacter le cabinet sur WhatsApp')}
     >
       <img src="/whatsapp-icon.png" alt="" aria-hidden="true" />
     </a>

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { BrowserRouter, Link, Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import {
   Apple,
@@ -10,24 +10,37 @@ import {
   Clock,
   ExternalLink,
   FileText,
+  Hand,
   Heart,
+  HeartPulse,
   Leaf,
   Mail,
   MapPin,
   MessageSquare,
   Phone,
   Send,
+  Scale,
+  ScanLine,
   ShieldCheck,
   Star,
   TrendingUp,
+  Utensils,
   UserRound,
   UsersRound,
+  Venus,
 } from 'lucide-react'
 import Navbar from './components/Navbar.jsx'
 import SiteFooter, { FloatingContact } from './components/SiteFooter.jsx'
-import services from './data/services.js'
+import services, { serviceCardSlugs } from './data/services.js'
+import { cabinet, defaultWhatsAppMessage, getWhatsAppUrl, openingHours } from './data/site.js'
+import { useLanguage } from './i18n/language.js'
+import { localizeServices } from './i18n/services.ar.js'
 import ServiceDetailPage from './pages/ServiceDetailPage.jsx'
 import './App.css'
+
+const cardServices = serviceCardSlugs
+  .map((slug) => services.find((service) => service.slug === slug))
+  .filter(Boolean)
 
 const instagramHighlights = [
   {
@@ -113,12 +126,12 @@ const instagramHighlights = [
 ]
 
 const treatments = [
-  'Bilan nutritionnel complet',
-  'Impédancemétrie et suivi corporel',
-  'Plans alimentaires personnalisés',
-  'Coaching comportemental',
-  'Suivi perte de poids',
-  'Accompagnement sport et santé',
+  'Obésité, amincissement et manque d’appétit',
+  'Diabète, cholestérol et goutte',
+  'Grossesse, allaitement, troubles hormonaux et SOPK',
+  'Maladies digestives, côlon irritable et Helicobacter pylori',
+  'Dénutrition, anémie et anorexie mentale',
+  'Bilans TANITA et Oligoscan',
 ]
 
 const whyChooseReasons = [
@@ -160,8 +173,8 @@ const whyChooseReasons = [
   {
     iconImage: '/service-icon-04.png',
     iconAlt: 'Icône meilleure santé',
-    title: 'Meilleure santé',
-    text: 'Une approche calme pour renforcer votre confort et votre confiance.',
+    title: 'Repères clairs',
+    text: 'Des repères clairs pour mieux comprendre vos besoins nutritionnels.',
     origin: 'from-right-bottom',
   },
 ]
@@ -173,8 +186,8 @@ const process = [
     detailIcon: Clock,
     title: 'Bilan initial',
     text: 'Analyse de vos objectifs, habitudes, antécédents, rythme quotidien et mesures de référence.',
-    detailTitle: 'Environ 1h',
-    detailText: 'Pour mieux vous connaître',
+    detailTitle: 'Premier échange',
+    detailText: 'Pour mieux comprendre vos besoins',
   },
   {
     step: '02',
@@ -190,9 +203,9 @@ const process = [
     icon: TrendingUp,
     detailIcon: Heart,
     title: 'Suivi régulier',
-    text: 'Ajustements, motivation et contrôle des résultats pour avancer avec méthode et sérénité.',
+    text: 'Ajustements et échanges réguliers pour faire évoluer les recommandations avec méthode.',
     detailTitle: 'Un accompagnement continu',
-    detailText: 'Pour des résultats durables',
+    detailText: 'Selon votre évolution',
   },
 ]
 
@@ -255,21 +268,23 @@ const faqs = [
   {
     question: 'Où se trouve le cabinet Imane Oulhint à Agadir ?',
     answer:
-      'Le cabinet est situé à Agadir. Pour connaître son adresse exacte et préparer votre itinéraire, consultez les informations Google Maps du cabinet ou contactez-nous directement.',
+      'Le cabinet est situé à Agadir Bay, Bloc D, 1er étage, N° 107, Technopole II. Le lien Google Maps du cabinet permet de préparer directement votre itinéraire.',
   },
 ]
 
-const faqStructuredData = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: faqs.map(({ question, answer }) => ({
+function getFaqStructuredData(items) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: items.map(({ question, answer }) => ({
     '@type': 'Question',
     name: question,
     acceptedAnswer: {
       '@type': 'Answer',
       text: answer,
     },
-  })),
+    })),
+  }
 }
 
 const scrollRevealGroups = [
@@ -295,24 +310,10 @@ const scrollRevealGroups = [
 
 const heroVideos = ['/hero-nutrition-1.mp4', '/hero-nutrition-2.mp4', '/hero-nutrition-3.mp4']
 
-const initialStats = {
-  patients: 0,
-  steps: 0,
-  plans: 0,
-}
-
-const statTargets = {
+const cabinetStatTargets = {
   patients: 1200,
   steps: 3,
   plans: 100,
-}
-
-function shouldSkipCountAnimation() {
-  return (
-    typeof window !== 'undefined' &&
-    (!('IntersectionObserver' in window) ||
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches)
-  )
 }
 
 function shouldRevealImmediately() {
@@ -403,10 +404,12 @@ function ScrollToHash() {
 }
 
 function PageSeo({ title, description }) {
+  const { translate } = useLanguage()
+
   useEffect(() => {
-    document.title = title
-    document.querySelector('meta[name="description"]')?.setAttribute('content', description)
-  }, [description, title])
+    document.title = translate(title)
+    document.querySelector('meta[name="description"]')?.setAttribute('content', translate(description))
+  }, [description, title, translate])
 
   return null
 }
@@ -427,44 +430,102 @@ function SiteLayout() {
 }
 
 function SectionIntro({ eyebrow, title, text }) {
+  const { translate } = useLanguage()
+
   return (
     <div className="section-intro">
-      <span>{eyebrow}</span>
-      <h2>{title}</h2>
-      <p>{text}</p>
+      <span>{translate(eyebrow)}</span>
+      <h2>{translate(title)}</h2>
+      <p>{translate(text)}</p>
     </div>
   )
 }
 
 function ServicesIntro() {
+  const { translate } = useLanguage()
   const title =
     'Des accompagnements adaptés à votre santé, votre objectif et votre quotidien.'
 
   return (
     <div className="section-intro services-intro">
-      <span className="services-eyebrow">Services</span>
-      <h2 aria-label={title}>
+      <span className="services-eyebrow">{translate('Services')}</span>
+      <h2 aria-label={translate(title)}>
         <span className="services-title-line" aria-hidden="true">
-          <span>Des accompagnements adaptés</span>
+          <span>{translate('Des accompagnements adaptés')}</span>
         </span>
         <span className="services-title-line" aria-hidden="true">
-          <span>à votre santé, votre objectif</span>
+          <span>{translate('à votre santé, votre objectif')}</span>
         </span>
         <span className="services-title-line" aria-hidden="true">
-          <span>et votre quotidien.</span>
+          <span>{translate('et votre quotidien.')}</span>
         </span>
       </h2>
       <p>
-        Le cabinet propose un suivi complet pour améliorer votre alimentation, votre silhouette
-        et votre confort de vie.
+        {translate(
+          'Le cabinet développe des solutions nutritionnelles sur mesure et propose des bilans adaptés aux besoins de chaque personne.',
+        )}
       </p>
     </div>
   )
 }
 
+function StomachIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M14.8 2.8v5.1c0 1.8 1 3.3 2.7 4 2.2.9 3.2 3.4 2.3 5.6-1.2 3-4.2 4.8-7.7 4.4-4.5-.5-7.6-3.7-7.6-8.1 0-2.5.7-4.8 2-6.8.6-.9 2-.5 2 .6v3.2c0 1.8 1.1 3.2 2.7 3.7 1.8.6 3.9-.8 3.9-2.8V2.8"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
+function ServiceCardIcon({ name }) {
+  if (name === 'clipboard-apple') {
+    return (
+      <span className="service-icon-combo service-icon-clipboard">
+        <ClipboardList />
+        <Apple />
+      </span>
+    )
+  }
+
+  if (name === 'utensils-heart') {
+    return (
+      <span className="service-icon-combo service-icon-utensils">
+        <Utensils />
+        <Heart />
+      </span>
+    )
+  }
+
+  if (name === 'hand-scan') {
+    return (
+      <span className="service-icon-combo service-icon-hand-scan">
+        <Hand />
+        <ScanLine />
+      </span>
+    )
+  }
+
+  const Icon = {
+    'heart-pulse': HeartPulse,
+    scale: Scale,
+    venus: Venus,
+  }[name]
+
+  if (name === 'stomach') {
+    return <StomachIcon />
+  }
+
+  return Icon ? <Icon aria-hidden="true" /> : <ClipboardList aria-hidden="true" />
+}
+
 function ServiceCard({
-  iconImage,
-  iconAlt,
+  cardIcon,
   image,
   imageFit,
   imageAlt,
@@ -475,11 +536,13 @@ function ServiceCard({
   onNavigate,
   pageReveal = false,
 }) {
+  const { translate } = useLanguage()
+
   return (
     <Link
       className="service-card"
       to={`/services/${slug}`}
-      aria-label={`Découvrir le service ${cardTitle}`}
+      aria-label={`${translate('Découvrir le service')} ${cardTitle}`}
       draggable="false"
       onClick={onNavigate}
       data-page-reveal={pageReveal || undefined}
@@ -496,21 +559,15 @@ function ServiceCard({
             decoding="async"
           />
         </div>
-        <span className="service-icon">
-          <img
-            src={iconImage}
-            alt={iconAlt}
-            draggable="false"
-            loading="lazy"
-            decoding="async"
-          />
+        <span className="service-icon" aria-hidden="true">
+          <ServiceCardIcon name={cardIcon} />
         </span>
       </div>
       <div className="service-content">
         <h3>{cardTitle}</h3>
         <p>{cardText}</p>
         <span className="service-read-more">
-          Lire plus
+          {translate('Lire plus')}
           <ChevronRight aria-hidden="true" size={17} />
         </span>
       </div>
@@ -518,14 +575,30 @@ function ServiceCard({
   )
 }
 
-function FaqItem({ faq, index, isOpen, onToggle, pageReveal = false }) {
+function FaqItem({ faq, index, isOpen, onToggle }) {
   const questionId = `faq-question-${index + 1}`
   const answerId = `faq-answer-${index + 1}`
+  const itemRef = useRef(null)
+
+  useEffect(() => {
+    if (!isOpen) {
+      return undefined
+    }
+
+    const timer = window.setTimeout(() => {
+      itemRef.current?.scrollIntoView({
+        behavior: shouldReduceMotion() ? 'auto' : 'smooth',
+        block: 'nearest',
+      })
+    }, 380)
+
+    return () => window.clearTimeout(timer)
+  }, [isOpen])
 
   return (
     <article
       className={`faq-item${isOpen ? ' is-open' : ''}`}
-      data-page-reveal={pageReveal || undefined}
+      ref={itemRef}
     >
       <h3>
         <button
@@ -572,12 +645,49 @@ function WhyChooseItem({ iconImage, iconAlt, title, text, origin, index }) {
   )
 }
 
+function sendFormToWhatsApp(event, translate) {
+  event.preventDefault()
+  const data = new FormData(event.currentTarget)
+  const details = [
+    translate('Bonjour, je souhaite prendre rendez-vous au Cabinet Imane Oulhint.'),
+    data.get('name') && `${translate('Nom')} : ${data.get('name')}`,
+    data.get('phone') && `${translate('Téléphone')} : ${data.get('phone')}`,
+    data.get('email') && `${translate('Email')} : ${data.get('email')}`,
+    data.get('subject') && `${translate('Sujet')} : ${data.get('subject')}`,
+    data.get('message') && `${translate('Message')} : ${data.get('message')}`,
+  ].filter(Boolean)
+
+  window.open(getWhatsAppUrl(details.join('\n')), '_blank', 'noopener,noreferrer')
+}
+
 function HomePage() {
+  const { language, localize, translate } = useLanguage()
+  const localizedCardServices = useMemo(
+    () => localizeServices(cardServices, language),
+    [language],
+  )
+  const localizedTreatments = useMemo(() => localize(treatments), [localize])
+  const localizedWhyChooseReasons = useMemo(() => localize(whyChooseReasons), [localize])
+  const localizedProcess = useMemo(() => localize(process), [localize])
+  const localizedFaqs = useMemo(() => localize(faqs), [localize])
+  const localizedHighlights = useMemo(() => localize(instagramHighlights), [localize])
+  const localizedFaqStructuredData = useMemo(
+    () => getFaqStructuredData(localizedFaqs),
+    [localizedFaqs],
+  )
   const [activeHeroVideo, setActiveHeroVideo] = useState(0)
-  const [shouldSkipStatsAnimation] = useState(shouldSkipCountAnimation)
   const [shouldShowServicesImmediately] = useState(shouldRevealImmediately)
   const [shouldShowWhyImmediately] = useState(shouldRevealImmediately)
   const [reduceMotion] = useState(shouldReduceMotion)
+  const [shouldShowCabinetStatsImmediately] = useState(shouldRevealImmediately)
+  const [areCabinetStatsVisible, setAreCabinetStatsVisible] = useState(
+    shouldShowCabinetStatsImmediately,
+  )
+  const [cabinetStatValues, setCabinetStatValues] = useState(() =>
+    shouldShowCabinetStatsImmediately
+      ? cabinetStatTargets
+      : { patients: 0, steps: 0, plans: 0 },
+  )
   const [isAboutVisible, setIsAboutVisible] = useState(
     () => typeof window !== 'undefined' && !('IntersectionObserver' in window),
   )
@@ -592,12 +702,9 @@ function HomePage() {
   const [serviceDragDelta, setServiceDragDelta] = useState(0)
   const [isServiceDragging, setIsServiceDragging] = useState(false)
   const [openFaqIndex, setOpenFaqIndex] = useState(null)
-  const [hasStatsStarted, setHasStatsStarted] = useState(shouldSkipStatsAnimation)
-  const [statValues, setStatValues] = useState(() =>
-    shouldSkipStatsAnimation ? statTargets : initialStats,
-  )
   const aboutSectionRef = useRef(null)
-  const statsRowRef = useRef(null)
+  const cabinetStatsRef = useRef(null)
+  const cabinetStatsRanRef = useRef(shouldShowCabinetStatsImmediately)
   const servicesSectionRef = useRef(null)
   const whySectionRef = useRef(null)
   const processSectionRef = useRef(null)
@@ -644,63 +751,60 @@ function HomePage() {
   }, [isAboutVisible])
 
   useEffect(() => {
-    const statsRow = statsRowRef.current
+    const stats = cabinetStatsRef.current
 
-    if (!statsRow || hasStatsStarted || shouldSkipStatsAnimation) {
+    if (!stats || cabinetStatsRanRef.current) {
       return undefined
     }
+
+    let animationFrame = 0
+    const duration = 1400
+    const delays = { patients: 0, steps: 100, plans: 200 }
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setHasStatsStarted(true)
-          observer.disconnect()
+        if (!entry.isIntersecting || cabinetStatsRanRef.current) {
+          return
         }
+
+        cabinetStatsRanRef.current = true
+        observer.disconnect()
+        setAreCabinetStatsVisible(true)
+        const startedAt = performance.now()
+
+        const animate = (now) => {
+          const elapsed = now - startedAt
+          const getValue = (key) => {
+            const progress = Math.min(Math.max((elapsed - delays[key]) / duration, 0), 1)
+            const eased = 1 - (1 - progress) ** 3
+            return Math.round(cabinetStatTargets[key] * eased)
+          }
+
+          setCabinetStatValues({
+            patients: getValue('patients'),
+            steps: getValue('steps'),
+            plans: getValue('plans'),
+          })
+
+          if (elapsed < duration + delays.plans) {
+            animationFrame = window.requestAnimationFrame(animate)
+          } else {
+            setCabinetStatValues(cabinetStatTargets)
+          }
+        }
+
+        animationFrame = window.requestAnimationFrame(animate)
       },
-      {
-        rootMargin: '0px 0px -10% 0px',
-        threshold: 0.35,
-      },
+      { threshold: 0.3, rootMargin: '0px 0px -8% 0px' },
     )
 
-    observer.observe(statsRow)
+    observer.observe(stats)
 
-    return () => observer.disconnect()
-  }, [hasStatsStarted, shouldSkipStatsAnimation])
-
-  useEffect(() => {
-    if (!hasStatsStarted || shouldSkipStatsAnimation) {
-      return undefined
+    return () => {
+      observer.disconnect()
+      window.cancelAnimationFrame(animationFrame)
     }
-
-    const duration = 1800
-    const startedAt = performance.now()
-    let animationFrame = 0
-
-    const easeOutCubic = (progress) => 1 - (1 - progress) ** 3
-
-    const animateStats = (now) => {
-      const progress = Math.min((now - startedAt) / duration, 1)
-      const easedProgress = easeOutCubic(progress)
-
-      setStatValues({
-        patients: Math.round(statTargets.patients * easedProgress),
-        steps: Math.round(statTargets.steps * easedProgress),
-        plans: Math.round(statTargets.plans * easedProgress),
-      })
-
-      if (progress < 1) {
-        animationFrame = window.requestAnimationFrame(animateStats)
-        return
-      }
-
-      setStatValues(statTargets)
-    }
-
-    animationFrame = window.requestAnimationFrame(animateStats)
-
-    return () => window.cancelAnimationFrame(animationFrame)
-  }, [hasStatsStarted, shouldSkipStatsAnimation])
+  }, [])
 
   useEffect(() => {
     const section = servicesSectionRef.current
@@ -918,9 +1022,9 @@ function HomePage() {
   const serviceSlideStep = serviceSlideWidth + serviceGap
   const serviceCarouselOffset = serviceCarouselIndex * serviceSlideStep
   const serviceCarouselSlides = [
-    ...services.slice(-visibleServiceCards),
-    ...services,
-    ...services.slice(0, visibleServiceCards),
+    ...localizedCardServices.slice(-visibleServiceCards),
+    ...localizedCardServices,
+    ...localizedCardServices.slice(0, visibleServiceCards),
   ]
 
   const handleServiceCarouselTransitionEnd = () => {
@@ -935,13 +1039,13 @@ function HomePage() {
       })
     }
 
-    if (serviceCarouselIndex >= services.length + visibleServiceCards) {
+    if (serviceCarouselIndex >= localizedCardServices.length + visibleServiceCards) {
       resetCarouselPosition(visibleServiceCards)
       return
     }
 
     if (serviceCarouselIndex < visibleServiceCards) {
-      resetCarouselPosition(services.length + visibleServiceCards - 1)
+      resetCarouselPosition(localizedCardServices.length + visibleServiceCards - 1)
     }
   }
 
@@ -1010,21 +1114,22 @@ function HomePage() {
           </div>
           <div className="hero-content container reveal">
             <h1>
-              <span>Nutrition personnalisée</span>
-              <span>pour retrouver</span>
-              <span className="accent-word">l’équilibre</span>
+              <span>{translate('Nutrition personnalisée')}</span>
+              <span>{translate('pour retrouver')}</span>
+              <span className="accent-word">{translate('l’équilibre')}</span>
             </h1>
             <p>
-              Cabinet Imane Oulhint accompagne adultes, familles et sportifs avec des programmes
-              personnalisés, une approche médicale calme et un suivi durable.
+              {translate(
+                'Imane Oulhint, Diététicienne Nutritionniste, vous accompagne avec des solutions nutritionnelles personnalisées selon vos besoins et votre quotidien.',
+              )}
             </p>
             <div className="hero-actions">
               <Link className="primary-button" to="/contact">
-                Prendre rendez-vous
+                {translate('Prendre rendez-vous')}
                 <ChevronRight aria-hidden="true" size={18} />
               </Link>
               <Link className="ghost-button" to="/services">
-                Découvrir les services
+                {translate('Découvrir les services')}
               </Link>
             </div>
           </div>
@@ -1039,28 +1144,46 @@ function HomePage() {
             <div className="cabinet-copy">
               <SectionIntro
                 eyebrow="Le cabinet"
-                title="Une approche nutritionnelle premium, claire et profondément personnalisée."
-                text="Chaque consultation s’appuie sur l’écoute, l’analyse clinique et l’éducation nutritionnelle. L’objectif est d’obtenir des résultats mesurables sans régimes extrêmes."
+                title="Une approche nutritionnelle claire, attentive et personnalisée."
+                text="Chaque consultation s’appuie sur l’écoute, l’analyse de vos besoins et des conseils adaptés à votre situation."
               />
-              <div className="trust-row" ref={statsRowRef}>
+              <div className="trust-row">
                 <div>
-                  <strong>+{statValues.patients}</strong>
-                  <span>patients accompagnés</span>
+                  <strong>Imane Oulhint</strong>
+                  <span>{translate('Diététicienne Nutritionniste')}</span>
                 </div>
                 <div>
-                  <strong>{statValues.steps}</strong>
-                  <span>étapes de suivi</span>
+                  <strong>UM6SS</strong>
+                  <span>{translate('Diplômée de l’Université Mohammed VI des Sciences et de la Santé – Casablanca')}</span>
                 </div>
                 <div>
-                  <strong>{statValues.plans}%</strong>
-                  <span>plans personnalisés</span>
+                  <strong>DU</strong>
+                  <span>{translate('International Nutrition Clinique')}</span>
+                </div>
+              </div>
+              <div
+                className={`cabinet-stats-row${areCabinetStatsVisible ? ' is-visible' : ''}`}
+                aria-label={translate('Chiffres clés du cabinet')}
+                ref={cabinetStatsRef}
+              >
+                <div role="group" aria-label={translate('Plus de 1200 patients accompagnés')}>
+                  <strong aria-hidden="true">+{cabinetStatValues.patients}</strong>
+                  <span>{translate('patients accompagnés')}</span>
+                </div>
+                <div role="group" aria-label={translate('3 étapes de suivi')}>
+                  <strong aria-hidden="true">{cabinetStatValues.steps}</strong>
+                  <span>{translate('étapes de suivi')}</span>
+                </div>
+                <div role="group" aria-label={translate('100 pour cent de plans personnalisés')}>
+                  <strong aria-hidden="true">{cabinetStatValues.plans}%</strong>
+                  <span>{translate('plans personnalisés')}</span>
                 </div>
               </div>
             </div>
             <video
               className="about-image about-video cabinet-media"
               src="/cabinet-ouverture.mp4"
-              aria-label="Vidéo de présentation du Cabinet Imane Oulhint"
+              aria-label={translate('Vidéo de présentation du Cabinet Imane Oulhint')}
               autoPlay
               muted
               loop
@@ -1135,7 +1258,7 @@ function HomePage() {
             </div>
             <div className="section-route-action">
               <Link className="outline-route-button" to="/services">
-                Découvrir tous les services
+                {translate('Découvrir tous les services')}
                 <ChevronRight aria-hidden="true" size={18} />
               </Link>
             </div>
@@ -1151,14 +1274,14 @@ function HomePage() {
         >
           <div className="container">
             <div className="why-choice-heading">
-              <span>Pourquoi nous choisir</span>
+              <span>{translate('Pourquoi nous choisir')}</span>
               <h2>Cabinet Imane Oulhint</h2>
-              <p>Une prise en charge nutritionnelle claire, humaine et pensée pour durer.</p>
+              <p>{translate('Une prise en charge nutritionnelle claire, humaine et pensée pour durer.')}</p>
             </div>
 
             <div className="why-choice-layout">
               <div className="why-choice-column why-choice-column-left">
-                {whyChooseReasons.slice(0, 3).map((reason, index) => (
+                {localizedWhyChooseReasons.slice(0, 3).map((reason, index) => (
                   <WhyChooseItem key={reason.title} index={index} {...reason} />
                 ))}
               </div>
@@ -1170,7 +1293,7 @@ function HomePage() {
               </div>
 
               <div className="why-choice-column why-choice-column-right">
-                {whyChooseReasons.slice(3).map((reason, index) => (
+                {localizedWhyChooseReasons.slice(3).map((reason, index) => (
                   <WhyChooseItem key={reason.title} index={index + 3} {...reason} />
                 ))}
               </div>
@@ -1182,12 +1305,12 @@ function HomePage() {
           <div className="container split-grid">
             <div>
               <SectionIntro
-                eyebrow="Traitements"
-                title="Un suivi nutritionnel structuré autour de données concrètes."
-                text="Les recommandations sont ajustées selon vos bilans, vos préférences alimentaires et votre progression réelle."
+                eyebrow="Besoins accompagnés"
+                title="Des solutions nutritionnelles adaptées à chaque situation."
+                text="Le cabinet développe des recommandations sur mesure selon vos besoins, vos habitudes et les informations communiquées."
               />
               <div className="check-list">
-                {treatments.map((item) => (
+                {localizedTreatments.map((item) => (
                   <span key={item}>
                     <CheckCircle2 aria-hidden="true" size={18} />
                     {item}
@@ -1197,10 +1320,11 @@ function HomePage() {
             </div>
             <div className="feature-panel">
               <ShieldCheck aria-hidden="true" size={34} />
-              <h3>Un cadre rassurant et professionnel</h3>
+              <h3>{translate('Un cadre rassurant et professionnel')}</h3>
               <p>
-                Le cabinet privilégie une prise en charge respectueuse, confidentielle et fondée sur
-                des objectifs réalistes, avec des conseils faciles à intégrer.
+                {translate(
+                  'Le cabinet privilégie un accompagnement respectueux, confidentiel et fondé sur des objectifs réalistes, en complément du suivi médical lorsque celui-ci est nécessaire.',
+                )}
               </p>
             </div>
           </div>
@@ -1219,25 +1343,26 @@ function HomePage() {
             loading="lazy"
           />
           <p className="process-side-note" aria-hidden="true">
-            Mieux manger
-            <span>pour mieux vivre</span>
+            {translate('Mieux manger')}
+            <span>{translate('pour mieux vivre')}</span>
           </p>
 
           <div className="container process-container">
             <header className="process-intro">
-              <span className="process-eyebrow">Consultation</span>
+              <span className="process-eyebrow">{translate('Consultation')}</span>
               <h2>
-                Votre accompagnement,
-                <em>étape par étape.</em>
+                {translate('Votre accompagnement,')}
+                <em>{translate('étape par étape.')}</em>
               </h2>
               <p>
-                Du premier bilan au suivi régulier, chaque rendez-vous s’inscrit dans une démarche
-                claire, personnalisée et durable.
+                {translate(
+                  'Du premier bilan au suivi régulier, chaque rendez-vous s’inscrit dans une démarche claire, personnalisée et durable.',
+                )}
               </p>
             </header>
 
             <div className="process-grid">
-              {process.map(
+              {localizedProcess.map(
                 ({ step, icon: Icon, detailIcon: DetailIcon, title, text, detailTitle, detailText }, index) => (
                 <article
                   className="process-item"
@@ -1265,12 +1390,12 @@ function HomePage() {
             </div>
 
             <p className="process-signature">
-              Chaque petit pas compte
+              {translate('Chaque petit pas compte')}
               <Heart aria-hidden="true" size={18} strokeWidth={1.7} />
             </p>
             <div className="section-route-action">
               <Link className="outline-route-button" to="/consultation">
-                Découvrir la consultation
+                {translate('Découvrir la consultation')}
                 <ChevronRight aria-hidden="true" size={18} />
               </Link>
             </div>
@@ -1288,13 +1413,13 @@ function HomePage() {
 
           <div className="container reviews-shell">
             <header className="reviews-heading">
-              <span className="reviews-eyebrow">Avis patients</span>
+              <span className="reviews-eyebrow">{translate('Avis patients')}</span>
               <h2>
-                Leur <em>expérience</em> au cabinet
+                {translate('Leur')} <em>{translate('expérience')}</em> {translate('au cabinet')}
               </h2>
-              <p>Des témoignages authentiques partagés par nos patients sur Google Maps.</p>
+              <p>{translate('Des contenus et témoignages partagés par les patients du cabinet.')}</p>
 
-              <div className="instagram-highlights" role="group" aria-label="Highlights Instagram du cabinet">
+              <div className="instagram-highlights" role="group" aria-label={translate('Highlights Instagram du cabinet')}>
                 <div className="instagram-highlights-track">
                   {[0, 1].map((copyIndex) => (
                     <div
@@ -1302,13 +1427,13 @@ function HomePage() {
                       aria-hidden={copyIndex === 1 ? true : undefined}
                       key={`highlight-set-${copyIndex}`}
                     >
-                      {instagramHighlights.map((highlight, index) => (
+                      {localizedHighlights.map((highlight, index) => (
                         <a
                           className="instagram-highlight-link"
                           href={highlight.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          aria-label={`Voir le Highlight Instagram « ${highlight.title} » ${index + 1}`}
+                          aria-label={`${translate('Voir le Highlight Instagram')} « ${highlight.title} » ${index + 1}`}
                           tabIndex={copyIndex === 1 ? -1 : undefined}
                           key={`${copyIndex}-${highlight.url}`}
                         >
@@ -1317,7 +1442,7 @@ function HomePage() {
                               src={highlight.image}
                               alt={
                                 copyIndex === 0
-                                  ? `Aperçu du Highlight Instagram « ${highlight.title} »`
+                                  ? `${translate('Aperçu du Highlight Instagram')} « ${highlight.title} »`
                                   : ''
                               }
                               loading="lazy"
@@ -1335,29 +1460,29 @@ function HomePage() {
                 </div>
               </div>
 
-              <div className="reviews-trust-row" aria-label="Les engagements du cabinet">
+              <div className="reviews-trust-row" aria-label={translate('Les engagements du cabinet')}>
                 <span>
                   <Leaf aria-hidden="true" />
-                  Des résultats concrets
+                  {translate('Des contenus partagés')}
                 </span>
                 <span>
                   <Heart aria-hidden="true" />
-                  Un accompagnement bienveillant
+                  {translate('Un accompagnement bienveillant')}
                 </span>
                 <span>
                   <UsersRound aria-hidden="true" />
-                  Une approche personnalisée
+                  {translate('Une approche personnalisée')}
                 </span>
                 <span>
                   <Star aria-hidden="true" />
-                  Une confiance durable
+                  {translate('Une relation de confiance')}
                 </span>
               </div>
             </header>
 
             <p className="reviews-thank-you" aria-hidden="true">
-              Merci
-              <span>pour votre confiance</span>
+              {translate('Merci')}
+              <span>{translate('pour votre confiance')}</span>
               <Heart />
             </p>
 
@@ -1369,7 +1494,7 @@ function HomePage() {
             </div>
             <div className="section-route-action">
               <Link className="outline-route-button" to="/resultats-patients">
-                Voir tous les résultats
+                {translate('Voir tous les résultats')}
                 <ChevronRight aria-hidden="true" size={18} />
               </Link>
             </div>
@@ -1383,20 +1508,20 @@ function HomePage() {
         >
           <script
             type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(localizedFaqStructuredData) }}
           />
           <div className="container faq-grid">
             <div className="section-intro">
-              <span>FAQ</span>
-              <h2 id="faq-heading">Questions fréquentes sur votre accompagnement à Agadir</h2>
+              <span>{translate('FAQ')}</span>
+              <h2 id="faq-heading">{translate('Questions fréquentes sur votre accompagnement à Agadir')}</h2>
               <p>
-                Retrouvez les réponses aux questions fréquentes concernant les consultations
-                diététiques, le suivi nutritionnel et les soins proposés au cabinet Imane Oulhint à
-                Agadir.
+                {translate(
+                  'Retrouvez les réponses aux questions fréquentes concernant les consultations diététiques, le suivi nutritionnel et les soins proposés au cabinet Imane Oulhint à Agadir.',
+                )}
               </p>
             </div>
             <div className="faq-list">
-              {faqs.slice(0, 4).map((faq, index) => (
+              {localizedFaqs.slice(0, 4).map((faq, index) => (
                 <FaqItem
                   faq={faq}
                   index={index}
@@ -1410,7 +1535,7 @@ function HomePage() {
             </div>
             <div className="section-route-action">
               <Link className="outline-route-button" to="/faq">
-                Voir toutes les questions
+                {translate('Voir toutes les questions')}
                 <ChevronRight aria-hidden="true" size={18} />
               </Link>
             </div>
@@ -1421,27 +1546,28 @@ function HomePage() {
           <div className="container booking-panel">
             <div className="booking-main">
               <header className="booking-heading">
-                <span>Contact</span>
-                <h2>Contactez-nous</h2>
+                <span>{translate('Contact')}</span>
+                <h2>{translate('Contactez-nous')}</h2>
                 <p>
-                  Une question ou envie de prendre rendez-vous ? Laissez-nous vos coordonnées,
-                  nous vous répondrons rapidement.
+                  {translate(
+                    'Une question ou envie de prendre rendez-vous ? Laissez-nous vos coordonnées, nous vous répondrons rapidement.',
+                  )}
                 </p>
               </header>
 
-              <form className="booking-form">
+              <form className="booking-form" onSubmit={(event) => sendFormToWhatsApp(event, translate)}>
                 <label>
                   <span>
-                    Nom <b aria-hidden="true">*</b>
+                    {translate('Nom')} <b aria-hidden="true">*</b>
                   </span>
                   <span className="booking-field">
                     <UserRound aria-hidden="true" size={21} />
-                    <input type="text" name="name" placeholder="Votre nom" required />
+                    <input type="text" name="name" placeholder={translate('Votre nom')} required />
                   </span>
                 </label>
                 <label>
                   <span>
-                    Email <b aria-hidden="true">*</b>
+                    {translate('Email')} <b aria-hidden="true">*</b>
                   </span>
                   <span className="booking-field">
                     <Mail aria-hidden="true" size={21} />
@@ -1449,15 +1575,15 @@ function HomePage() {
                   </span>
                 </label>
                 <label>
-                  <span>Sujet</span>
+                  <span>{translate('Sujet')}</span>
                   <span className="booking-field">
                     <FileText aria-hidden="true" size={21} />
-                    <input type="text" name="subject" placeholder="Objet de votre demande" />
+                    <input type="text" name="subject" placeholder={translate('Objet de votre demande')} />
                   </span>
                 </label>
                 <label>
                   <span>
-                    Tél <b aria-hidden="true">*</b>
+                    {translate('Tél')} <b aria-hidden="true">*</b>
                   </span>
                   <span className="booking-field">
                     <Phone aria-hidden="true" size={21} />
@@ -1466,31 +1592,32 @@ function HomePage() {
                 </label>
                 <label>
                   <span>
-                    Message <b aria-hidden="true">*</b>
+                    {translate('Message')} <b aria-hidden="true">*</b>
                   </span>
                   <span className="booking-field booking-message-field">
                     <MessageSquare aria-hidden="true" size={21} />
                     <textarea
                       name="message"
-                      placeholder="Écrivez votre message ici..."
+                      placeholder={translate('Écrivez votre message ici...')}
                       rows="5"
                       required
                     />
                   </span>
                 </label>
                 <button type="submit" className="primary-button">
-                  Prendre rendez-vous
+                  {translate('Prendre rendez-vous')}
                   <ChevronRight aria-hidden="true" size={18} />
                 </button>
               </form>
             </div>
 
             <aside className="booking-aside" aria-labelledby="booking-contact-title">
-              <span className="booking-aside-kicker">Nos coordonnées</span>
-              <h2 id="booking-contact-title">Toujours à votre écoute</h2>
+              <span className="booking-aside-kicker">{translate('Nos coordonnées')}</span>
+              <h2 id="booking-contact-title">{translate('Toujours à votre écoute')}</h2>
               <p>
-                Le cabinet reste disponible pour répondre à vos questions et vous accompagner dans
-                votre démarche.
+                {translate(
+                  'Le cabinet reste disponible pour répondre à vos questions et vous accompagner dans votre démarche.',
+                )}
               </p>
 
               <div className="booking-contact-list">
@@ -1499,9 +1626,9 @@ function HomePage() {
                     <Phone aria-hidden="true" size={23} />
                   </span>
                   <span>
-                    <strong>Téléphone</strong>
-                    <a href="tel:+212600000000">+212 600 000 000</a>
-                    <small>Disponible vendredi et samedi</small>
+                    <strong>{translate('Téléphone')}</strong>
+                    <a href={cabinet.phoneHref}>{cabinet.phoneDisplay}</a>
+                    <small>{translate('Pour vos questions et prises de rendez-vous')}</small>
                   </span>
                 </div>
                 <div>
@@ -1509,9 +1636,15 @@ function HomePage() {
                     <Mail aria-hidden="true" size={23} />
                   </span>
                   <span>
-                    <strong>Email</strong>
-                    <a href="mailto:contact@cabinet-imane.ma">contact@cabinet-imane.ma</a>
-                    <small>Réponse sous 24h</small>
+                    <strong>WhatsApp</strong>
+                    <a
+                      href={getWhatsAppUrl(translate(defaultWhatsAppMessage))}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {cabinet.whatsappDisplay}
+                    </a>
+                    <small>{translate('Message direct au cabinet')}</small>
                   </span>
                 </div>
                 <div>
@@ -1519,9 +1652,11 @@ function HomePage() {
                     <MapPin aria-hidden="true" size={23} />
                   </span>
                   <span>
-                    <strong>Adresse</strong>
-                    <b>Casablanca, Maroc</b>
-                    <small>Consultations sur rendez-vous</small>
+                    <strong>{translate('Adresse')}</strong>
+                    <a href={cabinet.mapsUrl} target="_blank" rel="noopener noreferrer">
+                      {translate(cabinet.address)}
+                    </a>
+                    <small>{translate('Consultations sur rendez-vous')}</small>
                   </span>
                 </div>
                 <div>
@@ -1529,9 +1664,9 @@ function HomePage() {
                     <Clock aria-hidden="true" size={23} />
                   </span>
                   <span>
-                    <strong>Horaires</strong>
-                    <b>Vendredi · 9h - 12h30 / 14h30 - 18h</b>
-                    <small>Samedi · 9h - 12h30</small>
+                    <strong>{translate('Horaires')}</strong>
+                    <b>{translate('Lun., mer., ven. · 09h–13h / 14h30–18h30')}</b>
+                    <small>{translate('Mar., jeu. · 09h–18h30 · Sam. 09h–12h30')}</small>
                   </span>
                 </div>
               </div>
@@ -1543,12 +1678,14 @@ function HomePage() {
 }
 
 function InnerPageHeader({ eyebrow, title, text }) {
+  const { translate } = useLanguage()
+
   return (
     <section className="inner-page-hero">
       <div className="container inner-page-hero-content">
-        <span data-page-reveal>{eyebrow}</span>
-        <h1 data-page-reveal>{title}</h1>
-        <p data-page-reveal>{text}</p>
+        <span data-page-reveal>{translate(eyebrow)}</span>
+        <h1 data-page-reveal>{translate(title)}</h1>
+        <p data-page-reveal>{translate(text)}</p>
       </div>
     </section>
   )
@@ -1556,6 +1693,11 @@ function InnerPageHeader({ eyebrow, title, text }) {
 
 function ServicesPage() {
   const pageRef = useRef(null)
+  const { language, translate } = useLanguage()
+  const localizedCardServices = useMemo(
+    () => localizeServices(cardServices, language),
+    [language],
+  )
   useRoutePageReveal(pageRef)
 
   return (
@@ -1569,9 +1711,9 @@ function ServicesPage() {
         title="Des accompagnements adaptés à chaque parcours"
         text="Nutrition, suivi corporel et soins de bien-être : découvrez les services proposés au cabinet Imane Oulhint à Agadir."
       />
-      <section className="section-pad services-directory" aria-label="Tous les services">
+      <section className="section-pad services-directory" aria-label={translate('Tous les services')}>
         <div className="container services-directory-grid">
-          {services.map((service, index) => (
+          {localizedCardServices.map((service, index) => (
             <ServiceCard key={service.slug} revealIndex={index} pageReveal {...service} />
           ))}
         </div>
@@ -1582,6 +1724,8 @@ function ServicesPage() {
 
 function ConsultationPage() {
   const pageRef = useRef(null)
+  const { localize, translate } = useLanguage()
+  const localizedProcess = useMemo(() => localize(process), [localize])
   useRoutePageReveal(pageRef)
 
   return (
@@ -1595,10 +1739,10 @@ function ConsultationPage() {
         title="Votre accompagnement, étape par étape"
         text="Du premier bilan au suivi régulier, chaque rendez-vous s’inscrit dans une démarche claire, personnalisée et durable."
       />
-      <section className="process-section section-pad inner-process-section" aria-label="Étapes de la consultation">
+      <section className="process-section section-pad inner-process-section" aria-label={translate('Étapes de la consultation')}>
         <div className="container process-container">
           <div className="process-grid">
-            {process.map(
+            {localizedProcess.map(
               ({ step, icon: Icon, detailIcon: DetailIcon, title, text, detailTitle, detailText }) => (
                 <article className="process-item" data-page-reveal key={step}>
                   <div className="process-marker">
@@ -1621,12 +1765,12 @@ function ConsultationPage() {
             )}
           </div>
           <p className="process-signature" data-page-reveal>
-            Chaque petit pas compte
+            {translate('Chaque petit pas compte')}
             <Heart aria-hidden="true" size={18} strokeWidth={1.7} />
           </p>
           <div className="section-route-action" data-page-reveal>
             <Link className="primary-button" to="/contact">
-              Prendre rendez-vous
+              {translate('Prendre rendez-vous')}
               <ChevronRight aria-hidden="true" size={18} />
             </Link>
           </div>
@@ -1638,6 +1782,8 @@ function ConsultationPage() {
 
 function ResultsPage() {
   const pageRef = useRef(null)
+  const { localize, translate } = useLanguage()
+  const localizedHighlights = useMemo(() => localize(instagramHighlights), [localize])
   useRoutePageReveal(pageRef)
 
   return (
@@ -1662,11 +1808,11 @@ function ResultsPage() {
         <div className="container reviews-shell">
           <header className="reviews-heading">
             <div className="reviews-title-group" data-page-reveal>
-              <span className="reviews-eyebrow">Sur Instagram</span>
-              <h2>Les moments partagés</h2>
-              <p>Retrouvez les Highlights du cabinet et ouvrez chaque contenu directement sur Instagram.</p>
+              <span className="reviews-eyebrow">{translate('Sur Instagram')}</span>
+              <h2>{translate('Les moments partagés')}</h2>
+              <p>{translate('Retrouvez les Highlights du cabinet et ouvrez chaque contenu directement sur Instagram.')}</p>
             </div>
-            <div className="instagram-highlights" role="group" aria-label="Highlights Instagram du cabinet" data-page-reveal>
+            <div className="instagram-highlights" role="group" aria-label={translate('Highlights Instagram du cabinet')} data-page-reveal>
               <div className="instagram-highlights-track">
                 {[0, 1].map((copyIndex) => (
                   <div
@@ -1674,20 +1820,20 @@ function ResultsPage() {
                     aria-hidden={copyIndex === 1 ? true : undefined}
                     key={`results-highlight-set-${copyIndex}`}
                   >
-                    {instagramHighlights.map((highlight, index) => (
+                    {localizedHighlights.map((highlight, index) => (
                       <a
                         className="instagram-highlight-link"
                         href={highlight.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        aria-label={`Voir le Highlight Instagram « ${highlight.title} » ${index + 1}`}
+                        aria-label={`${translate('Voir le Highlight Instagram')} « ${highlight.title} » ${index + 1}`}
                         tabIndex={copyIndex === 1 ? -1 : undefined}
                         key={`${copyIndex}-${highlight.url}`}
                       >
                         <span className="instagram-highlight-cover">
                           <img
                             src={highlight.image}
-                            alt={copyIndex === 0 ? `Aperçu du Highlight Instagram « ${highlight.title} »` : ''}
+                            alt={copyIndex === 0 ? `${translate('Aperçu du Highlight Instagram')} « ${highlight.title} »` : ''}
                             loading="lazy"
                             decoding="async"
                           />
@@ -1702,11 +1848,11 @@ function ResultsPage() {
                 ))}
               </div>
             </div>
-            <div className="reviews-trust-row" aria-label="Les engagements du cabinet" data-page-reveal>
-              <span><Leaf aria-hidden="true" />Des résultats concrets</span>
-              <span><Heart aria-hidden="true" />Un accompagnement bienveillant</span>
-              <span><UsersRound aria-hidden="true" />Une approche personnalisée</span>
-              <span><Star aria-hidden="true" />Une confiance durable</span>
+            <div className="reviews-trust-row" aria-label={translate('Les engagements du cabinet')} data-page-reveal>
+              <span><Leaf aria-hidden="true" />{translate('Des contenus partagés')}</span>
+              <span><Heart aria-hidden="true" />{translate('Un accompagnement bienveillant')}</span>
+              <span><UsersRound aria-hidden="true" />{translate('Une approche personnalisée')}</span>
+              <span><Star aria-hidden="true" />{translate('Une relation de confiance')}</span>
             </div>
           </header>
           <div className="elfsight-reviews-wrap" data-page-reveal>
@@ -1724,6 +1870,12 @@ function ResultsPage() {
 function FaqPage() {
   const [openIndex, setOpenIndex] = useState(null)
   const pageRef = useRef(null)
+  const { localize } = useLanguage()
+  const localizedFaqs = useMemo(() => localize(faqs), [localize])
+  const localizedFaqStructuredData = useMemo(
+    () => getFaqStructuredData(localizedFaqs),
+    [localizedFaqs],
+  )
   useRoutePageReveal(pageRef)
 
   return (
@@ -1734,7 +1886,7 @@ function FaqPage() {
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(localizedFaqStructuredData) }}
       />
       <InnerPageHeader
         eyebrow="FAQ"
@@ -1744,15 +1896,15 @@ function FaqPage() {
       <section className="faq-section section-pad soft-band faq-page-content">
         <div className="container">
           <div className="faq-list">
-            {faqs.map((faq, index) => (
-              <FaqItem
-                faq={faq}
-                index={index}
-                isOpen={openIndex === index}
-                pageReveal
-                key={faq.question}
-                onToggle={() => setOpenIndex((current) => (current === index ? null : index))}
-              />
+            {localizedFaqs.map((faq, index) => (
+              <div data-page-reveal key={faq.question}>
+                <FaqItem
+                  faq={faq}
+                  index={index}
+                  isOpen={openIndex === index}
+                  onToggle={() => setOpenIndex((current) => (current === index ? null : index))}
+                />
+              </div>
             ))}
           </div>
         </div>
@@ -1763,6 +1915,8 @@ function FaqPage() {
 
 function ContactPage() {
   const pageRef = useRef(null)
+  const { localize, translate } = useLanguage()
+  const localizedHours = useMemo(() => localize(openingHours), [localize])
 
   useEffect(() => {
     const page = pageRef.current
@@ -1800,14 +1954,7 @@ function ContactPage() {
     return () => observer.disconnect()
   }, [])
 
-  const phoneDisplay = '+212 528 23 49 49'
-  const phoneHref = 'tel:+212528234949'
-  const whatsappHref = 'https://wa.me/212528234949'
-  const address = 'Agadir Bay, Bloc D, 1er étage, N°107, Technopole II, Agadir'
-  const mapsPlaceHref =
-    'https://www.google.com/maps/place/Cabinet+de+di%C3%A9t%C3%A9tique+nutrition+et+amincissement,+IMANE+OULHINT/@30.4023229,-9.5841706,17z/data=!4m6!3m5!1s0xdb3b7de5424372b:0xafdffa32df4af541!8m2!3d30.4023229!4d-9.5863593!16s%2Fg%2F11jyd_nvlj'
-  const mapsDirectionsHref =
-    'https://www.google.com/maps/dir/?api=1&destination=30.4023229%2C-9.5863593&travelmode=driving'
+  const whatsappHref = getWhatsAppUrl(translate(defaultWhatsAppMessage))
 
   return (
     <main className="route-page contact-page" ref={pageRef}>
@@ -1819,145 +1966,154 @@ function ContactPage() {
       <section className="contact-hero" aria-labelledby="contact-page-title">
         <div className="container contact-hero-grid">
           <div className="contact-hero-copy" data-contact-reveal>
-            <nav className="contact-breadcrumb" aria-label="Fil d’Ariane">
-              <Link to="/">Accueil</Link>
+            <nav className="contact-breadcrumb" aria-label={translate('Fil d’Ariane')}>
+              <Link to="/">{translate('Accueil')}</Link>
               <ChevronRight aria-hidden="true" size={16} />
-              <span aria-current="page">Contact</span>
+              <span aria-current="page">{translate('Contact')}</span>
             </nav>
-            <span className="contact-eyebrow">Contact</span>
-            <h1 id="contact-page-title">Contactez-moi</h1>
+            <span className="contact-eyebrow">{translate('Contact')}</span>
+            <h1 id="contact-page-title">{translate('Contactez-moi')}</h1>
             <p>
-              Une question ? Un besoin d’information ? Je suis à votre écoute pour vous accompagner
-              et répondre à vos questions.
+              {translate(
+                'Une question ? Un besoin d’information ? Je suis à votre écoute pour vous accompagner et répondre à vos questions.',
+              )}
             </p>
           </div>
 
           <div className="contact-hero-media" data-contact-reveal>
             <img
               src="/images/contact-office.png"
-              alt="Bureau d’accueil lumineux du Cabinet Imane Oulhint"
+              alt={translate('Bureau d’accueil lumineux du Cabinet Imane Oulhint')}
               decoding="async"
             />
           </div>
         </div>
       </section>
 
-      <section className="contact-details-section" aria-label="Coordonnées du cabinet">
+      <section className="contact-details-section" aria-label={translate('Coordonnées du cabinet')}>
         <div className="container contact-details-grid">
           <article className="contact-info-card" data-contact-reveal>
             <span className="contact-info-icon"><Phone aria-hidden="true" size={24} /></span>
             <div>
-              <h2>Téléphone / WhatsApp</h2>
-              <a href={phoneHref}>{phoneDisplay}</a>
-              <small>Pour vos questions et prises de rendez-vous</small>
+              <h2>{translate('Téléphone')}</h2>
+              <a href={cabinet.phoneHref}>{cabinet.phoneDisplay}</a>
+              <small>{translate('Pour vos questions et prises de rendez-vous')}</small>
             </div>
           </article>
 
           <article className="contact-info-card" data-contact-reveal>
-            <span className="contact-info-icon"><Mail aria-hidden="true" size={24} /></span>
+            <span className="contact-info-icon">
+              <img src="/whatsapp-icon.png" alt="" aria-hidden="true" />
+            </span>
             <div>
-              <h2>Email</h2>
-              <a href="#contact-form">Écrire via le formulaire</a>
-              <small>Aucune adresse email publique n’est renseignée</small>
+              <h2>WhatsApp</h2>
+              <a href={whatsappHref} target="_blank" rel="noopener noreferrer">
+                {cabinet.whatsappDisplay}
+              </a>
+              <small>{translate('Message direct au cabinet')}</small>
             </div>
           </article>
 
           <article className="contact-info-card" data-contact-reveal>
             <span className="contact-info-icon"><MapPin aria-hidden="true" size={24} /></span>
             <div>
-              <h2>Adresse</h2>
-              <a href={mapsPlaceHref} target="_blank" rel="noopener noreferrer">{address}</a>
-              <small>Consultations sur rendez-vous</small>
+              <h2>{translate('Adresse')}</h2>
+              <a href={cabinet.mapsUrl} target="_blank" rel="noopener noreferrer">{translate(cabinet.address)}</a>
+              <small>{translate('Consultations sur rendez-vous')}</small>
             </div>
           </article>
 
           <article className="contact-info-card" data-contact-reveal>
             <span className="contact-info-icon"><Clock aria-hidden="true" size={24} /></span>
             <div>
-              <h2>Horaires</h2>
-              <p>Lundi - Vendredi</p>
-              <small>9h - 12h30 / 14h30 - 18h</small>
-              <p>Samedi</p>
-              <small>9h - 12h30</small>
+              <h2>{translate('Horaires')}</h2>
+              <div className="contact-hours-list">
+                {localizedHours.map((item) => (
+                  <span key={item.days}><b>{item.days}</b><small>{item.hours}</small></span>
+                ))}
+              </div>
             </div>
           </article>
         </div>
       </section>
 
-      <section className="contact-workspace" aria-label="Formulaire et localisation">
+      <section className="contact-workspace" aria-label={translate('Formulaire et localisation')}>
         <div className="container contact-workspace-grid">
           <section className="contact-form-panel" id="contact-form" data-contact-reveal>
             <header className="contact-section-heading">
-              <span>Votre demande</span>
-              <h2>Envoyez-moi un message</h2>
-              <p>Remplissez le formulaire ci-dessous et je vous répondrai dans les plus brefs délais.</p>
+              <span>{translate('Votre demande')}</span>
+              <h2>{translate('Envoyez-moi un message')}</h2>
+              <p>{translate('Remplissez le formulaire ci-dessous et je vous répondrai dans les plus brefs délais.')}</p>
             </header>
 
-            <form className="contact-form" onSubmit={(event) => event.preventDefault()}>
+            <form className="contact-form" onSubmit={(event) => sendFormToWhatsApp(event, translate)}>
               <label>
-                <span>Nom <b aria-hidden="true">*</b></span>
+                <span>{translate('Nom')} <b aria-hidden="true">*</b></span>
                 <span className="contact-field">
                   <UserRound aria-hidden="true" size={20} />
-                  <input type="text" name="name" autoComplete="name" placeholder="Votre nom" required />
+                  <input type="text" name="name" autoComplete="name" placeholder={translate('Votre nom')} required />
                 </span>
               </label>
               <label>
-                <span>Email <b aria-hidden="true">*</b></span>
+                <span>{translate('Email')} <b aria-hidden="true">*</b></span>
                 <span className="contact-field">
                   <Mail aria-hidden="true" size={20} />
                   <input type="email" name="email" autoComplete="email" placeholder="votre@email.com" required />
                 </span>
               </label>
               <label>
-                <span>Téléphone <b aria-hidden="true">*</b></span>
+                <span>{translate('Téléphone')} <b aria-hidden="true">*</b></span>
                 <span className="contact-field">
                   <Phone aria-hidden="true" size={20} />
-                  <input type="tel" name="phone" autoComplete="tel" placeholder="Votre numéro" required />
+                  <input type="tel" name="phone" autoComplete="tel" placeholder={translate('Votre numéro')} required />
                 </span>
               </label>
               <label>
-                <span>Sujet <b aria-hidden="true">*</b></span>
+                <span>{translate('Sujet')} <b aria-hidden="true">*</b></span>
                 <span className="contact-field">
                   <FileText aria-hidden="true" size={20} />
-                  <input type="text" name="subject" placeholder="Objet de votre demande" required />
+                  <input type="text" name="subject" placeholder={translate('Objet de votre demande')} required />
                 </span>
               </label>
               <label className="contact-message-label">
-                <span>Message <b aria-hidden="true">*</b></span>
+                <span>{translate('Message')} <b aria-hidden="true">*</b></span>
                 <span className="contact-field contact-message-field">
                   <MessageSquare aria-hidden="true" size={20} />
-                  <textarea name="message" placeholder="Écrivez votre message ici..." rows="5" required />
+                  <textarea name="message" placeholder={translate('Écrivez votre message ici...')} rows="5" required />
                 </span>
               </label>
               <button type="submit" className="contact-submit-button">
                 <Send aria-hidden="true" size={19} />
-                Envoyer le message
+                {translate('Envoyer sur WhatsApp')}
               </button>
             </form>
           </section>
 
           <section className="contact-location-panel" data-contact-reveal>
             <header className="contact-section-heading">
-              <span>Localisation</span>
-              <h2>Notre localisation</h2>
-              <p>Retrouvez facilement le cabinet à Agadir.</p>
+              <span>{translate('Localisation')}</span>
+              <h2>{translate('Notre localisation')}</h2>
+              <p>{translate('Retrouvez facilement le cabinet à Agadir.')}</p>
             </header>
             <div className="contact-map-frame">
               <iframe
-                title="Localisation du Cabinet Imane Oulhint à Agadir"
-                src="https://www.google.com/maps?q=30.4023229%2C-9.5863593&z=17&output=embed"
+                title={translate('Localisation du Cabinet Imane Oulhint à Agadir')}
+                src={cabinet.mapsEmbedUrl}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 allowFullScreen
               />
+              <div className="contact-map-brand-marker" aria-hidden="true">
+                <img src="/imane-logo-new.png" alt="" />
+              </div>
             </div>
             <div className="contact-location-card">
               <span className="contact-info-icon"><MapPin aria-hidden="true" size={23} /></span>
               <div>
                 <strong>Cabinet Imane Oulhint</strong>
-                <p>{address}</p>
-                <a href={mapsDirectionsHref} target="_blank" rel="noopener noreferrer">
-                  Voir l’itinéraire
+                <p>{translate(cabinet.address)}</p>
+                <a href={cabinet.mapsUrl} target="_blank" rel="noopener noreferrer">
+                  {translate('Voir l’itinéraire')}
                   <ExternalLink aria-hidden="true" size={15} />
                 </a>
               </div>
@@ -1969,34 +2125,34 @@ function ContactPage() {
       <section className="contact-whatsapp-section" data-contact-reveal>
         <div className="container contact-whatsapp-panel">
           <div>
-            <span>Contact direct</span>
-            <h2>Une question rapide ?</h2>
-            <p>Vous pouvez aussi nous contacter directement via WhatsApp.</p>
+            <span>{translate('Contact direct')}</span>
+            <h2>{translate('Une question rapide ?')}</h2>
+            <p>{translate('Vous pouvez aussi nous contacter directement via WhatsApp.')}</p>
           </div>
           <a href={whatsappHref} target="_blank" rel="noopener noreferrer">
             <img src="/whatsapp-icon.png" alt="" aria-hidden="true" />
-            Discuter sur WhatsApp
+            {translate('Discuter sur WhatsApp')}
           </a>
         </div>
       </section>
 
-      <section className="contact-trust-section" aria-label="Nos engagements">
+      <section className="contact-trust-section" aria-label={translate('Nos engagements')}>
         <div className="container contact-trust-grid">
           <article data-contact-reveal>
             <CalendarCheck aria-hidden="true" size={30} />
-            <div><h2>Rendez-vous personnalisé</h2><p>Un temps d’échange adapté à vos besoins.</p></div>
+            <div><h2>{translate('Rendez-vous personnalisé')}</h2><p>{translate('Un temps d’échange adapté à vos besoins.')}</p></div>
           </article>
           <article data-contact-reveal>
             <Heart aria-hidden="true" size={30} />
-            <div><h2>Écoute et conseils</h2><p>Une approche attentive et professionnelle.</p></div>
+            <div><h2>{translate('Écoute et conseils')}</h2><p>{translate('Une approche attentive et professionnelle.')}</p></div>
           </article>
           <article data-contact-reveal>
             <ShieldCheck aria-hidden="true" size={30} />
-            <div><h2>Confidentialité</h2><p>Vos informations sont traitées avec discrétion.</p></div>
+            <div><h2>{translate('Confidentialité')}</h2><p>{translate('Vos informations sont traitées avec discrétion.')}</p></div>
           </article>
           <article data-contact-reveal>
             <ClipboardList aria-hidden="true" size={30} />
-            <div><h2>Suivi sur mesure</h2><p>Un accompagnement ajusté à votre évolution.</p></div>
+            <div><h2>{translate('Suivi sur mesure')}</h2><p>{translate('Un accompagnement ajusté à votre évolution.')}</p></div>
           </article>
         </div>
       </section>
