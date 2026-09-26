@@ -305,7 +305,6 @@ const scrollRevealGroups = [
   '.booking-section .booking-aside > span, .booking-section .booking-aside > h2, .booking-section .booking-aside > p',
   '.booking-section .booking-contact-list > div',
   '.site-footer .footer-grid > *',
-  '.site-footer .footer-bottom',
 ]
 
 const heroVideos = ['/hero-nutrition-1.mp4', '/hero-nutrition-2.mp4', '/hero-nutrition-3.mp4']
