@@ -203,6 +203,14 @@ export const arabicTranslations = {
   'Des accompagnements adaptés à chaque parcours': 'مواكبة ملائمة لكل مسار',
   'Nutrition, suivi corporel et soins de bien-être : découvrez les services proposés au cabinet Imane Oulhint à Agadir.':
     'التغذية وتتبع مكونات الجسم وخدمات العناية: اكتشفوا خدمات عيادة إيمان أولحينت بأكادير.',
+  'Un accompagnement adapté pour chaque cas': 'مواكبة ملائمة لكل حالة',
+  "L'approche ?": 'ما هي المقاربة؟',
+  'Un rééquilibrage alimentaire personnalisé, sans frustration':
+    'إعادة توازن غذائي مخصصة دون حرمان',
+  'Des machines de haute technologie pour sculpter et affiner votre corps':
+    'أجهزة عالية التقنية لنحت الجسم وتحسين تناسقه',
+  'Un accompagnement bienveillant pour des résultats durables et un bien-être global':
+    'مواكبة داعمة لتحقيق نتائج مستدامة ورفاهية شاملة',
   'Tous les services': 'جميع الخدمات',
   'Étapes de la consultation': 'مراحل الاستشارة',
   'Des témoignages authentiques et des parcours partagés par les patients du cabinet Imane Oulhint.':
@@ -244,8 +252,7 @@ export const arabicTranslations = {
   'Suivre le cabinet Imane Oulhint sur TikTok': 'تابعوا عيادة إيمان أولحينت على تيك توك',
   'Agadir Bay, Bloc D, 1er étage, N° 107, Technopole II, Agadir':
     'أكادير باي، البناية D، الطابق الأول، رقم 107، تكنوبول II، أكادير',
-  'Bonjour, je souhaite prendre rendez-vous au Cabinet Imane Oulhint.':
-    'مرحبا، أود حجز موعد في عيادة إيمان أولحينت.',
+  'Bonjour, je souhaite prendre rendez-vous.': 'مرحبا، أود حجز موعد.',
   'Découvrir le service': 'اكتشاف الخدمة',
   'Cabinet de Diététique Nutrition et Amincissement': 'عيادة الحمية والتغذية والتنحيف',
   'Cabinet Imane Oulhint | Diététicienne Nutritionniste à Agadir':

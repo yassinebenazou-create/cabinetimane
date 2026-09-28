@@ -30,7 +30,9 @@ import {
   Venus,
 } from 'lucide-react'
 import Navbar from './components/Navbar.jsx'
+import PageSeo from './components/PageSeo.jsx'
 import SiteFooter, { FloatingContact } from './components/SiteFooter.jsx'
+import { getAbsoluteSiteUrl } from './data/seo.js'
 import services, { serviceCardSlugs } from './data/services.js'
 import { cabinet, defaultWhatsAppMessage, getWhatsAppUrl, openingHours } from './data/site.js'
 import { useLanguage } from './i18n/language.js'
@@ -287,6 +289,87 @@ function getFaqStructuredData(items) {
   }
 }
 
+function getLocalBusinessStructuredData() {
+  const homeUrl = getAbsoluteSiteUrl('/')
+
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'WebSite',
+        '@id': `${homeUrl}#website`,
+        url: homeUrl,
+        name: 'Cabinet Imane Oulhint',
+        alternateName: 'Cabinet de Diététique Nutrition et Amincissement Imane Oulhint',
+        inLanguage: ['fr-MA', 'ar-MA'],
+      },
+      {
+        '@type': 'MedicalBusiness',
+        '@id': `${homeUrl}#cabinet`,
+        name: 'Cabinet Imane Oulhint',
+        alternateName: 'Cabinet de Diététique Nutrition et Amincissement Imane Oulhint',
+        description:
+          'Cabinet de diététique et nutrition à Agadir proposant des consultations nutritionnelles personnalisées, des bilans et des soins de bien-être.',
+        url: homeUrl,
+        logo: getAbsoluteSiteUrl('/imane-logo-new.png'),
+        image: getAbsoluteSiteUrl('/service-gestion-poids.png'),
+        telephone: '+212528234949',
+        hasMap: cabinet.mapsUrl,
+        sameAs: [cabinet.instagramUrl, cabinet.facebookUrl, cabinet.tiktokUrl],
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: 'Agadir Bay, Bloc D, 1er étage, N° 107, Technopole II',
+          addressLocality: 'Agadir',
+          addressRegion: 'Souss-Massa',
+          postalCode: '80020',
+          addressCountry: 'MA',
+        },
+        geo: {
+          '@type': 'GeoCoordinates',
+          latitude: 30.4025,
+          longitude: -9.5867,
+        },
+        areaServed: {
+          '@type': 'City',
+          name: 'Agadir',
+        },
+        contactPoint: {
+          '@type': 'ContactPoint',
+          telephone: '+212528234949',
+          contactType: 'appointments',
+          availableLanguage: ['French', 'Arabic'],
+        },
+        openingHoursSpecification: [
+          {
+            '@type': 'OpeningHoursSpecification',
+            dayOfWeek: ['Monday', 'Wednesday', 'Friday'],
+            opens: '09:00',
+            closes: '13:00',
+          },
+          {
+            '@type': 'OpeningHoursSpecification',
+            dayOfWeek: ['Monday', 'Wednesday', 'Friday'],
+            opens: '14:30',
+            closes: '18:30',
+          },
+          {
+            '@type': 'OpeningHoursSpecification',
+            dayOfWeek: ['Tuesday', 'Thursday'],
+            opens: '09:00',
+            closes: '18:30',
+          },
+          {
+            '@type': 'OpeningHoursSpecification',
+            dayOfWeek: 'Saturday',
+            opens: '09:00',
+            closes: '12:30',
+          },
+        ],
+      },
+    ],
+  }
+}
+
 const scrollRevealGroups = [
   '.about-section .section-intro > span, .about-section .section-intro > h2, .about-section .section-intro > p',
   '.about-section .trust-row > div',
@@ -307,7 +390,11 @@ const scrollRevealGroups = [
   '.site-footer .footer-grid > *',
 ]
 
-const heroVideos = ['/hero-nutrition-1.mp4', '/hero-nutrition-2.mp4', '/hero-nutrition-3.mp4']
+const heroVideos = [
+  { src: '/hero-nutrition-1.mp4', displayDuration: 6000 },
+  { src: '/hero-nutrition-2.mp4', displayDuration: 7000 },
+  { src: '/hero-nutrition-3.mp4', displayDuration: 7000 },
+]
 
 const cabinetStatTargets = {
   patients: 1200,
@@ -398,17 +485,6 @@ function ScrollToHash() {
       target.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
   }, [hash, pathname])
-
-  return null
-}
-
-function PageSeo({ title, description }) {
-  const { translate } = useLanguage()
-
-  useEffect(() => {
-    document.title = translate(title)
-    document.querySelector('meta[name="description"]')?.setAttribute('content', translate(description))
-  }, [description, title, translate])
 
   return null
 }
@@ -648,7 +724,7 @@ function sendFormToWhatsApp(event, translate) {
   event.preventDefault()
   const data = new FormData(event.currentTarget)
   const details = [
-    translate('Bonjour, je souhaite prendre rendez-vous au Cabinet Imane Oulhint.'),
+    translate(defaultWhatsAppMessage),
     data.get('name') && `${translate('Nom')} : ${data.get('name')}`,
     data.get('phone') && `${translate('Téléphone')} : ${data.get('phone')}`,
     data.get('email') && `${translate('Email')} : ${data.get('email')}`,
@@ -674,6 +750,7 @@ function HomePage() {
     () => getFaqStructuredData(localizedFaqs),
     [localizedFaqs],
   )
+  const localBusinessStructuredData = useMemo(() => getLocalBusinessStructuredData(), [])
   const [activeHeroVideo, setActiveHeroVideo] = useState(0)
   const [shouldShowServicesImmediately] = useState(shouldRevealImmediately)
   const [shouldShowWhyImmediately] = useState(shouldRevealImmediately)
@@ -713,12 +790,12 @@ function HomePage() {
   const serviceCarouselFrameRef = useRef(0)
 
   useEffect(() => {
-    const switchTimer = window.setInterval(() => {
+    const switchTimer = window.setTimeout(() => {
       setActiveHeroVideo((current) => (current + 1) % heroVideos.length)
-    }, 7000)
+    }, heroVideos[activeHeroVideo].displayDuration)
 
-    return () => window.clearInterval(switchTimer)
-  }, [])
+    return () => window.clearTimeout(switchTimer)
+  }, [activeHeroVideo])
 
   useEffect(() => {
     const section = aboutSectionRef.current
@@ -1096,13 +1173,20 @@ function HomePage() {
           title="Cabinet Imane Oulhint | Diététicienne Nutritionniste à Agadir"
           description="Cabinet Imane Oulhint à Agadir : accompagnement nutritionnel personnalisé, services de bien-être et suivi adapté à vos objectifs."
         />
-        <section className="hero-section" id="accueil">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessStructuredData) }}
+        />
+        <section
+          className={`hero-section${activeHeroVideo === 2 ? ' hero-section-light' : ''}`}
+          id="accueil"
+        >
           <div className="hero-video-stack" aria-hidden="true">
             {heroVideos.map((video, index) => (
               <video
                 className={index === activeHeroVideo ? 'hero-video active' : 'hero-video'}
-                key={video}
-                src={video}
+                key={video.src}
+                src={video.src}
                 autoPlay
                 muted
                 loop
@@ -1676,15 +1760,30 @@ function HomePage() {
   )
 }
 
-function InnerPageHeader({ eyebrow, title, text }) {
+function InnerPageHeader({ eyebrow, title, text, approachTitle, approachPoints }) {
   const { translate } = useLanguage()
+  const hasApproach = approachTitle && approachPoints?.length
 
   return (
     <section className="inner-page-hero">
       <div className="container inner-page-hero-content">
         <span data-page-reveal>{translate(eyebrow)}</span>
         <h1 data-page-reveal>{translate(title)}</h1>
-        <p data-page-reveal>{translate(text)}</p>
+        {hasApproach ? (
+          <div className="inner-page-hero-approach" data-page-reveal>
+            <h2>{translate(approachTitle)}</h2>
+            <ul>
+              {approachPoints.map((point) => (
+                <li key={point}>
+                  <CheckCircle2 aria-hidden="true" size={21} />
+                  <span>{translate(point)}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <p data-page-reveal>{translate(text)}</p>
+        )}
       </div>
     </section>
   )
@@ -1707,8 +1806,13 @@ function ServicesPage() {
       />
       <InnerPageHeader
         eyebrow="Services"
-        title="Des accompagnements adaptés à chaque parcours"
-        text="Nutrition, suivi corporel et soins de bien-être : découvrez les services proposés au cabinet Imane Oulhint à Agadir."
+        title="Un accompagnement adapté pour chaque cas"
+        approachTitle="L'approche ?"
+        approachPoints={[
+          'Un rééquilibrage alimentaire personnalisé, sans frustration',
+          'Des machines de haute technologie pour sculpter et affiner votre corps',
+          'Un accompagnement bienveillant pour des résultats durables et un bien-être global',
+        ]}
       />
       <section className="section-pad services-directory" aria-label={translate('Tous les services')}>
         <div className="container services-directory-grid">
@@ -2010,15 +2114,6 @@ function ContactPage() {
                 {cabinet.whatsappDisplay}
               </a>
               <small>{translate('Message direct au cabinet')}</small>
-            </div>
-          </article>
-
-          <article className="contact-info-card" data-contact-reveal>
-            <span className="contact-info-icon"><MapPin aria-hidden="true" size={24} /></span>
-            <div>
-              <h2>{translate('Adresse')}</h2>
-              <a href={cabinet.mapsUrl} target="_blank" rel="noopener noreferrer">{translate(cabinet.address)}</a>
-              <small>{translate('Consultations sur rendez-vous')}</small>
             </div>
           </article>
 

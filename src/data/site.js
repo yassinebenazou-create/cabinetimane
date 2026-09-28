@@ -22,7 +22,7 @@ export const openingHours = [
 ]
 
 export const defaultWhatsAppMessage =
-  'Bonjour, je souhaite prendre rendez-vous au Cabinet Imane Oulhint.'
+  'Bonjour, je souhaite prendre rendez-vous.'
 
 export function getWhatsAppUrl(message = defaultWhatsAppMessage) {
   return `https://wa.me/${cabinet.whatsappNumber}?text=${encodeURIComponent(message)}`

@@ -101,7 +101,7 @@ const services = [
     slug: 'bilan-oligoscan', name: 'Bilan Oligoscan', cardTitle: 'Bilan Oligoscan',
     cardText: 'Une évaluation de la biodisponibilité des vitamines, minéraux et métaux lourds.',
     typeLabel: 'Bilan', cardIcon: 'hand-scan', iconImage: '/service-icon-07.png', iconAlt: 'Icône bilan Oligoscan',
-    image: '/images/services/Oligoscan.png', imageAlt: 'Bilan Oligoscan par analyse de la main',
+    image: '/images/services/oligoscan-new.jpeg', imageAlt: 'Bilan Oligoscan par analyse de la main',
     heroIntro: 'Un bilan proposé au cabinet à Agadir selon la méthode Oligoscan par spectrophotométrie de la main.',
     introTitle: 'Qu’est-ce que le bilan Oligoscan ?', audienceTitle: 'Ce qui est évalué',
     metaDescription: 'Bilan Oligoscan à Agadir pour évaluer la biodisponibilité des vitamines, minéraux et métaux lourds par spectrophotométrie de la main.',
@@ -110,6 +110,20 @@ const services = [
     steps: [{ title: 'Présentation du bilan', text: 'Explication de la méthode et de son déroulement.' }, { title: 'Mesure', text: 'Application d’un faisceau lumineux sur quatre points de la main.' }, { title: 'Lecture', text: 'Présentation des informations fournies par l’appareil.' }, { title: 'Échange', text: 'Mise en contexte des résultats dans le cadre de l’accompagnement.' }],
     benefits: [{ icon: 'search', title: 'Méthode non invasive', text: 'Une mesure effectuée au niveau de la main.' }, { icon: 'clipboard', title: 'Lecture structurée', text: 'Des informations présentées clairement.' }, { icon: 'message', title: 'Explications', text: 'Un échange consacré aux données obtenues.' }, { icon: 'shield', title: 'Cadre professionnel', text: 'Un bilan présenté avec ses limites.' }],
     relatedSlugs: ['bilan-corporel-tanita', 'nutrition-maladies-chroniques', 'reequilibrage-alimentaire'],
+  },
+  {
+    slug: 'amincissement', name: 'Amincissement', cardTitle: 'Amincissement',
+    cardText: 'Un accompagnement ciblé pour les zones du corps qui vous dérangent.',
+    typeLabel: 'Soin silhouette', cardIcon: 'scale', iconAlt: 'Icône amincissement',
+    image: '/images/services/amincissement.png', imageAlt: 'Accompagnement d’amincissement ciblé au niveau de la silhouette',
+    heroIntro: 'Un accompagnement d’amincissement à Agadir adapté aux zones de votre silhouette que vous souhaitez cibler.',
+    introTitle: 'Qu’est-ce que l’amincissement ?',
+    metaDescription: 'Amincissement à Agadir avec un accompagnement personnalisé pour cibler différentes zones de la silhouette au Cabinet Imane Oulhint.',
+    introduction: 'L’amincissement a pour but de cibler et de traiter des zones spécifiques de votre corps qui vous dérangent, comme le ventre, les cuisses, les bras, les mollets, le double menton ou les poignées d’amour. L’accompagnement est défini après un échange afin de tenir compte de vos attentes et de votre situation, sans promesse de résultat garanti.',
+    audience: ['Les personnes souhaitant cibler une ou plusieurs zones de leur silhouette.', 'Celles qui souhaitent être accompagnées pour le ventre, les cuisses, les bras ou les mollets.', 'Les personnes intéressées par un accompagnement concernant le double menton ou les poignées d’amour.', 'Celles qui recherchent une approche personnalisée et encadrée.'],
+    steps: [{ title: 'Premier échange', text: 'Discussion autour de vos attentes et de votre situation.' }, { title: 'Identification des zones', text: 'Définition des zones de la silhouette que vous souhaitez cibler.' }, { title: 'Accompagnement personnalisé', text: 'Mise en place d’une approche adaptée aux informations recueillies.' }, { title: 'Suivi', text: 'Échanges et ajustements selon votre ressenti et votre évolution.' }],
+    benefits: [{ icon: 'target', title: 'Zones ciblées', text: 'Un accompagnement centré sur vos priorités.' }, { icon: 'settings', title: 'Approche adaptée', text: 'Des modalités définies selon votre situation.' }, { icon: 'heart', title: 'Écoute attentive', text: 'Vos attentes sont prises en compte.' }, { icon: 'shield', title: 'Cadre professionnel', text: 'Un accompagnement encadré au cabinet.' }],
+    relatedSlugs: ['bilan-corporel-tanita', 'pressotherapie', 'drainage-lymphatique'],
   },
   {
     slug: 'drainage-lymphatique', name: 'Drainage lymphatique', cardTitle: 'Drainage lymphatique',
@@ -148,6 +162,7 @@ export const serviceAliases = {
 
 export const serviceCardSlugs = [
   'reequilibrage-alimentaire',
+  'amincissement',
   'nutrition-maladies-chroniques',
   'nutrition-feminine',
   'nutrition-digestive',

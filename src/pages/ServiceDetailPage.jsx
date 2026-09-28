@@ -17,6 +17,8 @@ import {
   UsersRound,
 } from 'lucide-react'
 import { Link, Navigate, useParams } from 'react-router-dom'
+import PageSeo from '../components/PageSeo.jsx'
+import { getAbsoluteSiteUrl } from '../data/seo.js'
 import services, { serviceAliases } from '../data/services.js'
 import { useLanguage } from '../i18n/language.js'
 import { localizeService } from '../i18n/services.ar.js'
@@ -74,6 +76,62 @@ export default function ServiceDetailPage() {
       .map((slug) => localizeService(services.find((item) => item.slug === slug), language))
       .filter(Boolean)
   }, [language, service])
+  const serviceStructuredData = useMemo(() => {
+    if (!service) {
+      return null
+    }
+
+    const homeUrl = getAbsoluteSiteUrl('/')
+    const serviceUrl = getAbsoluteSiteUrl(`/services/${service.slug}`)
+
+    return {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'Service',
+          '@id': `${serviceUrl}#service`,
+          name: service.name,
+          serviceType: service.name,
+          description: service.metaDescription,
+          url: serviceUrl,
+          image: getAbsoluteSiteUrl(service.image),
+          areaServed: {
+            '@type': 'City',
+            name: 'Agadir',
+          },
+          provider: {
+            '@type': 'MedicalBusiness',
+            '@id': `${homeUrl}#cabinet`,
+            name: 'Cabinet Imane Oulhint',
+            url: homeUrl,
+          },
+        },
+        {
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            {
+              '@type': 'ListItem',
+              position: 1,
+              name: translate('Accueil'),
+              item: homeUrl,
+            },
+            {
+              '@type': 'ListItem',
+              position: 2,
+              name: translate('Services'),
+              item: getAbsoluteSiteUrl('/services'),
+            },
+            {
+              '@type': 'ListItem',
+              position: 3,
+              name: service.name,
+              item: serviceUrl,
+            },
+          ],
+        },
+      ],
+    }
+  }, [service, translate])
 
   useEffect(() => {
     if (!service) {
@@ -82,26 +140,6 @@ export default function ServiceDetailPage() {
 
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
   }, [service])
-
-  useEffect(() => {
-    if (!service) {
-      return undefined
-    }
-
-    const previousTitle = document.title
-    const description = document.querySelector('meta[name="description"]')
-    const previousDescription = description?.getAttribute('content') ?? ''
-
-    document.title = language === 'ar'
-      ? `${service.name} في أكادير | عيادة إيمان أولحينت`
-      : `${service.name} à Agadir | Cabinet Imane Oulhint`
-    description?.setAttribute('content', service.metaDescription)
-
-    return () => {
-      document.title = previousTitle
-      description?.setAttribute('content', previousDescription)
-    }
-  }, [language, service])
 
   useEffect(() => {
     const page = pageRef.current
@@ -143,8 +181,22 @@ export default function ServiceDetailPage() {
     return <Navigate to="/services" replace />
   }
 
+  const hasLongTitleWord = service.name.split(/\s+/).some((word) => word.length >= 13)
+
   return (
       <main className="service-detail-page route-page" ref={pageRef}>
+        <PageSeo
+          title={language === 'ar'
+            ? `${service.name} في أكادير | عيادة إيمان أولحينت`
+            : `${service.name} à Agadir | Cabinet Imane Oulhint`}
+          description={service.metaDescription}
+          image={service.image}
+          imageAlt={service.imageAlt}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceStructuredData) }}
+        />
         <section className="service-detail-hero" aria-labelledby="service-detail-title">
           <div
             className="container service-detail-hero-grid service-detail-hero-enter"
@@ -159,7 +211,12 @@ export default function ServiceDetailPage() {
                 <span aria-current="page">{service.name}</span>
               </nav>
               <span className="service-detail-eyebrow service-hero-enter-meta">{translate('Service')}</span>
-              <h1 className="service-hero-enter-title" id="service-detail-title">{service.name}</h1>
+              <h1
+                className={`service-hero-enter-title${hasLongTitleWord ? ' service-detail-long-title' : ''}`}
+                id="service-detail-title"
+              >
+                {service.name}
+              </h1>
               <p className="service-hero-enter-description">{service.heroIntro}</p>
               <span className="service-hero-enter-cta">
                 <Link className="primary-button service-detail-primary" to="/contact">
