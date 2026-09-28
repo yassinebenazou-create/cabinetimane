@@ -392,7 +392,7 @@ const scrollRevealGroups = [
 
 const heroVideos = [
   { src: '/hero-nutrition-1.mp4', displayDuration: 6000 },
-  { src: '/hero-nutrition-2.mp4', displayDuration: 7000 },
+  { src: '/hero-nutrition-2.mp4', displayDuration: 10000 },
   { src: '/hero-nutrition-3.mp4', displayDuration: 7000 },
 ]
 
@@ -519,14 +519,14 @@ function SectionIntro({ eyebrow, title, text }) {
 function ServicesIntro() {
   const { translate } = useLanguage()
   const title =
-    'Des accompagnements adaptés à votre santé, votre objectif et votre quotidien.'
+    'Un accompagnement adapté à votre santé, votre objectif et votre quotidien.'
 
   return (
     <div className="section-intro services-intro">
       <span className="services-eyebrow">{translate('Services')}</span>
       <h2 aria-label={translate(title)}>
         <span className="services-title-line" aria-hidden="true">
-          <span>{translate('Des accompagnements adaptés')}</span>
+          <span>{translate('Un accompagnement adapté')}</span>
         </span>
         <span className="services-title-line" aria-hidden="true">
           <span>{translate('à votre santé, votre objectif')}</span>
@@ -1728,18 +1728,6 @@ function HomePage() {
                       {cabinet.whatsappDisplay}
                     </a>
                     <small>{translate('Message direct au cabinet')}</small>
-                  </span>
-                </div>
-                <div>
-                  <span className="booking-contact-icon">
-                    <MapPin aria-hidden="true" size={23} />
-                  </span>
-                  <span>
-                    <strong>{translate('Adresse')}</strong>
-                    <a href={cabinet.mapsUrl} target="_blank" rel="noopener noreferrer">
-                      {translate(cabinet.address)}
-                    </a>
-                    <small>{translate('Consultations sur rendez-vous')}</small>
                   </span>
                 </div>
                 <div>

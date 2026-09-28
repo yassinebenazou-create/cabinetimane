@@ -40,9 +40,9 @@ export const arabicTranslations = {
   'étapes de suivi': 'مراحل للمتابعة',
   'plans personnalisés': 'خطط مخصصة',
   'Vidéo de présentation du Cabinet Imane Oulhint': 'فيديو تعريفي بعيادة إيمان أولحينت',
-  'Des accompagnements adaptés à votre santé, votre objectif et votre quotidien.':
+  'Un accompagnement adapté à votre santé, votre objectif et votre quotidien.':
     'مواكبة ملائمة لصحتكم وأهدافكم وحياتكم اليومية.',
-  'Des accompagnements adaptés': 'مواكبة ملائمة',
+  'Un accompagnement adapté': 'مواكبة ملائمة',
   'à votre santé, votre objectif': 'لصحتكم وأهدافكم',
   'et votre quotidien.': 'وحياتكم اليومية.',
   'Le cabinet développe des solutions nutritionnelles sur mesure et propose des bilans adaptés aux besoins de chaque personne.':
@@ -242,6 +242,7 @@ export const arabicTranslations = {
   "Heures d'ouverture": 'أوقات العمل',
   '© 2026 Cabinet Imane Oulhint. Tous droits réservés.':
     '© 2026 عيادة إيمان أولحينت. جميع الحقوق محفوظة.',
+  'Site réalisé par': 'تصميم وتطوير',
   'Réseaux sociaux': 'شبكات التواصل الاجتماعي',
   'Prendre rendez-vous sur WhatsApp': 'حجز موعد عبر واتساب',
   'Imane Oulhint, Diététicienne Nutritionniste, propose à Agadir des solutions nutritionnelles personnalisées selon les besoins de chaque personne.':
