@@ -242,6 +242,11 @@ export default function ServiceDetailPage() {
               <span className="service-detail-kicker">{translate('Le service')}</span>
               <h2>{service.introTitle}</h2>
               <p className="service-detail-lead">{service.introduction}</p>
+              {language !== 'ar' && service.disclaimer ? (
+                <p className="service-detail-lead service-detail-disclaimer">
+                  {service.disclaimer}
+                </p>
+              ) : null}
             </Reveal>
           </div>
         </section>

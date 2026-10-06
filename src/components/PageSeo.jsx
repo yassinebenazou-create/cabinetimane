@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom'
 import { getAbsoluteSiteUrl } from '../data/seo.js'
 import { useLanguage } from '../i18n/language.js'
 
-const defaultShareImage = '/service-gestion-poids.png'
+const defaultShareImage = '/service-gestion-poids.webp'
 
 function setMeta(attribute, key, content) {
   let element = document.head.querySelector(`meta[${attribute}="${key}"]`)

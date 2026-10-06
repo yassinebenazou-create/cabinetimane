@@ -25,21 +25,21 @@ const routes = [
     title: 'Cabinet Imane Oulhint | Diététicienne Nutritionniste à Agadir',
     description:
       'Cabinet Imane Oulhint à Agadir : accompagnement nutritionnel personnalisé, services de bien-être et suivi adapté à vos objectifs.',
-    image: '/service-gestion-poids.png',
+    image: '/service-gestion-poids.webp',
   },
   {
     path: '/services',
     title: 'Services de nutrition et bien-être | Cabinet Imane Oulhint',
     description:
       'Découvrez les services de nutrition, les bilans et les soins de bien-être proposés par le cabinet Imane Oulhint à Agadir.',
-    image: '/images/services/reequilibrage-alimentaire.jpg',
+    image: '/images/services/reequilibrage-alimentaire.webp',
   },
   {
     path: '/consultation',
     title: 'Consultation diététique à Agadir | Cabinet Imane Oulhint',
     description:
       'Découvrez le déroulement d’une consultation diététique personnalisée au cabinet Imane Oulhint à Agadir, du bilan initial au suivi régulier.',
-    image: '/service-gestion-poids.png',
+    image: '/service-gestion-poids.webp',
   },
   {
     path: '/resultats-patients',
@@ -53,14 +53,14 @@ const routes = [
     title: 'Questions fréquentes | Cabinet Imane Oulhint à Agadir',
     description:
       'Retrouvez les réponses aux questions fréquentes sur les consultations diététiques, le suivi nutritionnel et les soins proposés à Agadir.',
-    image: '/service-gestion-poids.png',
+    image: '/service-gestion-poids.webp',
   },
   {
     path: '/contact',
     title: 'Contact | Cabinet Imane Oulhint - Agadir',
     description:
       'Contactez le Cabinet Imane Oulhint à Agadir pour toute demande d’information ou prise de rendez-vous.',
-    image: '/images/contact-office.png',
+    image: '/images/contact-office.webp',
   },
   ...services.map((service) => ({
     path: `/services/${service.slug}`,

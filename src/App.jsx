@@ -28,13 +28,14 @@ import {
   UserRound,
   UsersRound,
   Venus,
+  Video,
 } from 'lucide-react'
 import Navbar from './components/Navbar.jsx'
 import PageSeo from './components/PageSeo.jsx'
 import SiteFooter, { FloatingContact } from './components/SiteFooter.jsx'
 import { getAbsoluteSiteUrl } from './data/seo.js'
 import services, { serviceCardSlugs } from './data/services.js'
-import { cabinet, defaultWhatsAppMessage, getWhatsAppUrl, openingHours } from './data/site.js'
+import { cabinet, defaultWhatsAppMessage, getWhatsAppUrl } from './data/site.js'
 import { useLanguage } from './i18n/language.js'
 import { localizeServices } from './i18n/services.ar.js'
 import ServiceDetailPage from './pages/ServiceDetailPage.jsx'
@@ -72,7 +73,7 @@ const instagramHighlights = [
   },
   {
     title: 'Quotes',
-    image: '/instagram-highlight-06.jpg',
+    image: '/instagram-highlight-06.webp',
     url: 'https://www.instagram.com/stories/highlights/17897427104563212/?hl=ar',
   },
   {
@@ -87,7 +88,7 @@ const instagramHighlights = [
   },
   {
     title: 'À la une',
-    image: '/instagram-highlight-09.jpg',
+    image: '/instagram-highlight-09.webp',
     url: 'https://www.instagram.com/stories/highlights/18333175978210127/?hl=ar',
   },
   {
@@ -97,12 +98,12 @@ const instagramHighlights = [
   },
   {
     title: 'Amincissement',
-    image: '/instagram-highlight-11.jpg',
+    image: '/instagram-highlight-11.webp',
     url: 'https://www.instagram.com/stories/highlights/18085824854131146/?hl=ar',
   },
   {
     title: 'À la une',
-    image: '/instagram-highlight-12.jpg',
+    image: '/instagram-highlight-12.webp',
     url: 'https://www.instagram.com/stories/highlights/17874303045469923/?hl=ar',
   },
   {
@@ -112,7 +113,7 @@ const instagramHighlights = [
   },
   {
     title: '⭐️⭐️⭐️⭐️⭐️',
-    image: '/instagram-highlight-14.jpg',
+    image: '/instagram-highlight-14.webp',
     url: 'https://www.instagram.com/stories/highlights/17897079648082806/?hl=ar',
   },
   {
@@ -312,7 +313,7 @@ function getLocalBusinessStructuredData() {
           'Cabinet de diététique et nutrition à Agadir proposant des consultations nutritionnelles personnalisées, des bilans et des soins de bien-être.',
         url: homeUrl,
         logo: getAbsoluteSiteUrl('/imane-logo-new.png'),
-        image: getAbsoluteSiteUrl('/service-gestion-poids.png'),
+        image: getAbsoluteSiteUrl('/service-gestion-poids.webp'),
         telephone: '+212528234949',
         hasMap: cabinet.mapsUrl,
         sameAs: [cabinet.instagramUrl, cabinet.facebookUrl, cabinet.tiktokUrl],
@@ -590,6 +591,7 @@ function ServiceCardIcon({ name }) {
     'heart-pulse': HeartPulse,
     scale: Scale,
     venus: Venus,
+    video: Video,
   }[name]
 
   if (name === 'stomach') {
@@ -1420,7 +1422,7 @@ function HomePage() {
         >
           <img
             className="process-decor-overlay"
-            src="/process-decor-overlay.png"
+            src="/process-decor-overlay.webp"
             alt=""
             aria-hidden="true"
             loading="lazy"
@@ -1488,7 +1490,7 @@ function HomePage() {
         <section className="results-section section-pad" id="resultats">
           <img
             className="reviews-leaf-frame"
-            src="/reviews-leaf-frame.png"
+            src="/reviews-leaf-frame.webp"
             alt=""
             aria-hidden="true"
             loading="lazy"
@@ -1891,7 +1893,7 @@ function ResultsPage() {
       <section className="results-section section-pad results-page-content">
         <img
           className="reviews-leaf-frame"
-          src="/reviews-leaf-frame.png"
+          src="/reviews-leaf-frame.webp"
           alt=""
           aria-hidden="true"
           loading="lazy"
@@ -2006,8 +2008,7 @@ function FaqPage() {
 
 function ContactPage() {
   const pageRef = useRef(null)
-  const { localize, translate } = useLanguage()
-  const localizedHours = useMemo(() => localize(openingHours), [localize])
+  const { translate } = useLanguage()
 
   useEffect(() => {
     const page = pageRef.current
@@ -2063,17 +2064,22 @@ function ContactPage() {
               <span aria-current="page">{translate('Contact')}</span>
             </nav>
             <span className="contact-eyebrow">{translate('Contact')}</span>
-            <h1 id="contact-page-title">{translate('Contactez-moi')}</h1>
+            <h1 id="contact-page-title">{translate('Contactez-nous')}</h1>
             <p>
               {translate(
-                'Une question ? Un besoin d’information ? Je suis à votre écoute pour vous accompagner et répondre à vos questions.',
+                'Pour toute information ou prise de rendez-vous, merci de nous contacter au 05 28 23 49 49 ou via WhatsApp au 07 63 49 32 04.',
+              )}
+            </p>
+            <p>
+              {translate(
+                'Nous restons à votre entière disposition pour toute information complémentaire.',
               )}
             </p>
           </div>
 
           <div className="contact-hero-media" data-contact-reveal>
             <img
-              src="/images/contact-office.png"
+              src="/images/contact-office.webp"
               alt={translate('Bureau d’accueil lumineux du Cabinet Imane Oulhint')}
               decoding="async"
             />
@@ -2105,17 +2111,6 @@ function ContactPage() {
             </div>
           </article>
 
-          <article className="contact-info-card" data-contact-reveal>
-            <span className="contact-info-icon"><Clock aria-hidden="true" size={24} /></span>
-            <div>
-              <h2>{translate('Horaires')}</h2>
-              <div className="contact-hours-list">
-                {localizedHours.map((item) => (
-                  <span key={item.days}><b>{item.days}</b><small>{item.hours}</small></span>
-                ))}
-              </div>
-            </div>
-          </article>
         </div>
       </section>
 

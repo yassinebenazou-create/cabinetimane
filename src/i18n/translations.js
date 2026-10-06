@@ -170,9 +170,10 @@ export const arabicTranslations = {
     'الاثنين، الأربعاء، الجمعة · 09:00–13:00 / 14:30–18:30',
   'Mar., jeu. · 09h–18h30 · Sam. 09h–12h30':
     'الثلاثاء، الخميس · 09:00–18:30 · السبت 09:00–12:30',
-  'Contactez-moi': 'تواصلوا معي',
-  'Une question ? Un besoin d’information ? Je suis à votre écoute pour vous accompagner et répondre à vos questions.':
-    'لديكم سؤال أو تحتاجون إلى معلومات؟ أنا رهن إشارتكم لمواكبتكم والإجابة عن أسئلتكم.',
+  'Pour toute information ou prise de rendez-vous, merci de nous contacter au 05 28 23 49 49 ou via WhatsApp au 07 63 49 32 04.':
+    'لأي معلومات أو لحجز موعد، يرجى الاتصال بنا على 05 28 23 49 49 أو عبر واتساب على 07 63 49 32 04.',
+  'Nous restons à votre entière disposition pour toute information complémentaire.':
+    'نبقى رهن إشارتكم لأي معلومات إضافية.',
   'Bureau d’accueil lumineux du Cabinet Imane Oulhint': 'مكتب استقبال عيادة إيمان أولحينت',
   'Coordonnées du cabinet': 'بيانات اتصال العيادة',
   'Formulaire et localisation': 'الاستمارة والموقع',
@@ -242,7 +243,6 @@ export const arabicTranslations = {
   "Heures d'ouverture": 'أوقات العمل',
   '© 2026 Cabinet Imane Oulhint. Tous droits réservés.':
     '© 2026 عيادة إيمان أولحينت. جميع الحقوق محفوظة.',
-  'Site réalisé par': 'تصميم وتطوير',
   'Réseaux sociaux': 'شبكات التواصل الاجتماعي',
   'Prendre rendez-vous sur WhatsApp': 'حجز موعد عبر واتساب',
   'Imane Oulhint, Diététicienne Nutritionniste, propose à Agadir des solutions nutritionnelles personnalisées selon les besoins de chaque personne.':

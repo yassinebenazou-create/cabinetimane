@@ -1,4 +1,4 @@
-import { ChevronRight, ExternalLink, MapPin, MessageCircle, Phone } from 'lucide-react'
+import { ChevronRight, MapPin, MessageCircle, Phone } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { cabinet, defaultWhatsAppMessage, getWhatsAppUrl, openingHours } from '../data/site.js'
 import { useLanguage } from '../i18n/language.js'
@@ -156,21 +156,7 @@ export default function SiteFooter() {
       </div>
 
       <div className="container footer-bottom">
-        <p className="footer-copyright">
-          <span>{translate('© 2026 Cabinet Imane Oulhint. Tous droits réservés.')}</span>
-          <span className="footer-credit">
-            <span aria-hidden="true">—</span>
-            {translate('Site réalisé par')}{' '}
-            <a
-              href="https://portfolio-peach-three-57.vercel.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Yassine Benazzou
-              <ExternalLink aria-hidden="true" size={13} strokeWidth={2} />
-            </a>
-          </span>
-        </p>
+        <p>{translate('© 2026 Cabinet Imane Oulhint. Tous droits réservés.')}</p>
         <nav className="footer-social-links" aria-label={translate('Réseaux sociaux')}>
           <a
             className="footer-social-link"
