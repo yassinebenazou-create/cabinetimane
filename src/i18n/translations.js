@@ -15,13 +15,13 @@ export const arabicTranslations = {
   'Fermer le menu': 'إغلاق القائمة',
   'Navigation principale': 'التنقل الرئيسي',
   'Navigation mobile': 'التنقل عبر الهاتف',
-  'Accueil Cabinet Imane Oulhint': 'الصفحة الرئيسية لعيادة إيمان أولحينت',
-  'Imane Oulhint, Diététicienne Nutritionniste': 'إيمان أولحينت، أخصائية التغذية والحمية',
+  'Accueil Cabinet Imane Oulhint': 'الصفحة الرئيسية لعيادة إيمان أولهينت',
+  'Imane Oulhint, Diététicienne Nutritionniste': 'إيمان أولهينت، أخصائية التغذية والحمية',
   'Nutrition personnalisée': 'تغذية مخصصة',
   'pour retrouver': 'لاستعادة',
   'l’équilibre': 'التوازن',
   'Imane Oulhint, Diététicienne Nutritionniste, vous accompagne avec des solutions nutritionnelles personnalisées selon vos besoins et votre quotidien.':
-    'ترافقكم إيمان أولحينت، أخصائية التغذية والحمية، بحلول غذائية مخصصة تناسب احتياجاتكم وحياتكم اليومية.',
+    'ترافقكم إيمان أولهينت، أخصائية التغذية والحمية، بحلول غذائية مخصصة تناسب احتياجاتكم وحياتكم اليومية.',
   'Découvrir les services': 'اكتشفوا الخدمات',
   'Le cabinet': 'العيادة',
   'Une approche nutritionnelle claire, attentive et personnalisée.':
@@ -39,7 +39,7 @@ export const arabicTranslations = {
   'patients accompagnés': 'مريض تمت مواكبته',
   'étapes de suivi': 'مراحل للمتابعة',
   'plans personnalisés': 'خطط مخصصة',
-  'Vidéo de présentation du Cabinet Imane Oulhint': 'فيديو تعريفي بعيادة إيمان أولحينت',
+  'Vidéo de présentation du Cabinet Imane Oulhint': 'فيديو تعريفي بعيادة إيمان أولهينت',
   'Un accompagnement adapté à votre santé, votre objectif et votre quotidien.':
     'مواكبة ملائمة لصحتكم وأهدافكم وحياتكم اليومية.',
   'Un accompagnement adapté': 'مواكبة ملائمة',
@@ -133,7 +133,7 @@ export const arabicTranslations = {
   'Questions fréquentes sur votre accompagnement à Agadir':
     'أسئلة شائعة حول مواكبتكم في أكادير',
   'Retrouvez les réponses aux questions fréquentes concernant les consultations diététiques, le suivi nutritionnel et les soins proposés au cabinet Imane Oulhint à Agadir.':
-    'تعرفوا على أجوبة الأسئلة الشائعة حول استشارات التغذية والمتابعة الغذائية والعلاجات المقدمة في عيادة إيمان أولحينت بأكادير.',
+    'تعرفوا على أجوبة الأسئلة الشائعة حول استشارات التغذية والمتابعة الغذائية والعلاجات المقدمة في عيادة إيمان أولهينت بأكادير.',
   'Préparez votre rendez-vous et retrouvez les informations essentielles sur les consultations et les soins du cabinet.':
     'استعدوا لموعدكم واطلعوا على المعلومات الأساسية حول استشارات وخدمات العيادة.',
   'Voir toutes les questions': 'عرض جميع الأسئلة',
@@ -174,7 +174,7 @@ export const arabicTranslations = {
     'لأي معلومات أو لحجز موعد، يرجى الاتصال بنا على 05 28 23 49 49 أو عبر واتساب على 07 63 49 32 04.',
   'Nous restons à votre entière disposition pour toute information complémentaire.':
     'نبقى رهن إشارتكم لأي معلومات إضافية.',
-  'Bureau d’accueil lumineux du Cabinet Imane Oulhint': 'مكتب استقبال عيادة إيمان أولحينت',
+  'Bureau d’accueil lumineux du Cabinet Imane Oulhint': 'مكتب استقبال عيادة إيمان أولهينت',
   'Coordonnées du cabinet': 'بيانات اتصال العيادة',
   'Formulaire et localisation': 'الاستمارة والموقع',
   'Votre demande': 'طلبكم',
@@ -184,7 +184,7 @@ export const arabicTranslations = {
   Localisation: 'الموقع',
   'Notre localisation': 'موقعنا',
   'Retrouvez facilement le cabinet à Agadir.': 'اعثروا على العيادة بسهولة في أكادير.',
-  'Localisation du Cabinet Imane Oulhint à Agadir': 'موقع عيادة إيمان أولحينت في أكادير',
+  'Localisation du Cabinet Imane Oulhint à Agadir': 'موقع عيادة إيمان أولهينت في أكادير',
   'Diététique · Nutrition · Amincissement': 'الحمية · التغذية · التنحيف',
   'Voir l’itinéraire': 'عرض الاتجاهات',
   'Contact direct': 'تواصل مباشر',
@@ -203,7 +203,7 @@ export const arabicTranslations = {
   'Un accompagnement ajusté à votre évolution.': 'مواكبة تتكيف مع تطوركم.',
   'Des accompagnements adaptés à chaque parcours': 'مواكبة ملائمة لكل مسار',
   'Nutrition, suivi corporel et soins de bien-être : découvrez les services proposés au cabinet Imane Oulhint à Agadir.':
-    'التغذية وتتبع مكونات الجسم وخدمات العناية: اكتشفوا خدمات عيادة إيمان أولحينت بأكادير.',
+    'التغذية وتتبع مكونات الجسم وخدمات العناية: اكتشفوا خدمات عيادة إيمان أولهينت بأكادير.',
   'Un accompagnement adapté pour chaque cas': 'مواكبة ملائمة لكل حالة',
   "L'approche ?": 'ما هي المقاربة؟',
   'Un rééquilibrage alimentaire personnalisé, sans frustration':
@@ -215,7 +215,7 @@ export const arabicTranslations = {
   'Tous les services': 'جميع الخدمات',
   'Étapes de la consultation': 'مراحل الاستشارة',
   'Des témoignages authentiques et des parcours partagés par les patients du cabinet Imane Oulhint.':
-    'شهادات حقيقية ومسارات يشاركها مرضى عيادة إيمان أولحينت.',
+    'شهادات حقيقية ومسارات يشاركها مرضى عيادة إيمان أولهينت.',
   'Le service': 'الخدمة',
   Service: 'الخدمة',
   'Fil d’Ariane': 'مسار التنقل',
@@ -229,7 +229,7 @@ export const arabicTranslations = {
   'Votre prochain pas': 'خطوتكم التالية',
   'Besoin d’un accompagnement personnalisé ?': 'هل تحتاجون إلى مواكبة مخصصة؟',
   'Contactez le cabinet Imane Oulhint pour demander votre rendez-vous à Agadir.':
-    'تواصلوا مع عيادة إيمان أولحينت لطلب موعدكم في أكادير.',
+    'تواصلوا مع عيادة إيمان أولهينت لطلب موعدكم في أكادير.',
   'Nos services': 'خدماتنا',
   'Découvrir aussi': 'اكتشفوا أيضا',
   'Liens Utiles': 'روابط مفيدة',
@@ -242,24 +242,24 @@ export const arabicTranslations = {
   'Contact Infos': 'بيانات الاتصال',
   "Heures d'ouverture": 'أوقات العمل',
   '© 2026 Cabinet Imane Oulhint. Tous droits réservés.':
-    '© 2026 عيادة إيمان أولحينت. جميع الحقوق محفوظة.',
+    '© 2026 عيادة إيمان أولهينت. جميع الحقوق محفوظة.',
   'Réseaux sociaux': 'شبكات التواصل الاجتماعي',
   'Prendre rendez-vous sur WhatsApp': 'حجز موعد عبر واتساب',
   'Imane Oulhint, Diététicienne Nutritionniste, propose à Agadir des solutions nutritionnelles personnalisées selon les besoins de chaque personne.':
-    'تقدم إيمان أولحينت، أخصائية التغذية والحمية في أكادير، حلولا غذائية مخصصة حسب احتياجات كل شخص.',
+    'تقدم إيمان أولهينت، أخصائية التغذية والحمية في أكادير، حلولا غذائية مخصصة حسب احتياجات كل شخص.',
   'Contacter le cabinet sur WhatsApp': 'التواصل مع العيادة عبر واتساب',
-  'Suivre le cabinet Imane Oulhint sur Facebook': 'تابعوا عيادة إيمان أولحينت على فيسبوك',
-  'Suivre le cabinet Imane Oulhint sur Instagram': 'تابعوا عيادة إيمان أولحينت على إنستغرام',
-  'Suivre le cabinet Imane Oulhint sur TikTok': 'تابعوا عيادة إيمان أولحينت على تيك توك',
+  'Suivre le cabinet Imane Oulhint sur Facebook': 'تابعوا عيادة إيمان أولهينت على فيسبوك',
+  'Suivre le cabinet Imane Oulhint sur Instagram': 'تابعوا عيادة إيمان أولهينت على إنستغرام',
+  'Suivre le cabinet Imane Oulhint sur TikTok': 'تابعوا عيادة إيمان أولهينت على تيك توك',
   'Agadir Bay, Bloc D, 1er étage, N° 107, Technopole II, Agadir':
     'أكادير باي، البناية D، الطابق الأول، رقم 107، تكنوبول II، أكادير',
   'Bonjour, je souhaite prendre rendez-vous.': 'مرحبا، أود حجز موعد.',
   'Découvrir le service': 'اكتشاف الخدمة',
   'Cabinet de Diététique Nutrition et Amincissement': 'عيادة الحمية والتغذية والتنحيف',
   'Cabinet Imane Oulhint | Diététicienne Nutritionniste à Agadir':
-    'عيادة إيمان أولحينت | أخصائية التغذية والحمية في أكادير',
+    'عيادة إيمان أولهينت | أخصائية التغذية والحمية في أكادير',
   'Cabinet Imane Oulhint à Agadir : accompagnement nutritionnel personnalisé, services de bien-être et suivi adapté à vos objectifs.':
-    'عيادة إيمان أولحينت في أكادير: مواكبة غذائية مخصصة وخدمات للعناية ومتابعة ملائمة لأهدافكم.',
+    'عيادة إيمان أولهينت في أكادير: مواكبة غذائية مخصصة وخدمات للعناية ومتابعة ملائمة لأهدافكم.',
   'Icône stratégie nutritionnelle': 'أيقونة الاستراتيجية الغذائية',
   'Icône soutien individuel': 'أيقونة الدعم الفردي',
   'Icône habitudes actives': 'أيقونة العادات النشيطة',
@@ -277,7 +277,7 @@ export const arabicTranslations = {
   'Où trouver une diététicienne nutritionniste à Agadir ?':
     'أين يمكن العثور على أخصائية تغذية وحمية في أكادير؟',
   'Le cabinet Imane Oulhint accueille les personnes à Agadir souhaitant bénéficier d’un accompagnement nutritionnel personnalisé. Le suivi est adapté aux objectifs, aux habitudes alimentaires et aux besoins de chaque personne.':
-    'تستقبل عيادة إيمان أولحينت في أكادير الأشخاص الراغبين في الاستفادة من مواكبة غذائية مخصصة. ويتم تكييف المتابعة مع أهداف كل شخص وعاداته الغذائية واحتياجاته.',
+    'تستقبل عيادة إيمان أولهينت في أكادير الأشخاص الراغبين في الاستفادة من مواكبة غذائية مخصصة. ويتم تكييف المتابعة مع أهداف كل شخص وعاداته الغذائية واحتياجاته.',
   'Comment se déroule une consultation diététique à Agadir ?':
     'كيف تتم استشارة التغذية في أكادير؟',
   'La première consultation permet de faire le point sur vos habitudes alimentaires, votre mode de vie et vos objectifs. Un accompagnement personnalisé peut ensuite être mis en place selon vos besoins et votre évolution.':
@@ -312,32 +312,32 @@ export const arabicTranslations = {
   'Il est recommandé de prendre rendez-vous à l’avance afin de confirmer la disponibilité du cabinet et l’horaire de votre consultation ou de votre soin.':
     'ينصح بحجز موعد مسبقا للتأكد من توفر العيادة وتوقيت الاستشارة أو العناية.',
   'Comment prendre rendez-vous avec le cabinet Imane Oulhint à Agadir ?':
-    'كيف يمكن حجز موعد مع عيادة إيمان أولحينت في أكادير؟',
+    'كيف يمكن حجز موعد مع عيادة إيمان أولهينت في أكادير؟',
   'Le rendez-vous peut être demandé directement par téléphone ou WhatsApp, en utilisant les coordonnées indiquées sur ce site.':
     'يمكن طلب الموعد مباشرة عبر الهاتف أو واتساب باستعمال بيانات الاتصال المبينة في هذا الموقع.',
   'Où se trouve le cabinet Imane Oulhint à Agadir ?':
-    'أين توجد عيادة إيمان أولحينت في أكادير؟',
+    'أين توجد عيادة إيمان أولهينت في أكادير؟',
   'Le cabinet est situé à Agadir Bay, Bloc D, 1er étage, N° 107, Technopole II. Le lien Google Maps du cabinet permet de préparer directement votre itinéraire.':
     'تقع العيادة في أكادير باي، البناية D، الطابق الأول، رقم 107، تكنوبول II. يتيح رابط خرائط Google الخاص بالعيادة إعداد مساركم مباشرة.',
   'Services de nutrition et bien-être | Cabinet Imane Oulhint':
-    'خدمات التغذية والعناية | عيادة إيمان أولحينت',
+    'خدمات التغذية والعناية | عيادة إيمان أولهينت',
   'Découvrez les services de nutrition, les bilans et les soins de bien-être proposés par le cabinet Imane Oulhint à Agadir.':
-    'اكتشفوا خدمات التغذية والفحوصات والعناية التي تقدمها عيادة إيمان أولحينت في أكادير.',
+    'اكتشفوا خدمات التغذية والفحوصات والعناية التي تقدمها عيادة إيمان أولهينت في أكادير.',
   'Consultation diététique à Agadir | Cabinet Imane Oulhint':
-    'استشارة التغذية في أكادير | عيادة إيمان أولحينت',
+    'استشارة التغذية في أكادير | عيادة إيمان أولهينت',
   'Découvrez le déroulement d’une consultation diététique personnalisée au cabinet Imane Oulhint à Agadir, du bilan initial au suivi régulier.':
-    'اكتشفوا مراحل الاستشارة الغذائية المخصصة في عيادة إيمان أولحينت بأكادير، من التقييم الأولي إلى المتابعة المنتظمة.',
+    'اكتشفوا مراحل الاستشارة الغذائية المخصصة في عيادة إيمان أولهينت بأكادير، من التقييم الأولي إلى المتابعة المنتظمة.',
   'Résultats patients | Cabinet Imane Oulhint à Agadir':
-    'نتائج المرضى | عيادة إيمان أولحينت في أكادير',
+    'نتائج المرضى | عيادة إيمان أولهينت في أكادير',
   'Découvrez les retours, avis Google et contenus partagés par les patients du cabinet Imane Oulhint à Agadir.':
-    'اكتشفوا تجارب وآراء Google والمحتويات التي شاركها مرضى عيادة إيمان أولحينت بأكادير.',
+    'اكتشفوا تجارب وآراء Google والمحتويات التي شاركها مرضى عيادة إيمان أولهينت بأكادير.',
   'Questions fréquentes | Cabinet Imane Oulhint à Agadir':
-    'الأسئلة الشائعة | عيادة إيمان أولحينت في أكادير',
+    'الأسئلة الشائعة | عيادة إيمان أولهينت في أكادير',
   'Retrouvez les réponses aux questions fréquentes sur les consultations diététiques, le suivi nutritionnel et les soins proposés à Agadir.':
     'تعرفوا على أجوبة الأسئلة الشائعة حول استشارات التغذية والمتابعة الغذائية والعلاجات المقدمة في أكادير.',
-  'Contact | Cabinet Imane Oulhint - Agadir': 'اتصل بنا | عيادة إيمان أولحينت - أكادير',
+  'Contact | Cabinet Imane Oulhint - Agadir': 'اتصل بنا | عيادة إيمان أولهينت - أكادير',
   'Contactez le Cabinet Imane Oulhint à Agadir pour toute demande d’information ou prise de rendez-vous.':
-    'تواصلوا مع عيادة إيمان أولحينت في أكادير لطلب المعلومات أو حجز موعد.',
+    'تواصلوا مع عيادة إيمان أولهينت في أكادير لطلب المعلومات أو حجز موعد.',
 }
 
 export function translateDeep(value, translate) {

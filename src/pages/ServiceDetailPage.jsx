@@ -187,7 +187,7 @@ export default function ServiceDetailPage() {
       <main className="service-detail-page route-page" ref={pageRef}>
         <PageSeo
           title={language === 'ar'
-            ? `${service.name} في أكادير | عيادة إيمان أولحينت`
+            ? `${service.name} في أكادير | عيادة إيمان أولهينت`
             : `${service.name} à Agadir | Cabinet Imane Oulhint`}
           description={service.metaDescription}
           image={service.image}
