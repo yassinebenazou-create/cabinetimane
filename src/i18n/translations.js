@@ -20,8 +20,8 @@ export const arabicTranslations = {
   'Nutrition personnalisée': 'تغذية مخصصة',
   'pour retrouver': 'لاستعادة',
   'l’équilibre': 'التوازن',
-  'Imane Oulhint, Diététicienne Nutritionniste, vous accompagne avec des solutions nutritionnelles personnalisées selon vos besoins et votre quotidien.':
-    'ترافقكم إيمان أولهينت، أخصائية التغذية والحمية، بحلول غذائية مخصصة تناسب احتياجاتكم وحياتكم اليومية.',
+  'Imane Oulhint, Diététicienne Nutritionniste, vous accompagne avec des solutions nutritionnelles personnalisées selon vos besoins et votre mode de vie':
+    'ترافقكم إيمان أولهينت، أخصائية التغذية والحمية، بحلول غذائية مخصصة تناسب احتياجاتكم ونمط حياتكم.',
   'Découvrir les services': 'اكتشفوا الخدمات',
   'Le cabinet': 'العيادة',
   'Une approche nutritionnelle claire, attentive et personnalisée.':
@@ -33,7 +33,7 @@ export const arabicTranslations = {
     'خريجة جامعة محمد السادس لعلوم الصحة بالدار البيضاء',
   'International Nutrition Clinique': 'التغذية السريرية الدولية',
   'Chiffres clés du cabinet': 'أرقام رئيسية عن العيادة',
-  'Plus de 1200 patients accompagnés': 'أكثر من 1200 مريض تمت مواكبته',
+  'Plus de 1400 patients accompagnés': 'أكثر من 1400 مريض تمت مواكبته',
   '3 étapes de suivi': '3 مراحل للمتابعة',
   '100 pour cent de plans personnalisés': 'خطط مخصصة بنسبة 100 بالمئة',
   'patients accompagnés': 'مريض تمت مواكبته',
@@ -50,8 +50,8 @@ export const arabicTranslations = {
   'Lire plus': 'اقرأ المزيد',
   'Découvrir tous les services': 'اكتشفوا جميع الخدمات',
   'Pourquoi nous choisir': 'لماذا تختاروننا',
-  'Une prise en charge nutritionnelle claire, humaine et pensée pour durer.':
-    'مواكبة غذائية واضحة وإنسانية ومصممة للاستمرار.',
+  'Une prise en charge personnalisée, claire et adaptée au rythme de vie de chacun':
+    'مواكبة شخصية وواضحة وملائمة لوتيرة حياة كل شخص.',
   'Stratégie nutritionnelle': 'استراتيجية غذائية',
   'Des conseils clairs, adaptés à votre rythme et à vos objectifs.':
     'نصائح واضحة تناسب إيقاعكم وأهدافكم.',
@@ -142,6 +142,7 @@ export const arabicTranslations = {
     'لديكم سؤال أو ترغبون في حجز موعد؟ اتركوا بياناتكم وسنجيبكم في أقرب وقت.',
   Nom: 'الاسم',
   Email: 'البريد الإلكتروني',
+  'Écrivez-nous pour toute demande d’information': 'راسلونا عبر البريد الإلكتروني لطلب أي معلومات',
   Sujet: 'الموضوع',
   Tél: 'الهاتف',
   Téléphone: 'الهاتف',

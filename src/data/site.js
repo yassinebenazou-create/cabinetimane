@@ -6,6 +6,8 @@ export const cabinet = {
   phoneHref: 'tel:+212528234949',
   whatsappDisplay: '07 63 49 32 04',
   whatsappNumber: '212763493204',
+  email: 'moulhintimane@gmail.com',
+  emailHref: 'mailto:moulhintimane@gmail.com',
   address: 'Agadir Bay, Bloc D, 1er étage, N° 107, Technopole II, Agadir',
   mapsUrl: 'https://maps.app.goo.gl/ySn7P1XEkWU57EU27?g_st=iw',
   mapsEmbedUrl:

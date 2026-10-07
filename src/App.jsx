@@ -398,7 +398,7 @@ const heroVideos = [
 ]
 
 const cabinetStatTargets = {
-  patients: 1200,
+  patients: 1400,
   steps: 3,
   plans: 100,
 }
@@ -1205,7 +1205,7 @@ function HomePage() {
             </h1>
             <p>
               {translate(
-                'Imane Oulhint, Diététicienne Nutritionniste, vous accompagne avec des solutions nutritionnelles personnalisées selon vos besoins et votre quotidien.',
+                'Imane Oulhint, Diététicienne Nutritionniste, vous accompagne avec des solutions nutritionnelles personnalisées selon vos besoins et votre mode de vie',
               )}
             </p>
             <div className="hero-actions">
@@ -1251,7 +1251,7 @@ function HomePage() {
                 aria-label={translate('Chiffres clés du cabinet')}
                 ref={cabinetStatsRef}
               >
-                <div role="group" aria-label={translate('Plus de 1200 patients accompagnés')}>
+                <div role="group" aria-label={translate('Plus de 1400 patients accompagnés')}>
                   <strong aria-hidden="true">+{cabinetStatValues.patients}</strong>
                   <span>{translate('patients accompagnés')}</span>
                 </div>
@@ -1361,7 +1361,7 @@ function HomePage() {
             <div className="why-choice-heading">
               <span>{translate('Pourquoi nous choisir')}</span>
               <h2>Cabinet Imane Oulhint</h2>
-              <p>{translate('Une prise en charge nutritionnelle claire, humaine et pensée pour durer.')}</p>
+              <p>{translate('Une prise en charge personnalisée, claire et adaptée au rythme de vie de chacun')}</p>
             </div>
 
             <div className="why-choice-layout">
@@ -2108,6 +2108,15 @@ function ContactPage() {
                 {cabinet.whatsappDisplay}
               </a>
               <small>{translate('Message direct au cabinet')}</small>
+            </div>
+          </article>
+
+          <article className="contact-info-card" data-contact-reveal>
+            <span className="contact-info-icon"><Mail aria-hidden="true" size={24} /></span>
+            <div>
+              <h2>{translate('Email')}</h2>
+              <a href={cabinet.emailHref}>{cabinet.email}</a>
+              <small>{translate('Écrivez-nous pour toute demande d’information')}</small>
             </div>
           </article>
 
