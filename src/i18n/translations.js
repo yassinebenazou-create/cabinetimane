@@ -102,12 +102,12 @@ export const arabicTranslations = {
   'Des conseils adaptés': 'نصائح ملائمة',
   'Simples et réalistes': 'بسيطة وواقعية',
   'Suivi régulier': 'متابعة منتظمة',
-  'Ajustements et échanges réguliers pour faire évoluer les recommandations avec méthode.':
-    'تعديلات وتواصل منتظم لتطوير التوصيات بطريقة منهجية.',
-  'Un accompagnement continu': 'مواكبة مستمرة',
-  'Selon votre évolution': 'حسب تطوركم',
+  'Des échanges réguliers et des ajustements adaptés pour faire évoluer les recommandations de manière progressive et structurée.':
+    'تواصل منتظم وتعديلات ملائمة لتطوير التوصيات بشكل تدريجي ومنظم.',
+  'Un accompagnement continu, adapté à votre évolution.': 'مواكبة مستمرة تتكيف مع تطوركم.',
   'Chaque petit pas compte': 'كل خطوة صغيرة مهمة',
   'Découvrir la consultation': 'اكتشفوا الاستشارة',
+  'Masquer les détails': 'إخفاء التفاصيل',
   'Mieux manger': 'غذاء أفضل',
   'pour mieux vivre': 'لحياة أفضل',
   'Avis patients': 'آراء المرضى',

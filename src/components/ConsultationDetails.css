@@ -1,0 +1,82 @@
+.consultation-details-control {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding-top: 24px;
+  padding-bottom: 32px;
+}
+
+.consultation-details-toggle {
+  cursor: pointer;
+  font: inherit;
+  font-weight: 800;
+}
+
+.consultation-details-toggle:focus-visible {
+  outline: 3px solid var(--brand-blue);
+  outline-offset: 5px;
+}
+
+.consultation-details-toggle svg {
+  transition: transform 250ms ease;
+}
+
+.consultation-details-toggle[aria-expanded='true'] svg {
+  transform: rotate(180deg);
+}
+
+.consultation-details-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  scroll-margin-top: 104px;
+  transition: grid-template-rows 600ms cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0s 600ms;
+}
+
+.consultation-details-panel.is-expanded {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+.consultation-details-content {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.consultation-details-panel .process-item {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 350ms ease, transform 350ms ease;
+}
+
+.consultation-details-panel.is-expanded .process-item {
+  opacity: 1;
+  transform: translateY(0);
+  transition-duration: 550ms;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: 80ms;
+}
+
+.consultation-details-panel.is-expanded .process-item:nth-child(2) {
+  transition-delay: 210ms;
+}
+
+.consultation-details-panel.is-expanded .process-item:nth-child(3) {
+  transition-delay: 340ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .consultation-details-panel,
+  .consultation-details-panel .process-item,
+  .consultation-details-toggle svg {
+    transition: none;
+  }
+
+  .consultation-details-panel .process-item {
+    transform: none;
+  }
+}

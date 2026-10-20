@@ -31,6 +31,7 @@ import {
   Video,
 } from 'lucide-react'
 import Navbar from './components/Navbar.jsx'
+import ConsultationDetails from './components/ConsultationDetails.tsx'
 import PageSeo from './components/PageSeo.jsx'
 import SiteFooter, { FloatingContact } from './components/SiteFooter.jsx'
 import { getAbsoluteSiteUrl } from './data/seo.js'
@@ -206,9 +207,8 @@ const process = [
     icon: TrendingUp,
     detailIcon: Heart,
     title: 'Suivi régulier',
-    text: 'Ajustements et échanges réguliers pour faire évoluer les recommandations avec méthode.',
-    detailTitle: 'Un accompagnement continu',
-    detailText: 'Selon votre évolution',
+    text: 'Des échanges réguliers et des ajustements adaptés pour faire évoluer les recommandations de manière progressive et structurée.',
+    detailTitle: 'Un accompagnement continu, adapté à votre évolution.',
   },
 ]
 
@@ -393,7 +393,6 @@ const scrollRevealGroups = [
 
 const heroVideos = [
   { src: '/hero-nutrition-1.mp4', displayDuration: 6000 },
-  { src: '/hero-nutrition-2.mp4', displayDuration: 10000 },
   { src: '/hero-nutrition-3.mp4', displayDuration: 7000 },
 ]
 
@@ -1465,7 +1464,7 @@ function HomePage() {
                       <DetailIcon aria-hidden="true" size={22} strokeWidth={1.8} />
                       <span>
                         <strong>{detailTitle}</strong>
-                        <small>{detailText}</small>
+                        {detailText && <small>{detailText}</small>}
                       </span>
                     </div>
                   </div>
@@ -1480,7 +1479,7 @@ function HomePage() {
             </p>
             <div className="section-route-action">
               <Link className="outline-route-button" to="/consultation">
-                {translate('Découvrir la consultation')}
+                {translate('Prendre rendez-vous')}
                 <ChevronRight aria-hidden="true" size={18} />
               </Link>
             </div>
@@ -1832,43 +1831,55 @@ function ConsultationPage() {
         title="Votre accompagnement, étape par étape"
         text="Du premier bilan au suivi régulier, chaque rendez-vous s’inscrit dans une démarche claire, personnalisée et durable."
       />
-      <section className="process-section section-pad inner-process-section" aria-label={translate('Étapes de la consultation')}>
-        <div className="container process-container">
-          <div className="process-grid">
-            {localizedProcess.map(
-              ({ step, icon: Icon, detailIcon: DetailIcon, title, text, detailTitle, detailText }) => (
-                <article className="process-item" data-page-reveal key={step}>
-                  <div className="process-marker">
-                    <Icon aria-hidden="true" size={28} strokeWidth={1.8} />
-                    <span>{step}</span>
-                  </div>
-                  <div className="process-content">
-                    <h2>{title}</h2>
-                    <p>{text}</p>
-                    <div className="process-detail">
-                      <DetailIcon aria-hidden="true" size={22} strokeWidth={1.8} />
-                      <span>
-                        <strong>{detailTitle}</strong>
-                        <small>{detailText}</small>
-                      </span>
+      <ConsultationDetails
+        bookingAction={
+          <Link className="primary-button" to="/contact">
+            {translate('Prendre rendez-vous')}
+            <ChevronRight aria-hidden="true" size={18} />
+          </Link>
+        }
+        openLabel={translate('Découvrir la consultation')}
+        closeLabel={translate('Masquer les détails')}
+        regionLabel={translate('Étapes de la consultation')}
+      >
+        <section className="process-section section-pad inner-process-section" aria-label={translate('Étapes de la consultation')}>
+          <div className="container process-container">
+            <div className="process-grid">
+              {localizedProcess.map(
+                ({ step, icon: Icon, detailIcon: DetailIcon, title, text, detailTitle, detailText }) => (
+                  <article className="process-item" key={step}>
+                    <div className="process-marker">
+                      <Icon aria-hidden="true" size={28} strokeWidth={1.8} />
+                      <span>{step}</span>
                     </div>
-                  </div>
-                </article>
-              ),
-            )}
+                    <div className="process-content">
+                      <h2>{title}</h2>
+                      <p>{text}</p>
+                      <div className="process-detail">
+                        <DetailIcon aria-hidden="true" size={22} strokeWidth={1.8} />
+                        <span>
+                          <strong>{detailTitle}</strong>
+                          {detailText && <small>{detailText}</small>}
+                        </span>
+                      </div>
+                    </div>
+                  </article>
+                ),
+              )}
+            </div>
+            <p className="process-signature">
+              {translate('Chaque petit pas compte')}
+              <Heart aria-hidden="true" size={18} strokeWidth={1.7} />
+            </p>
+            <div className="section-route-action">
+              <Link className="primary-button" to="/contact">
+                {translate('Prendre rendez-vous')}
+                <ChevronRight aria-hidden="true" size={18} />
+              </Link>
+            </div>
           </div>
-          <p className="process-signature" data-page-reveal>
-            {translate('Chaque petit pas compte')}
-            <Heart aria-hidden="true" size={18} strokeWidth={1.7} />
-          </p>
-          <div className="section-route-action" data-page-reveal>
-            <Link className="primary-button" to="/contact">
-              {translate('Prendre rendez-vous')}
-              <ChevronRight aria-hidden="true" size={18} />
-            </Link>
-          </div>
-        </div>
-      </section>
+        </section>
+      </ConsultationDetails>
     </main>
   )
 }
