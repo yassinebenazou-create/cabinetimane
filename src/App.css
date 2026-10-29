@@ -2489,7 +2489,8 @@ details p {
   line-height: 1.25;
 }
 
-.footer-services img {
+.footer-services img,
+.footer-services svg {
   width: 58px;
   height: 58px;
   padding: 14px;
@@ -3492,7 +3493,8 @@ details p {
     grid-template-columns: 58px minmax(0, 1fr);
   }
 
-  .footer-services img {
+  .footer-services img,
+  .footer-services svg {
     width: 48px;
     height: 48px;
     padding: 12px;

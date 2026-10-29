@@ -129,7 +129,7 @@ const services = [
   {
     slug: 'amincissement', name: 'Amincissement', cardTitle: 'Amincissement',
     cardText: 'Un accompagnement ciblé pour les zones du corps qui vous dérangent.',
-    typeLabel: 'Soin silhouette', cardIcon: 'scale', iconAlt: 'Icône amincissement',
+    typeLabel: 'Soin silhouette', cardIcon: 'amincissement', iconAlt: 'Icône amincissement',
     image: '/images/services/amincissement.webp', imageAlt: 'Accompagnement d’amincissement ciblé au niveau de la silhouette',
     heroIntro: 'Un accompagnement d’amincissement à Agadir adapté aux zones de votre silhouette que vous souhaitez cibler.',
     introTitle: 'Qu’est-ce que l’amincissement ?',

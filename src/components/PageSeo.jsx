@@ -1,9 +1,11 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
+import { getBreadcrumbStructuredData } from '../data/schema.js'
 import { getAbsoluteSiteUrl } from '../data/seo.js'
+import { defaultShareImage, defaultShareImageAlt, siteName } from '../data/seoPages.js'
 import { useLanguage } from '../i18n/language.js'
 
-const defaultShareImage = '/service-gestion-poids.webp'
+const indexableRobots = 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'
 
 function setMeta(attribute, key, content) {
   let element = document.head.querySelector(`meta[${attribute}="${key}"]`)
@@ -33,8 +35,10 @@ export default function PageSeo({
   title,
   description,
   image = defaultShareImage,
-  imageAlt = 'Cabinet Imane Oulhint à Agadir',
+  imageAlt = defaultShareImageAlt,
   type = 'website',
+  noindex = false,
+  breadcrumbs,
 }) {
   const { pathname } = useLocation()
   const { language, translate } = useLanguage()
@@ -42,18 +46,29 @@ export default function PageSeo({
   const localizedDescription = translate(description)
   const localizedImageAlt = translate(imageAlt)
 
+  // The canonical URL never carries a trailing slash (except for the home page)
+  // so that /services and /services/ resolve to one indexable address.
+  const canonicalPath = pathname.length > 1 ? pathname.replace(/\/+$/, '') : '/'
+
   useEffect(() => {
-    const canonicalUrl = getAbsoluteSiteUrl(pathname || '/')
+    const canonicalUrl = getAbsoluteSiteUrl(canonicalPath)
     const imageUrl = getAbsoluteSiteUrl(image)
     const locale = language === 'ar' ? 'ar_MA' : 'fr_MA'
     const alternateLocale = language === 'ar' ? 'fr_MA' : 'ar_MA'
 
     document.title = localizedTitle
-    setCanonical(canonicalUrl)
+
+    if (noindex) {
+      // Non-indexable pages (404) must not advertise a canonical URL.
+      document.head.querySelector('link[rel="canonical"]')?.remove()
+    } else {
+      setCanonical(canonicalUrl)
+    }
+
     setMeta('name', 'description', localizedDescription)
-    setMeta('name', 'robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1')
+    setMeta('name', 'robots', noindex ? 'noindex, follow' : indexableRobots)
     setMeta('property', 'og:type', type)
-    setMeta('property', 'og:site_name', 'Cabinet Imane Oulhint')
+    setMeta('property', 'og:site_name', siteName)
     setMeta('property', 'og:locale', locale)
     setMeta('property', 'og:locale:alternate', alternateLocale)
     setMeta('property', 'og:title', localizedTitle)
@@ -65,7 +80,24 @@ export default function PageSeo({
     setMeta('name', 'twitter:title', localizedTitle)
     setMeta('name', 'twitter:description', localizedDescription)
     setMeta('name', 'twitter:image', imageUrl)
-  }, [image, language, localizedDescription, localizedImageAlt, localizedTitle, pathname, type])
+    setMeta('name', 'twitter:image:alt', localizedImageAlt)
+  }, [canonicalPath, image, language, localizedDescription, localizedImageAlt, localizedTitle, noindex, type])
 
-  return null
+  if (!breadcrumbs?.length) {
+    return null
+  }
+
+  const breadcrumbData = {
+    '@context': 'https://schema.org',
+    ...getBreadcrumbStructuredData(
+      breadcrumbs.map((item) => ({ name: translate(item.name), path: item.path })),
+    ),
+  }
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbData) }}
+    />
+  )
 }

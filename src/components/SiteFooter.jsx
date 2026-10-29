@@ -1,4 +1,4 @@
-import { ChevronRight, MapPin, MessageCircle, Phone } from 'lucide-react'
+import { ChevronRight, Mail, MessageCircle, Phone } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { cabinet, defaultWhatsAppMessage, getWhatsAppUrl, openingHours } from '../data/site.js'
 import { useLanguage } from '../i18n/language.js'
@@ -79,6 +79,10 @@ export default function SiteFooter() {
               <ChevronRight aria-hidden="true" size={18} />
               {translate('Consultation')}
             </Link>
+            <Link to="/faq">
+              <ChevronRight aria-hidden="true" size={18} />
+              {translate('FAQ')}
+            </Link>
             <Link to="/contact">
               <ChevronRight aria-hidden="true" size={18} />
               {translate('Contact')}
@@ -104,6 +108,10 @@ export default function SiteFooter() {
             <Link to="/services/bilan-oligoscan">
               <img src="/service-icon-04.png" alt="" aria-hidden="true" />
               {translate('Bilan Oligoscan')}
+            </Link>
+            <Link to="/services/amincissement">
+              <img src="/service-icon-amincissement.png" alt="" aria-hidden="true" />
+              {translate('Amincissement')}
             </Link>
           </div>
         </div>
@@ -132,18 +140,12 @@ export default function SiteFooter() {
               </a>
             </span>
             <span>
-              <MapPin aria-hidden="true" size={28} />
-              <a
-                href={cabinet.mapsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {translate(cabinet.address)}
-              </a>
+              <Mail aria-hidden="true" size={28} />
+              <a href={cabinet.emailHref}>{cabinet.email}</a>
             </span>
           </div>
 
-          <h2 className="footer-hours-title">{translate("Heures d'ouverture")}</h2>
+          <h2 className="footer-hours-title">{translate("Horaires d'ouverture")}</h2>
           <div className="footer-hours">
             {localizedHours.map((item) => (
               <div key={item.days}>

@@ -1,19 +1,9 @@
-function getConfiguredOrigin() {
-  const configuredUrl = import.meta.env.VITE_SITE_URL?.trim()
+import { defaultSiteOrigin, normalizeOrigin } from './siteConfig.js'
 
-  if (configuredUrl) {
-    return configuredUrl.replace(/\/$/, '')
-  }
-
-  return typeof window === 'undefined' ? '' : window.location.origin
+export function getSiteOrigin() {
+  return normalizeOrigin(import.meta.env.VITE_SITE_URL) || defaultSiteOrigin
 }
 
 export function getAbsoluteSiteUrl(path = '/') {
-  const origin = getConfiguredOrigin()
-
-  if (!origin) {
-    return path
-  }
-
-  return new URL(path, `${origin}/`).href
+  return new URL(path, `${getSiteOrigin()}/`).href
 }

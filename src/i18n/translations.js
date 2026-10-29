@@ -1,3 +1,5 @@
+import { defaultShareImageAlt, notFoundPage, seoPages } from '../data/seoPages.js'
+
 export const arabicTranslations = {
   Accueil: 'الرئيسية',
   Services: 'الخدمات',
@@ -20,7 +22,7 @@ export const arabicTranslations = {
   'Nutrition personnalisée': 'تغذية مخصصة',
   'pour retrouver': 'لاستعادة',
   'l’équilibre': 'التوازن',
-  'Imane Oulhint, Diététicienne Nutritionniste, vous accompagne avec des solutions nutritionnelles personnalisées selon vos besoins et votre mode de vie':
+  'Imane Oulhint, Diététicienne Nutritionniste à Agadir, vous accompagne avec des solutions nutritionnelles personnalisées selon vos besoins et votre mode de vie':
     'ترافقكم إيمان أولهينت، أخصائية التغذية والحمية، بحلول غذائية مخصصة تناسب احتياجاتكم ونمط حياتكم.',
   'Découvrir les services': 'اكتشفوا الخدمات',
   'Le cabinet': 'العيادة',
@@ -241,7 +243,7 @@ export const arabicTranslations = {
   'Bilan corporel – TANITA': 'فحص مكونات الجسم – TANITA',
   'Bilan Oligoscan': 'فحص Oligoscan',
   'Contact Infos': 'بيانات الاتصال',
-  "Heures d'ouverture": 'أوقات العمل',
+  "Horaires d'ouverture": 'أوقات العمل',
   '© 2026 Cabinet Imane Oulhint. Tous droits réservés.':
     '© 2026 عيادة إيمان أولهينت. جميع الحقوق محفوظة.',
   'Réseaux sociaux': 'شبكات التواصل الاجتماعي',
@@ -257,10 +259,6 @@ export const arabicTranslations = {
   'Bonjour, je souhaite prendre rendez-vous.': 'مرحبا، أود حجز موعد.',
   'Découvrir le service': 'اكتشاف الخدمة',
   'Cabinet de Diététique Nutrition et Amincissement': 'عيادة الحمية والتغذية والتنحيف',
-  'Cabinet Imane Oulhint | Diététicienne Nutritionniste à Agadir':
-    'عيادة إيمان أولهينت | أخصائية التغذية والحمية في أكادير',
-  'Cabinet Imane Oulhint à Agadir : accompagnement nutritionnel personnalisé, services de bien-être et suivi adapté à vos objectifs.':
-    'عيادة إيمان أولهينت في أكادير: مواكبة غذائية مخصصة وخدمات للعناية ومتابعة ملائمة لأهدافكم.',
   'Icône stratégie nutritionnelle': 'أيقونة الاستراتيجية الغذائية',
   'Icône soutien individuel': 'أيقونة الدعم الفردي',
   'Icône habitudes actives': 'أيقونة العادات النشيطة',
@@ -302,7 +300,7 @@ export const arabicTranslations = {
     'نعم. التصريف اللمفاوي من الخدمات التي تقدمها العيادة. يمكن التواصل مع العيادة للمزيد من المعلومات وحجز موعد.',
   'Le cabinet propose-t-il des séances de pressothérapie à Agadir ?':
     'هل تقدم العيادة جلسات العلاج بالضغط الهوائي في أكادير؟',
-  'Oui. Des séances de pressothérapie sont proposées au cabinet. Contactez directement le cabinet pour obtenir davantage d’informations sur la prestation et les modalités de rendez-vous.':
+  'Oui, des séances de pressothérapie sont proposées au cabinet. Pour obtenir davantage d’informations sur la prestation et les modalités de prise de rendez-vous, nous vous invitons à contacter directement le cabinet.':
     'نعم. تقدم العيادة جلسات العلاج بالضغط الهوائي. تواصلوا مباشرة مع العيادة للمزيد من المعلومات حول الخدمة وكيفية حجز الموعد.',
   'Combien de séances sont nécessaires pour un suivi nutritionnel ?':
     'كم عدد الجلسات اللازمة للمتابعة الغذائية؟',
@@ -320,25 +318,43 @@ export const arabicTranslations = {
     'أين توجد عيادة إيمان أولهينت في أكادير؟',
   'Le cabinet est situé à Agadir Bay, Bloc D, 1er étage, N° 107, Technopole II. Le lien Google Maps du cabinet permet de préparer directement votre itinéraire.':
     'تقع العيادة في أكادير باي، البناية D، الطابق الأول، رقم 107، تكنوبول II. يتيح رابط خرائط Google الخاص بالعيادة إعداد مساركم مباشرة.',
-  'Services de nutrition et bien-être | Cabinet Imane Oulhint':
-    'خدمات التغذية والعناية | عيادة إيمان أولهينت',
-  'Découvrez les services de nutrition, les bilans et les soins de bien-être proposés par le cabinet Imane Oulhint à Agadir.':
-    'اكتشفوا خدمات التغذية والفحوصات والعناية التي تقدمها عيادة إيمان أولهينت في أكادير.',
-  'Consultation diététique à Agadir | Cabinet Imane Oulhint':
-    'استشارة التغذية في أكادير | عيادة إيمان أولهينت',
-  'Découvrez le déroulement d’une consultation diététique personnalisée au cabinet Imane Oulhint à Agadir, du bilan initial au suivi régulier.':
-    'اكتشفوا مراحل الاستشارة الغذائية المخصصة في عيادة إيمان أولهينت بأكادير، من التقييم الأولي إلى المتابعة المنتظمة.',
   'Résultats patients | Cabinet Imane Oulhint à Agadir':
     'نتائج المرضى | عيادة إيمان أولهينت في أكادير',
   'Découvrez les retours, avis Google et contenus partagés par les patients du cabinet Imane Oulhint à Agadir.':
     'اكتشفوا تجارب وآراء Google والمحتويات التي شاركها مرضى عيادة إيمان أولهينت بأكادير.',
-  'Questions fréquentes | Cabinet Imane Oulhint à Agadir':
-    'الأسئلة الشائعة | عيادة إيمان أولهينت في أكادير',
-  'Retrouvez les réponses aux questions fréquentes sur les consultations diététiques, le suivi nutritionnel et les soins proposés à Agadir.':
-    'تعرفوا على أجوبة الأسئلة الشائعة حول استشارات التغذية والمتابعة الغذائية والعلاجات المقدمة في أكادير.',
-  'Contact | Cabinet Imane Oulhint - Agadir': 'اتصل بنا | عيادة إيمان أولهينت - أكادير',
-  'Contactez le Cabinet Imane Oulhint à Agadir pour toute demande d’information ou prise de rendez-vous.':
-    'تواصلوا مع عيادة إيمان أولهينت في أكادير لطلب المعلومات أو حجز موعد.',
+  // SEO titles, descriptions and headings (see src/data/seoPages.js)
+  [seoPages.home.title]: 'أخصائية التغذية والحمية في أكادير | إيمان أولهينت',
+  [seoPages.home.description]:
+    'اكتشفوا عيادة إيمان أولهينت، أخصائية التغذية والحمية في أكادير. تدبير الوزن، التغذية العلاجية وفحوصات مخصصة. تواصلوا مع العيادة.',
+  [seoPages.services.title]: 'خدمات التغذية في أكادير | عيادة إيمان أولهينت',
+  [seoPages.services.description]:
+    'إعادة التوازن الغذائي، التغذية العلاجية، فحصا TANITA وOligoscan، التنحيف: اكتشفوا خدمات عيادة إيمان أولهينت في أكادير.',
+  [seoPages.consultation.title]: 'استشارة غذائية في أكادير | إيمان أولهينت',
+  [seoPages.consultation.description]:
+    'اكتشفوا مراحل الاستشارة الغذائية المخصصة في عيادة إيمان أولهينت بأكادير، من التقييم الأولي إلى المتابعة المنتظمة.',
+  [seoPages.results.title]: 'نتائج المرضى | عيادة إيمان أولهينت في أكادير',
+  [seoPages.results.description]:
+    'اكتشفوا تجارب وآراء Google والمحتويات التي شاركها مرضى عيادة إيمان أولهينت بأكادير.',
+  [seoPages.faq.title]: 'أسئلة حول التغذية | عيادة إيمان أولهينت في أكادير',
+  [seoPages.faq.description]:
+    'أجوبة عن الأسئلة الشائعة حول الاستشارة الغذائية والمتابعة وحجز المواعيد والعلاجات التي تقدمها عيادة إيمان أولهينت في أكادير.',
+  [seoPages.contact.title]: 'التواصل وحجز موعد | أخصائية تغذية في أكادير',
+  [seoPages.contact.description]:
+    'احجزوا موعدا مع إيمان أولهينت، أخصائية التغذية والحمية في أكادير: الهاتف، واتساب، البريد الإلكتروني وعنوان العيادة في أكادير باي، تكنوبول II.',
+  [notFoundPage.title]: 'الصفحة غير موجودة | عيادة إيمان أولهينت',
+  [notFoundPage.description]:
+    'الصفحة المطلوبة غير موجودة. تعرفوا على خدمات عيادة إيمان أولهينت في أكادير وبيانات التواصل.',
+  [defaultShareImageAlt]: 'شعار عيادة إيمان أولهينت، أخصائية التغذية والحمية في أكادير',
+  'Services de nutrition et bilans à Agadir': 'خدمات التغذية والفحوصات في أكادير',
+  'Votre consultation nutritionnelle à Agadir': 'استشارتكم الغذائية في أكادير',
+  'Expériences des patients au cabinet à Agadir': 'تجارب مرضى العيادة في أكادير',
+  'Contact et rendez-vous à Agadir': 'التواصل وحجز المواعيد في أكادير',
+  'Page introuvable': 'الصفحة غير موجودة',
+  'Erreur 404': 'خطأ 404',
+  'La page que vous recherchez n’existe pas ou a été déplacée. Retrouvez nos services et nos coordonnées depuis l’accueil.':
+    'الصفحة التي تبحثون عنها غير موجودة أو تم نقلها. يمكنكم الاطلاع على خدماتنا وبيانات التواصل انطلاقا من الصفحة الرئيسية.',
+  'Retour à l’accueil': 'العودة إلى الصفحة الرئيسية',
+  'Voir les services': 'عرض الخدمات',
 }
 
 export function translateDeep(value, translate) {

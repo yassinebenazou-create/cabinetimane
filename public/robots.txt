@@ -1,2 +1,6 @@
 User-agent: *
 Allow: /
+
+# Update this line together with VITE_SITE_URL when the official domain is connected.
+# (npm run build regenerates dist/robots.txt automatically from the configured origin.)
+Sitemap: https://cabinetimane.vercel.app/sitemap.xml

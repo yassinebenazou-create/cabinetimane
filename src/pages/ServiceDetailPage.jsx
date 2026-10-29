@@ -18,7 +18,9 @@ import {
 } from 'lucide-react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import PageSeo from '../components/PageSeo.jsx'
+import { getCabinetReference } from '../data/schema.js'
 import { getAbsoluteSiteUrl } from '../data/seo.js'
+import { getServiceSeoTitle } from '../data/seoPages.js'
 import services, { serviceAliases } from '../data/services.js'
 import { useLanguage } from '../i18n/language.js'
 import { localizeService } from '../i18n/services.ar.js'
@@ -95,16 +97,11 @@ export default function ServiceDetailPage() {
           description: service.metaDescription,
           url: serviceUrl,
           image: getAbsoluteSiteUrl(service.image),
-          areaServed: {
-            '@type': 'City',
-            name: 'Agadir',
-          },
-          provider: {
-            '@type': 'MedicalBusiness',
-            '@id': `${homeUrl}#cabinet`,
-            name: 'Cabinet Imane Oulhint',
-            url: homeUrl,
-          },
+          // A remote follow-up is not limited to the Agadir premises.
+          ...(service.slug === 'suivi-nutritionnel-a-distance'
+            ? {}
+            : { areaServed: { '@type': 'City', name: 'Agadir' } }),
+          provider: getCabinetReference(),
         },
         {
           '@type': 'BreadcrumbList',
@@ -188,7 +185,7 @@ export default function ServiceDetailPage() {
         <PageSeo
           title={language === 'ar'
             ? `${service.name} في أكادير | عيادة إيمان أولهينت`
-            : `${service.name} à Agadir | Cabinet Imane Oulhint`}
+            : getServiceSeoTitle(service)}
           description={service.metaDescription}
           image={service.image}
           imageAlt={service.imageAlt}

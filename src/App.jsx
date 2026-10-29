@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { BrowserRouter, Link, Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom'
+import { BrowserRouter, Link, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import {
   Apple,
   CalendarCheck,
@@ -34,7 +34,8 @@ import Navbar from './components/Navbar.jsx'
 import ConsultationDetails from './components/ConsultationDetails.tsx'
 import PageSeo from './components/PageSeo.jsx'
 import SiteFooter, { FloatingContact } from './components/SiteFooter.jsx'
-import { getAbsoluteSiteUrl } from './data/seo.js'
+import { getHomeStructuredData } from './data/schema.js'
+import { notFoundPage, seoPages } from './data/seoPages.js'
 import services, { serviceCardSlugs } from './data/services.js'
 import { cabinet, defaultWhatsAppMessage, getWhatsAppUrl } from './data/site.js'
 import { useLanguage } from './i18n/language.js'
@@ -251,7 +252,7 @@ const faqs = [
   {
     question: 'Le cabinet propose-t-il des séances de pressothérapie à Agadir ?',
     answer:
-      'Oui. Des séances de pressothérapie sont proposées au cabinet. Contactez directement le cabinet pour obtenir davantage d’informations sur la prestation et les modalités de rendez-vous.',
+      'Oui, des séances de pressothérapie sont proposées au cabinet. Pour obtenir davantage d’informations sur la prestation et les modalités de prise de rendez-vous, nous vous invitons à contacter directement le cabinet.',
   },
   {
     question: 'Combien de séances sont nécessaires pour un suivi nutritionnel ?',
@@ -287,87 +288,6 @@ function getFaqStructuredData(items) {
       text: answer,
     },
     })),
-  }
-}
-
-function getLocalBusinessStructuredData() {
-  const homeUrl = getAbsoluteSiteUrl('/')
-
-  return {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': 'WebSite',
-        '@id': `${homeUrl}#website`,
-        url: homeUrl,
-        name: 'Cabinet Imane Oulhint',
-        alternateName: 'Cabinet de Diététique Nutrition et Amincissement Imane Oulhint',
-        inLanguage: ['fr-MA', 'ar-MA'],
-      },
-      {
-        '@type': 'MedicalBusiness',
-        '@id': `${homeUrl}#cabinet`,
-        name: 'Cabinet Imane Oulhint',
-        alternateName: 'Cabinet de Diététique Nutrition et Amincissement Imane Oulhint',
-        description:
-          'Cabinet de diététique et nutrition à Agadir proposant des consultations nutritionnelles personnalisées, des bilans et des soins de bien-être.',
-        url: homeUrl,
-        logo: getAbsoluteSiteUrl('/imane-logo-new.png'),
-        image: getAbsoluteSiteUrl('/service-gestion-poids.webp'),
-        telephone: '+212528234949',
-        hasMap: cabinet.mapsUrl,
-        sameAs: [cabinet.instagramUrl, cabinet.facebookUrl, cabinet.tiktokUrl],
-        address: {
-          '@type': 'PostalAddress',
-          streetAddress: 'Agadir Bay, Bloc D, 1er étage, N° 107, Technopole II',
-          addressLocality: 'Agadir',
-          addressRegion: 'Souss-Massa',
-          postalCode: '80020',
-          addressCountry: 'MA',
-        },
-        geo: {
-          '@type': 'GeoCoordinates',
-          latitude: 30.4025,
-          longitude: -9.5867,
-        },
-        areaServed: {
-          '@type': 'City',
-          name: 'Agadir',
-        },
-        contactPoint: {
-          '@type': 'ContactPoint',
-          telephone: '+212528234949',
-          contactType: 'appointments',
-          availableLanguage: ['French', 'Arabic'],
-        },
-        openingHoursSpecification: [
-          {
-            '@type': 'OpeningHoursSpecification',
-            dayOfWeek: ['Monday', 'Wednesday', 'Friday'],
-            opens: '09:00',
-            closes: '13:00',
-          },
-          {
-            '@type': 'OpeningHoursSpecification',
-            dayOfWeek: ['Monday', 'Wednesday', 'Friday'],
-            opens: '14:30',
-            closes: '18:30',
-          },
-          {
-            '@type': 'OpeningHoursSpecification',
-            dayOfWeek: ['Tuesday', 'Thursday'],
-            opens: '09:00',
-            closes: '18:30',
-          },
-          {
-            '@type': 'OpeningHoursSpecification',
-            dayOfWeek: 'Saturday',
-            opens: '09:00',
-            closes: '12:30',
-          },
-        ],
-      },
-    ],
   }
 }
 
@@ -415,6 +335,23 @@ function shouldReduceMotion() {
     typeof window !== 'undefined' &&
     window.matchMedia('(prefers-reduced-motion: reduce)').matches
   )
+}
+
+const elfsightPlatformSrc = 'https://elfsightcdn.com/platform.js'
+
+// The Google reviews widget is only rendered on the home and results pages, so its
+// third-party script is loaded on demand instead of on every page.
+function useElfsightPlatform() {
+  useEffect(() => {
+    if (document.querySelector(`script[src="${elfsightPlatformSrc}"]`)) {
+      return
+    }
+
+    const script = document.createElement('script')
+    script.src = elfsightPlatformSrc
+    script.async = true
+    document.body.appendChild(script)
+  }, [])
 }
 
 function useRoutePageReveal(pageRef) {
@@ -559,6 +496,10 @@ function StomachIcon() {
 }
 
 function ServiceCardIcon({ name }) {
+  if (name === 'amincissement') {
+    return <img src="/service-icon-amincissement.png" alt="" draggable="false" />
+  }
+
   if (name === 'clipboard-apple') {
     return (
       <span className="service-icon-combo service-icon-clipboard">
@@ -747,11 +688,8 @@ function HomePage() {
   const localizedProcess = useMemo(() => localize(process), [localize])
   const localizedFaqs = useMemo(() => localize(faqs), [localize])
   const localizedHighlights = useMemo(() => localize(instagramHighlights), [localize])
-  const localizedFaqStructuredData = useMemo(
-    () => getFaqStructuredData(localizedFaqs),
-    [localizedFaqs],
-  )
-  const localBusinessStructuredData = useMemo(() => getLocalBusinessStructuredData(), [])
+  const homeStructuredData = useMemo(() => getHomeStructuredData(), [])
+  useElfsightPlatform()
   const [activeHeroVideo, setActiveHeroVideo] = useState(0)
   const [shouldShowServicesImmediately] = useState(shouldRevealImmediately)
   const [shouldShowWhyImmediately] = useState(shouldRevealImmediately)
@@ -1171,12 +1109,12 @@ function HomePage() {
   return (
       <main className="route-page home-page">
         <PageSeo
-          title="Cabinet Imane Oulhint | Diététicienne Nutritionniste à Agadir"
-          description="Cabinet Imane Oulhint à Agadir : accompagnement nutritionnel personnalisé, services de bien-être et suivi adapté à vos objectifs."
+          title={seoPages.home.title}
+          description={seoPages.home.description}
         />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(localBusinessStructuredData) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(homeStructuredData) }}
         />
         <section
           className={`hero-section${activeHeroVideo === 2 ? ' hero-section-light' : ''}`}
@@ -1204,7 +1142,7 @@ function HomePage() {
             </h1>
             <p>
               {translate(
-                'Imane Oulhint, Diététicienne Nutritionniste, vous accompagne avec des solutions nutritionnelles personnalisées selon vos besoins et votre mode de vie',
+                'Imane Oulhint, Diététicienne Nutritionniste à Agadir, vous accompagne avec des solutions nutritionnelles personnalisées selon vos besoins et votre mode de vie',
               )}
             </p>
             <div className="hero-actions">
@@ -1590,10 +1528,6 @@ function HomePage() {
           id="faq"
           aria-labelledby="faq-heading"
         >
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(localizedFaqStructuredData) }}
-          />
           <div className="container faq-grid">
             <div className="section-intro">
               <span>{translate('FAQ')}</span>
@@ -1790,12 +1724,13 @@ function ServicesPage() {
   return (
     <main className="route-page inner-page services-page" ref={pageRef}>
       <PageSeo
-        title="Services de nutrition et bien-être | Cabinet Imane Oulhint"
-        description="Découvrez les services de nutrition, les bilans et les soins de bien-être proposés par le cabinet Imane Oulhint à Agadir."
-      />
+          title={seoPages.services.title}
+          description={seoPages.services.description}
+          breadcrumbs={[{ name: 'Accueil', path: '/' }, { name: 'Services', path: '/services' }]}
+        />
       <InnerPageHeader
         eyebrow="Services"
-        title="Un accompagnement adapté pour chaque cas"
+        title="Services de nutrition et bilans à Agadir"
         approachTitle="L'approche ?"
         approachPoints={[
           'Un rééquilibrage alimentaire personnalisé, sans frustration',
@@ -1823,12 +1758,13 @@ function ConsultationPage() {
   return (
     <main className="route-page inner-page consultation-page" ref={pageRef}>
       <PageSeo
-        title="Consultation diététique à Agadir | Cabinet Imane Oulhint"
-        description="Découvrez le déroulement d’une consultation diététique personnalisée au cabinet Imane Oulhint à Agadir, du bilan initial au suivi régulier."
-      />
+          title={seoPages.consultation.title}
+          description={seoPages.consultation.description}
+          breadcrumbs={[{ name: 'Accueil', path: '/' }, { name: 'Consultation', path: '/consultation' }]}
+        />
       <InnerPageHeader
         eyebrow="Consultation"
-        title="Votre accompagnement, étape par étape"
+        title="Votre consultation nutritionnelle à Agadir"
         text="Du premier bilan au suivi régulier, chaque rendez-vous s’inscrit dans une démarche claire, personnalisée et durable."
       />
       <ConsultationDetails
@@ -1889,16 +1825,18 @@ function ResultsPage() {
   const { localize, translate } = useLanguage()
   const localizedHighlights = useMemo(() => localize(instagramHighlights), [localize])
   useRoutePageReveal(pageRef)
+  useElfsightPlatform()
 
   return (
     <main className="route-page inner-page results-page" ref={pageRef}>
       <PageSeo
-        title="Résultats patients | Cabinet Imane Oulhint à Agadir"
-        description="Découvrez les retours, avis Google et contenus partagés par les patients du cabinet Imane Oulhint à Agadir."
-      />
+          title={seoPages.results.title}
+          description={seoPages.results.description}
+          breadcrumbs={[{ name: 'Accueil', path: '/' }, { name: 'Résultats patients', path: '/resultats-patients' }]}
+        />
       <InnerPageHeader
         eyebrow="Résultats patients"
-        title="Leur expérience au cabinet"
+        title="Expériences des patients au cabinet à Agadir"
         text="Des témoignages authentiques et des parcours partagés par les patients du cabinet Imane Oulhint."
       />
       <section className="results-section section-pad results-page-content">
@@ -1985,9 +1923,10 @@ function FaqPage() {
   return (
     <main className="route-page inner-page faq-page" ref={pageRef}>
       <PageSeo
-        title="Questions fréquentes | Cabinet Imane Oulhint à Agadir"
-        description="Retrouvez les réponses aux questions fréquentes sur les consultations diététiques, le suivi nutritionnel et les soins proposés à Agadir."
-      />
+          title={seoPages.faq.title}
+          description={seoPages.faq.description}
+          breadcrumbs={[{ name: 'Accueil', path: '/' }, { name: 'FAQ', path: '/faq' }]}
+        />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(localizedFaqStructuredData) }}
@@ -2062,9 +2001,10 @@ function ContactPage() {
   return (
     <main className="route-page contact-page" ref={pageRef}>
       <PageSeo
-        title="Contact | Cabinet Imane Oulhint - Agadir"
-        description="Contactez le Cabinet Imane Oulhint à Agadir pour toute demande d’information ou prise de rendez-vous."
-      />
+          title={seoPages.contact.title}
+          description={seoPages.contact.description}
+          breadcrumbs={[{ name: 'Accueil', path: '/' }, { name: 'Contact', path: '/contact' }]}
+        />
 
       <section className="contact-hero" aria-labelledby="contact-page-title">
         <div className="container contact-hero-grid">
@@ -2075,7 +2015,7 @@ function ContactPage() {
               <span aria-current="page">{translate('Contact')}</span>
             </nav>
             <span className="contact-eyebrow">{translate('Contact')}</span>
-            <h1 id="contact-page-title">{translate('Contactez-nous')}</h1>
+            <h1 id="contact-page-title">{translate('Contact et rendez-vous à Agadir')}</h1>
             <p>
               {translate(
                 'Pour toute information ou prise de rendez-vous, merci de nous contacter au 05 28 23 49 49 ou via WhatsApp au 07 63 49 32 04.',
@@ -2257,6 +2197,38 @@ function ContactPage() {
   )
 }
 
+function NotFoundPage() {
+  const pageRef = useRef(null)
+  const { translate } = useLanguage()
+  useRoutePageReveal(pageRef)
+
+  return (
+    <main className="route-page inner-page not-found-page" ref={pageRef}>
+      <PageSeo title={notFoundPage.title} description={notFoundPage.description} noindex />
+      <InnerPageHeader
+        eyebrow="Erreur 404"
+        title="Page introuvable"
+        text="La page que vous recherchez n’existe pas ou a été déplacée. Retrouvez nos services et nos coordonnées depuis l’accueil."
+      />
+      <section className="section-pad" aria-label={translate('Page introuvable')}>
+        <div className="container">
+          <div className="section-route-action" style={{ gap: 16, flexWrap: 'wrap', marginTop: 0 }}>
+            <Link className="primary-button" to="/">
+              {translate('Retour à l’accueil')}
+            </Link>
+            <Link className="outline-route-button" to="/services">
+              {translate('Voir les services')}
+            </Link>
+            <Link className="outline-route-button" to="/contact">
+              {translate('Contact')}
+            </Link>
+          </div>
+        </div>
+      </section>
+    </main>
+  )
+}
+
 function App() {
   return (
     <BrowserRouter>
@@ -2270,8 +2242,8 @@ function App() {
           <Route path="/resultats-patients" element={<ResultsPage />} />
           <Route path="/faq" element={<FaqPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Route>
-        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   )

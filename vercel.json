@@ -1,8 +1,16 @@
 {
-  "rewrites": [
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "source": "/services/analyse-du-corps",
+      "destination": "/services/bilan-corporel-tanita",
+      "permanent": true
+    },
+    {
+      "source": "/services/troubles-des-conduites-alimentaires",
+      "destination": "/services/troubles-nutritionnels",
+      "permanent": true
     }
   ]
 }
