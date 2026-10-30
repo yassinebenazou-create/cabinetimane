@@ -9,6 +9,7 @@ export function getAbsoluteSiteUrl(path = '/') {
 }
 
 export function getAbsolutePageUrl(path = '/') {
-  const normalizedPath = `/${path.replace(/^\/+|\/+$/g, '')}`
+  const { pathname } = new URL(path, `${getSiteOrigin()}/`)
+  const normalizedPath = `/${pathname.replace(/^\/+|\/+$/g, '')}`
   return getAbsoluteSiteUrl(normalizedPath === '/' ? '/' : `${normalizedPath}/`)
 }
