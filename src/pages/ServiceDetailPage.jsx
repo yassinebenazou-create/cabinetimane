@@ -19,7 +19,7 @@ import {
 import { Link, Navigate, useParams } from 'react-router-dom'
 import PageSeo from '../components/PageSeo.jsx'
 import { getCabinetReference } from '../data/schema.js'
-import { getAbsoluteSiteUrl } from '../data/seo.js'
+import { getAbsolutePageUrl, getAbsoluteSiteUrl } from '../data/seo.js'
 import { getServiceSeoTitle } from '../data/seoPages.js'
 import services, { serviceAliases } from '../data/services.js'
 import { useLanguage } from '../i18n/language.js'
@@ -84,7 +84,7 @@ export default function ServiceDetailPage() {
     }
 
     const homeUrl = getAbsoluteSiteUrl('/')
-    const serviceUrl = getAbsoluteSiteUrl(`/services/${service.slug}`)
+    const serviceUrl = getAbsolutePageUrl(`/services/${service.slug}`)
 
     return {
       '@context': 'https://schema.org',
@@ -116,7 +116,7 @@ export default function ServiceDetailPage() {
               '@type': 'ListItem',
               position: 2,
               name: translate('Services'),
-              item: getAbsoluteSiteUrl('/services'),
+              item: getAbsolutePageUrl('/services'),
             },
             {
               '@type': 'ListItem',

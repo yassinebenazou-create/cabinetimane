@@ -1,4 +1,4 @@
-import { getAbsoluteSiteUrl } from './seo.js'
+import { getAbsolutePageUrl, getAbsoluteSiteUrl } from './seo.js'
 import { cabinet } from './site.js'
 import { siteName } from './seoPages.js'
 
@@ -117,7 +117,7 @@ export function getBreadcrumbStructuredData(items) {
       '@type': 'ListItem',
       position: index + 1,
       name: item.name,
-      item: getAbsoluteSiteUrl(item.path),
+      item: getAbsolutePageUrl(item.path),
     })),
   }
 }

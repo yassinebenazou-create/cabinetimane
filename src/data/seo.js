@@ -1,9 +1,14 @@
-import { defaultSiteOrigin, normalizeOrigin } from './siteConfig.js'
+import { defaultSiteOrigin } from './siteConfig.js'
 
 export function getSiteOrigin() {
-  return normalizeOrigin(import.meta.env.VITE_SITE_URL) || defaultSiteOrigin
+  return defaultSiteOrigin
 }
 
 export function getAbsoluteSiteUrl(path = '/') {
   return new URL(path, `${getSiteOrigin()}/`).href
+}
+
+export function getAbsolutePageUrl(path = '/') {
+  const normalizedPath = `/${path.replace(/^\/+|\/+$/g, '')}`
+  return getAbsoluteSiteUrl(normalizedPath === '/' ? '/' : `${normalizedPath}/`)
 }

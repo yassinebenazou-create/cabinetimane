@@ -1,8 +1,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { loadEnv } from 'vite'
-import { defaultSiteOrigin, normalizeOrigin } from '../src/data/siteConfig.js'
+import { defaultSiteOrigin } from '../src/data/siteConfig.js'
 import {
   defaultShareImage,
   defaultShareImageAlt,
@@ -18,10 +17,7 @@ const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 const distDir = path.join(rootDir, 'dist')
 const sourceHtml = await readFile(path.join(distDir, 'index.html'), 'utf8')
 
-// Production origin: VITE_SITE_URL (shell env or .env files) when the official
-// domain is configured, otherwise the verified Vercel production origin.
-const env = { ...loadEnv('production', rootDir, 'VITE_'), ...process.env }
-const siteUrl = normalizeOrigin(env.VITE_SITE_URL) || defaultSiteOrigin
+const siteUrl = defaultSiteOrigin
 
 const indexableRobots = 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'
 
@@ -66,6 +62,15 @@ function absoluteUrl(urlPath) {
   return new URL(urlPath, `${siteUrl}/`).href
 }
 
+function canonicalPath(urlPath) {
+  const normalizedPath = `/${urlPath.replace(/^\/+|\/+$/g, '')}`
+  return normalizedPath === '/' ? '/' : `${normalizedPath}/`
+}
+
+function pageUrl(urlPath) {
+  return absoluteUrl(canonicalPath(urlPath))
+}
+
 function upsertMeta(html, attribute, key, content) {
   const pattern = new RegExp(`<meta\\s+[^>]*${attribute}=["']${escapeRegExp(key)}["'][^>]*>`, 'i')
   const tag = `<meta ${attribute}="${escapeHtml(key)}" content="${escapeHtml(content)}" />`
@@ -75,11 +80,11 @@ function upsertMeta(html, attribute, key, content) {
 
 function buildNoscript(route) {
   const links = [
-    ...staticRoutes.map((item) => ({ href: item.path, label: item.title.split(' | ')[0] })),
+    ...staticRoutes.map((item) => ({ href: canonicalPath(item.path), label: item.title.split(' | ')[0] })),
   ]
   const nav = links.map((link) => `<li><a href="${escapeHtml(link.href)}">${escapeHtml(link.label)}</a></li>`).join('')
   const serviceLinks = services
-    .map((service) => `<li><a href="/services/${escapeHtml(service.slug)}">${escapeHtml(service.name)}</a></li>`)
+    .map((service) => `<li><a href="${canonicalPath(`/services/${service.slug}`)}">${escapeHtml(service.name)}</a></li>`)
     .join('')
 
   // Shown only when JavaScript is disabled: a readable fallback with the same
@@ -98,7 +103,7 @@ function buildNoscript(route) {
 }
 
 function buildHtml(route) {
-  const canonicalUrl = absoluteUrl(route.path)
+  const canonicalUrl = pageUrl(route.path)
   const imageUrl = absoluteUrl(route.image)
   let html = sourceHtml.replace(/<title>[^<]*<\/title>/i, `<title>${escapeHtml(route.title)}</title>`)
 
@@ -178,7 +183,7 @@ await writeFile(path.join(distDir, '404.html'), build404Html(), 'utf8')
 const sitemap = [
   '<?xml version="1.0" encoding="UTF-8"?>',
   '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
-  ...routes.map((route) => `  <url><loc>${escapeXml(absoluteUrl(route.path))}</loc></url>`),
+  ...routes.map((route) => `  <url><loc>${escapeXml(pageUrl(route.path))}</loc></url>`),
   '</urlset>',
   '',
 ].join('\n')

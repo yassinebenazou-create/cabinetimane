@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { getBreadcrumbStructuredData } from '../data/schema.js'
-import { getAbsoluteSiteUrl } from '../data/seo.js'
+import { getAbsolutePageUrl, getAbsoluteSiteUrl } from '../data/seo.js'
 import { defaultShareImage, defaultShareImageAlt, siteName } from '../data/seoPages.js'
 import { useLanguage } from '../i18n/language.js'
 
@@ -46,12 +46,11 @@ export default function PageSeo({
   const localizedDescription = translate(description)
   const localizedImageAlt = translate(imageAlt)
 
-  // The canonical URL never carries a trailing slash (except for the home page)
-  // so that /services and /services/ resolve to one indexable address.
+  // Cloudflare Pages serves directory route shells at their trailing-slash URL.
   const canonicalPath = pathname.length > 1 ? pathname.replace(/\/+$/, '') : '/'
 
   useEffect(() => {
-    const canonicalUrl = getAbsoluteSiteUrl(canonicalPath)
+    const canonicalUrl = getAbsolutePageUrl(canonicalPath)
     const imageUrl = getAbsoluteSiteUrl(image)
     const locale = language === 'ar' ? 'ar_MA' : 'fr_MA'
     const alternateLocale = language === 'ar' ? 'fr_MA' : 'ar_MA'
