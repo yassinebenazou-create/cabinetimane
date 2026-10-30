@@ -2,7 +2,7 @@ const services = [
   {
     slug: 'perte-de-poids', name: 'Gestion du poids', cardTitle: 'Gestion du poids',
     cardText: 'Un suivi personnalisé pour l’obésité, l’amincissement ou le manque d’appétit.',
-    typeLabel: 'Service nutritionnel', iconImage: '/service-icon-09.png', iconAlt: 'Icône gestion du poids',
+    typeLabel: 'Service nutritionnel', cardIcon: 'scale', iconAlt: 'Icône gestion du poids',
     image: '/service-gestion-poids.webp', imageAlt: 'Accompagnement nutritionnel personnalisé pour la gestion du poids',
     heroIntro: 'Un accompagnement nutritionnel à Agadir adapté à vos besoins, à vos habitudes et à votre rythme de vie.',
     introTitle: 'En quoi consiste l’accompagnement en gestion du poids ?',
@@ -30,7 +30,7 @@ const services = [
   {
     slug: 'nutrition-maladies-chroniques', name: 'Nutrition et maladies chroniques', cardTitle: 'Nutrition & maladies chroniques',
     cardText: 'Un suivi nutritionnel adapté au diabète, au cholestérol et à la goutte.',
-    typeLabel: 'Nutrition clinique', cardIcon: 'heart-pulse', iconImage: '/service-icon-07.png', iconAlt: 'Icône nutrition clinique',
+    typeLabel: 'Nutrition clinique', cardIcon: 'apple-measuring-tape', iconImage: '/service-icon-gestion-poids.png', iconAlt: 'Icône nutrition clinique',
     image: '/images/services/Nutrition & maladies chroniques → HeartPulse.webp', imageAlt: 'Accompagnement nutritionnel pour les maladies chroniques',
     heroIntro: 'Un suivi nutritionnel à Agadir tenant compte de votre situation, de vos habitudes et de votre prise en charge médicale.',
     introTitle: 'Quel est le rôle de l’accompagnement nutritionnel ?',
@@ -100,7 +100,7 @@ const services = [
   {
     slug: 'bilan-corporel-tanita', name: 'Bilan corporel – TANITA', cardTitle: 'Bilan corporel – TANITA',
     cardText: 'Une analyse de la composition corporelle avec un impédancemètre professionnel.',
-    typeLabel: 'Bilan corporel', cardIcon: 'scale', iconImage: '/service-icon-04.png', iconAlt: 'Icône bilan corporel TANITA',
+    typeLabel: 'Bilan corporel', cardIcon: 'scale', iconAlt: 'Icône bilan corporel TANITA',
     image: '/images/services/Bilan corporel.webp', imageAlt: 'Bilan de composition corporelle',
     heroIntro: 'Un bilan à Agadir pour analyser plus précisément plusieurs composantes de votre composition corporelle.',
     introTitle: 'Qu’est-ce que le bilan corporel TANITA ?', audienceTitle: 'Ce qui est analysé',
@@ -129,7 +129,7 @@ const services = [
   {
     slug: 'amincissement', name: 'Amincissement', cardTitle: 'Amincissement',
     cardText: 'Un accompagnement ciblé pour les zones du corps qui vous dérangent.',
-    typeLabel: 'Soin silhouette', cardIcon: 'amincissement', iconAlt: 'Icône amincissement',
+    typeLabel: 'Soin silhouette', cardIcon: 'amincissement', iconImage: '/service-icon-amincissement.png', iconAlt: 'Icône amincissement',
     image: '/images/services/amincissement.webp', imageAlt: 'Accompagnement d’amincissement ciblé au niveau de la silhouette',
     heroIntro: 'Un accompagnement d’amincissement à Agadir adapté aux zones de votre silhouette que vous souhaitez cibler.',
     introTitle: 'Qu’est-ce que l’amincissement ?',
@@ -176,6 +176,7 @@ export const serviceAliases = {
 }
 
 export const serviceCardSlugs = [
+  'perte-de-poids',
   'reequilibrage-alimentaire',
   'amincissement',
   'nutrition-maladies-chroniques',

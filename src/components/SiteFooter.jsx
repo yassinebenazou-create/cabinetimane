@@ -1,7 +1,23 @@
 import { ChevronRight, Mail, MessageCircle, Phone } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import ServiceCardIcon from './ServiceCardIcon.jsx'
+import services from '../data/services.js'
 import { cabinet, defaultWhatsAppMessage, getWhatsAppUrl, openingHours } from '../data/site.js'
 import { useLanguage } from '../i18n/language.js'
+
+const footerServiceLinks = [
+  { slug: 'perte-de-poids', label: 'Gestion du poids' },
+  { slug: 'nutrition-maladies-chroniques', label: 'Nutrition clinique' },
+  { slug: 'bilan-corporel-tanita', label: 'Bilan corporel – TANITA' },
+  { slug: 'bilan-oligoscan', label: 'Bilan Oligoscan' },
+  { slug: 'amincissement', label: 'Amincissement' },
+].map((item) => {
+  const service = services.find(({ slug }) => slug === item.slug)
+  if (!service) {
+    throw new Error(`Missing service data for footer link "${item.slug}"`)
+  }
+  return { ...item, service }
+})
 
 export function FacebookIcon() {
   return (
@@ -93,26 +109,14 @@ export default function SiteFooter() {
         <div className="footer-column">
           <h2>{translate('Services')}</h2>
           <div className="footer-services">
-            <Link to="/services/perte-de-poids">
-              <img src="/service-icon-09.png" alt="" aria-hidden="true" />
-              {translate('Gestion du poids')}
-            </Link>
-            <Link to="/services/nutrition-maladies-chroniques">
-              <img src="/service-icon-06.png" alt="" aria-hidden="true" />
-              {translate('Nutrition clinique')}
-            </Link>
-            <Link to="/services/bilan-corporel-tanita">
-              <img src="/service-icon-07.png" alt="" aria-hidden="true" />
-              {translate('Bilan corporel – TANITA')}
-            </Link>
-            <Link to="/services/bilan-oligoscan">
-              <img src="/service-icon-04.png" alt="" aria-hidden="true" />
-              {translate('Bilan Oligoscan')}
-            </Link>
-            <Link to="/services/amincissement">
-              <img src="/service-icon-amincissement.png" alt="" aria-hidden="true" />
-              {translate('Amincissement')}
-            </Link>
+            {footerServiceLinks.map(({ slug, label, service }) => (
+              <Link to={`/services/${slug}`} key={slug}>
+                <span className="footer-service-icon" aria-hidden="true">
+                  <ServiceCardIcon name={service.cardIcon} image={service.iconImage} />
+                </span>
+                {translate(label)}
+              </Link>
+            ))}
           </div>
         </div>
 

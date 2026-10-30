@@ -2477,26 +2477,91 @@ details p {
   gap: 24px;
 }
 
-.footer-services span {
-  display: grid;
-  grid-template-columns: 70px minmax(0, 1fr);
-  gap: 16px;
+.footer-service-icon {
+  display: inline-flex;
   align-items: center;
-  min-height: 64px;
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 1.08rem;
-  font-weight: 800;
-  line-height: 1.25;
-}
-
-.footer-services img,
-.footer-services svg {
+  justify-content: center;
   width: 58px;
   height: 58px;
-  padding: 14px;
   border-radius: 50%;
   background: var(--brand-green);
+  color: #fff;
+}
+
+.footer-service-icon > img,
+.footer-service-icon > svg {
+  width: 30px;
+  height: 30px;
   object-fit: contain;
+}
+
+.footer-service-icon > svg {
+  stroke-width: 1.8;
+}
+
+.footer-service-icon .service-icon-combo {
+  width: 30px;
+  height: 30px;
+}
+
+.footer-service-icon .service-icon-combo svg:first-child {
+  inset: 2px;
+  width: 25px;
+  height: 25px;
+}
+
+.footer-service-icon .service-icon-combo svg:last-child {
+  width: 14px;
+  height: 14px;
+  padding: 1px;
+}
+
+.footer-service-icon .service-icon-utensils svg:first-child {
+  inset: 3px 5px;
+  width: 20px;
+  height: 25px;
+}
+
+.footer-service-icon .service-icon-hand-scan svg:last-child {
+  width: 16px;
+  height: 16px;
+}
+
+@media (max-width: 900px) {
+  .footer-service-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  .footer-service-icon > img,
+  .footer-service-icon > svg,
+  .footer-service-icon .service-icon-combo {
+    width: 24px;
+    height: 24px;
+  }
+
+  .footer-service-icon .service-icon-combo svg:first-child {
+    inset: 2px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .footer-service-icon .service-icon-combo svg:last-child {
+    width: 12px;
+    height: 12px;
+    padding: 1px;
+  }
+
+  .footer-service-icon .service-icon-utensils svg:first-child {
+    inset: 2px 4px;
+    width: 16px;
+    height: 20px;
+  }
+
+  .footer-service-icon .service-icon-hand-scan svg:last-child {
+    width: 13px;
+    height: 13px;
+  }
 }
 
 .footer-contact-list {
@@ -3487,17 +3552,6 @@ details p {
   .footer-social-links {
     width: 100%;
     justify-content: center;
-  }
-
-  .footer-services span {
-    grid-template-columns: 58px minmax(0, 1fr);
-  }
-
-  .footer-services img,
-  .footer-services svg {
-    width: 48px;
-    height: 48px;
-    padding: 12px;
   }
 
   .floating-contact {
