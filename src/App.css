@@ -3238,8 +3238,9 @@ details p {
   }
 
   .brand-link {
-    width: min(210px, calc(100% - 128px));
-    height: 58px;
+    width: min(248px, calc(100% - 128px));
+    height: clamp(62px, calc(58px + 3vw), 70px);
+    max-width: 100%;
   }
 
   .mobile-nav-actions {
@@ -3605,7 +3606,7 @@ details p {
   }
 
   .brand-link {
-    width: min(150px, calc(100% - 124px));
+    width: min(170px, calc(100% - 126px));
   }
 
   .menu-toggle {

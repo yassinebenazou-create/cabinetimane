@@ -1,7 +1,18 @@
 {
   "cleanUrls": true,
-  "trailingSlash": false,
+  "trailingSlash": true,
   "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www\\.nutritionniste-agadir\\.com"
+        }
+      ],
+      "destination": "https://nutritionniste-agadir.com/:path*",
+      "statusCode": 301
+    },
     {
       "source": "/services/analyse-du-corps",
       "destination": "/services/bilan-corporel-tanita",

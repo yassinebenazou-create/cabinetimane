@@ -2,6 +2,12 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { defaultSiteOrigin } from '../src/data/siteConfig.js'
+import { faqs, getFaqStructuredData } from '../src/data/faqs.js'
+import {
+  getBreadcrumbStructuredData,
+  getHomeStructuredData,
+  getServiceStructuredData,
+} from '../src/data/schema.js'
 import {
   defaultShareImage,
   defaultShareImageAlt,
@@ -23,11 +29,31 @@ const indexableRobots = 'index, follow, max-image-preview:large, max-snippet:-1,
 
 const staticRoutes = [
   { ...seoPages.home, heading: 'Nutrition personnalisée pour retrouver l’équilibre' },
-  { ...seoPages.services, heading: 'Services de nutrition et bilans à Agadir' },
-  { ...seoPages.consultation, heading: 'Votre consultation nutritionnelle à Agadir' },
-  { ...seoPages.results, heading: 'Expériences des patients au cabinet à Agadir' },
-  { ...seoPages.faq, heading: 'Questions fréquentes sur votre accompagnement à Agadir' },
-  { ...seoPages.contact, heading: 'Contact et rendez-vous à Agadir' },
+  {
+    ...seoPages.services,
+    heading: 'Services de nutrition et bilans à Agadir',
+    breadcrumbs: [{ name: 'Accueil', path: '/' }, { name: 'Services', path: '/services' }],
+  },
+  {
+    ...seoPages.consultation,
+    heading: 'Votre consultation nutritionnelle à Agadir',
+    breadcrumbs: [{ name: 'Accueil', path: '/' }, { name: 'Consultation', path: '/consultation' }],
+  },
+  {
+    ...seoPages.results,
+    heading: 'Expériences des patients au cabinet à Agadir',
+    breadcrumbs: [{ name: 'Accueil', path: '/' }, { name: 'Résultats patients', path: '/resultats-patients' }],
+  },
+  {
+    ...seoPages.faq,
+    heading: 'Questions fréquentes sur votre accompagnement à Agadir',
+    breadcrumbs: [{ name: 'Accueil', path: '/' }, { name: 'FAQ', path: '/faq' }],
+  },
+  {
+    ...seoPages.contact,
+    heading: 'Contact et rendez-vous à Agadir',
+    breadcrumbs: [{ name: 'Accueil', path: '/' }, { name: 'Contact', path: '/contact' }],
+  },
 ].map((route) => ({ ...route, image: defaultShareImage, imageAlt: defaultShareImageAlt }))
 
 const routes = [
@@ -39,6 +65,7 @@ const routes = [
     heading: service.name,
     image: service.image,
     imageAlt: service.imageAlt,
+    service,
   })),
 ]
 
@@ -69,6 +96,41 @@ function canonicalPath(urlPath) {
 
 function pageUrl(urlPath) {
   return absoluteUrl(canonicalPath(urlPath))
+}
+
+function getStructuredData(route) {
+  if (route.path === '/') {
+    return [{ name: 'home', data: getHomeStructuredData() }]
+  }
+
+  const schemas = []
+
+  if (route.service) {
+    schemas.push({ name: 'service', data: getServiceStructuredData(route.service) })
+  } else if (route.path === '/faq') {
+    schemas.push({ name: 'faq', data: getFaqStructuredData(faqs) })
+  }
+
+  if (route.breadcrumbs) {
+    schemas.push({
+      name: 'breadcrumbs',
+      data: {
+        '@context': 'https://schema.org',
+        ...getBreadcrumbStructuredData(route.breadcrumbs),
+      },
+    })
+  }
+
+  return schemas
+}
+
+function buildStructuredData(route) {
+  return getStructuredData(route)
+    .map(({ name, data }) => {
+      const json = JSON.stringify(data).replaceAll('<', '\\u003c')
+      return `    <script type="application/ld+json" data-seo-schema="${name}">${json}</script>`
+    })
+    .join('\n')
 }
 
 function removeHomeHeroPreload(html) {
@@ -137,6 +199,7 @@ function buildHtml(route) {
 
   html = html.replace(/\s*<link\s+[^>]*rel=["']canonical["'][^>]*>/i, '')
   html = html.replace('</head>', `    <link rel="canonical" href="${escapeHtml(canonicalUrl)}" />\n  </head>`)
+  html = html.replace('</head>', `${buildStructuredData(route)}\n  </head>`)
   html = html.replace('<div id="root"></div>', `<div id="root"></div>\n${buildNoscript(route)}`)
 
   return html

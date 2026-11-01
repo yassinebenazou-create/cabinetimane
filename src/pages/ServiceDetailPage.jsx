@@ -16,10 +16,11 @@ import {
   TrendingUp,
   UsersRound,
 } from 'lucide-react'
-import { Link, Navigate, useParams } from 'react-router-dom'
+import { Navigate, useParams } from 'react-router-dom'
 import PageSeo from '../components/PageSeo.jsx'
-import { getCabinetReference } from '../data/schema.js'
-import { getAbsolutePageUrl, getAbsoluteSiteUrl } from '../data/seo.js'
+import RouteLink from '../components/RouteLink.jsx'
+import StructuredData from '../components/StructuredData.jsx'
+import { getServiceStructuredData } from '../data/schema.js'
 import { getServiceSeoTitle } from '../data/seoPages.js'
 import services, { serviceAliases } from '../data/services.js'
 import { useLanguage } from '../i18n/language.js'
@@ -84,51 +85,10 @@ export default function ServiceDetailPage() {
       return null
     }
 
-    const homeUrl = getAbsoluteSiteUrl('/')
-    const serviceUrl = getAbsolutePageUrl(`/services/${service.slug}`)
-
-    return {
-      '@context': 'https://schema.org',
-      '@graph': [
-        {
-          '@type': 'Service',
-          '@id': `${serviceUrl}#service`,
-          name: service.name,
-          serviceType: service.name,
-          description: service.metaDescription,
-          url: serviceUrl,
-          image: getAbsoluteSiteUrl(service.image),
-          // A remote follow-up is not limited to the Agadir premises.
-          ...(service.slug === 'suivi-nutritionnel-a-distance'
-            ? {}
-            : { areaServed: { '@type': 'City', name: 'Agadir' } }),
-          provider: getCabinetReference(),
-        },
-        {
-          '@type': 'BreadcrumbList',
-          itemListElement: [
-            {
-              '@type': 'ListItem',
-              position: 1,
-              name: translate('Accueil'),
-              item: homeUrl,
-            },
-            {
-              '@type': 'ListItem',
-              position: 2,
-              name: translate('Services'),
-              item: getAbsolutePageUrl('/services'),
-            },
-            {
-              '@type': 'ListItem',
-              position: 3,
-              name: service.name,
-              item: serviceUrl,
-            },
-          ],
-        },
-      ],
-    }
+    return getServiceStructuredData(service, {
+      home: translate('Accueil'),
+      services: translate('Services'),
+    })
   }, [service, translate])
 
   useEffect(() => {
@@ -172,11 +132,11 @@ export default function ServiceDetailPage() {
   }, [service])
 
   if (aliasTarget) {
-    return <Navigate to={`/services/${aliasTarget}`} replace />
+    return <Navigate to={`/services/${aliasTarget}/`} replace />
   }
 
   if (!service) {
-    return <Navigate to="/services" replace />
+    return <Navigate to="/services/" replace />
   }
 
   const hasLongTitleWord = service.name.split(/\s+/).some((word) => word.length >= 13)
@@ -191,10 +151,7 @@ export default function ServiceDetailPage() {
           image={service.image}
           imageAlt={service.imageAlt}
         />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceStructuredData) }}
-        />
+        <StructuredData name="service" data={serviceStructuredData} />
         <section className="service-detail-hero" aria-labelledby="service-detail-title">
           <div
             className="container service-detail-hero-grid service-detail-hero-enter"
@@ -202,9 +159,9 @@ export default function ServiceDetailPage() {
           >
             <div className="service-detail-hero-copy">
               <nav className="service-breadcrumb service-hero-enter-meta" aria-label={translate('Fil d’Ariane')}>
-                <Link to="/">{translate('Accueil')}</Link>
+                <RouteLink to="/">{translate('Accueil')}</RouteLink>
                 <ChevronRight aria-hidden="true" size={15} />
-                <Link to="/services">{translate('Services')}</Link>
+                <RouteLink to="/services">{translate('Services')}</RouteLink>
                 <ChevronRight aria-hidden="true" size={15} />
                 <span aria-current="page">{service.name}</span>
               </nav>
@@ -217,10 +174,10 @@ export default function ServiceDetailPage() {
               </h1>
               <p className="service-hero-enter-description">{service.heroIntro}</p>
               <span className="service-hero-enter-cta">
-                <Link className="primary-button service-detail-primary" to="/contact">
+                <RouteLink className="primary-button service-detail-primary" to="/contact">
                   <CalendarCheck aria-hidden="true" size={19} />
                   {translate('Prendre rendez-vous')}
-                </Link>
+                </RouteLink>
               </span>
             </div>
 
@@ -317,10 +274,10 @@ export default function ServiceDetailPage() {
               <h2>{translate('Besoin d’un accompagnement personnalisé ?')}</h2>
               <p>{translate('Contactez le cabinet Imane Oulhint pour demander votre rendez-vous à Agadir.')}</p>
             </div>
-            <Link className="service-detail-cta-button" to="/contact">
+            <RouteLink className="service-detail-cta-button" to="/contact">
               <CalendarCheck aria-hidden="true" size={20} />
               {translate('Prendre rendez-vous')}
-            </Link>
+            </RouteLink>
           </Reveal>
         </section>
 
@@ -333,7 +290,7 @@ export default function ServiceDetailPage() {
             <div className="service-related-grid">
               {relatedServices.map((related, index) => (
                 <Reveal delay={index * 90} key={related.slug}>
-                  <Link className="service-related-card" to={`/services/${related.slug}`}>
+                  <RouteLink className="service-related-card" to={`/services/${related.slug}`}>
                     <span className="service-related-image">
                       <img
                         className={related.imageFit === 'contain' ? 'is-contain' : undefined}
@@ -354,7 +311,7 @@ export default function ServiceDetailPage() {
                         <ChevronRight aria-hidden="true" size={17} />
                       </span>
                     </span>
-                  </Link>
+                  </RouteLink>
                 </Reveal>
               ))}
             </div>

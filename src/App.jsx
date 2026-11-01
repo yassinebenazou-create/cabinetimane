@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { BrowserRouter, Link, Outlet, Route, Routes, useLocation } from 'react-router-dom'
+import { BrowserRouter, Outlet, Route, Routes, useLocation } from 'react-router-dom'
 import {
   Apple,
   CalendarCheck,
@@ -26,9 +26,12 @@ import {
 import Navbar from './components/Navbar.jsx'
 import ConsultationDetails from './components/ConsultationDetails.tsx'
 import PageSeo from './components/PageSeo.jsx'
+import RouteLink from './components/RouteLink.jsx'
 import ServiceCardIcon from './components/ServiceCardIcon.jsx'
 import SiteFooter, { FloatingContact } from './components/SiteFooter.jsx'
 import { getHomeStructuredData } from './data/schema.js'
+import StructuredData from './components/StructuredData.jsx'
+import { faqs, getFaqStructuredData } from './data/faqs.js'
 import { getResponsiveWebpSrcSet } from './data/imageSources.js'
 import { notFoundPage, seoPages } from './data/seoPages.js'
 import services, { serviceCardSlugs } from './data/services.js'
@@ -239,84 +242,6 @@ const process = [
     detailTitle: 'Un accompagnement continu, adapté à votre évolution.',
   },
 ]
-
-const faqs = [
-  {
-    question: 'Où trouver une diététicienne nutritionniste à Agadir ?',
-    answer:
-      'Le cabinet Imane Oulhint accueille les personnes à Agadir souhaitant bénéficier d’un accompagnement nutritionnel personnalisé. Le suivi est adapté aux objectifs, aux habitudes alimentaires et aux besoins de chaque personne.',
-  },
-  {
-    question: 'Comment se déroule une consultation diététique à Agadir ?',
-    answer:
-      'La première consultation permet de faire le point sur vos habitudes alimentaires, votre mode de vie et vos objectifs. Un accompagnement personnalisé peut ensuite être mis en place selon vos besoins et votre évolution.',
-  },
-  {
-    question: 'Le cabinet propose-t-il un accompagnement pour la perte de poids ?',
-    answer:
-      'Oui. Le cabinet propose un suivi nutritionnel personnalisé pour les personnes souhaitant perdre du poids progressivement, avec des recommandations adaptées à leur situation et à leurs habitudes.',
-  },
-  {
-    question: 'Peut-on consulter pour une prise de poids ?',
-    answer:
-      'Oui. Un accompagnement nutritionnel peut également être proposé aux personnes souhaitant prendre du poids de manière encadrée et améliorer leur alimentation.',
-  },
-  {
-    question: 'Qu’est-ce qu’un rééquilibrage alimentaire ?',
-    answer:
-      'Le rééquilibrage alimentaire vise à améliorer progressivement les habitudes alimentaires sans se limiter à un régime temporaire. L’accompagnement est adapté au rythme, aux besoins et aux objectifs de chaque personne.',
-  },
-  {
-    question: 'Le suivi nutritionnel est-il personnalisé ?',
-    answer:
-      'Oui. Les recommandations sont adaptées à chaque personne en fonction de ses objectifs, de ses habitudes alimentaires, de son mode de vie et de son évolution au cours du suivi.',
-  },
-  {
-    question: 'Le cabinet propose-t-il le drainage lymphatique à Agadir ?',
-    answer:
-      'Oui. Le drainage lymphatique fait partie des prestations proposées par le cabinet. Il est possible de contacter le cabinet pour obtenir plus d’informations et prendre rendez-vous.',
-  },
-  {
-    question: 'Le cabinet propose-t-il des séances de pressothérapie à Agadir ?',
-    answer:
-      'Oui, des séances de pressothérapie sont proposées au cabinet. Pour obtenir davantage d’informations sur la prestation et les modalités de prise de rendez-vous, nous vous invitons à contacter directement le cabinet.',
-  },
-  {
-    question: 'Combien de séances sont nécessaires pour un suivi nutritionnel ?',
-    answer:
-      'Le nombre de consultations dépend des objectifs et de l’évolution de chaque personne. La fréquence du suivi peut être déterminée après la première consultation.',
-  },
-  {
-    question: 'Faut-il prendre rendez-vous avant de venir au cabinet ?',
-    answer:
-      'Il est recommandé de prendre rendez-vous à l’avance afin de confirmer la disponibilité du cabinet et l’horaire de votre consultation ou de votre soin.',
-  },
-  {
-    question: 'Comment prendre rendez-vous avec le cabinet Imane Oulhint à Agadir ?',
-    answer:
-      'Le rendez-vous peut être demandé directement par téléphone ou WhatsApp, en utilisant les coordonnées indiquées sur ce site.',
-  },
-  {
-    question: 'Où se trouve le cabinet Imane Oulhint à Agadir ?',
-    answer:
-      'Le cabinet est situé à Agadir Bay, Bloc D, 1er étage, N° 107, Technopole II. Le lien Google Maps du cabinet permet de préparer directement votre itinéraire.',
-  },
-]
-
-function getFaqStructuredData(items) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    mainEntity: items.map(({ question, answer }) => ({
-    '@type': 'Question',
-    name: question,
-    acceptedAnswer: {
-      '@type': 'Answer',
-      text: answer,
-    },
-    })),
-  }
-}
 
 const scrollRevealGroups = [
   '.about-section .section-intro > span, .about-section .section-intro > h2, .about-section .section-intro > p',
@@ -578,7 +503,7 @@ function ServiceCard({
   const { translate } = useLanguage()
 
   return (
-    <Link
+    <RouteLink
       className="service-card"
       to={`/services/${slug}`}
       aria-label={`${translate('Découvrir le service')} ${cardTitle}`}
@@ -614,7 +539,7 @@ function ServiceCard({
           <ChevronRight aria-hidden="true" size={17} />
         </span>
       </div>
-    </Link>
+    </RouteLink>
   )
 }
 
@@ -1159,10 +1084,7 @@ function HomePage() {
           title={seoPages.home.title}
           description={seoPages.home.description}
         />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(homeStructuredData) }}
-        />
+        <StructuredData name="home" data={homeStructuredData} />
         <section
           className={`hero-section${activeHeroVideo === 2 ? ' hero-section-light' : ''}`}
           id="accueil"
@@ -1204,13 +1126,13 @@ function HomePage() {
               )}
             </p>
             <div className="hero-actions">
-              <Link className="primary-button" to="/contact">
+              <RouteLink className="primary-button" to="/contact">
                 {translate('Prendre rendez-vous')}
                 <ChevronRight aria-hidden="true" size={18} />
-              </Link>
-              <Link className="ghost-button" to="/services">
+              </RouteLink>
+              <RouteLink className="ghost-button" to="/services">
                 {translate('Découvrir les services')}
-              </Link>
+              </RouteLink>
             </div>
           </div>
         </section>
@@ -1338,10 +1260,10 @@ function HomePage() {
               </div>
             </div>
             <div className="section-route-action">
-              <Link className="outline-route-button" to="/services">
+              <RouteLink className="outline-route-button" to="/services">
                 {translate('Découvrir tous les services')}
                 <ChevronRight aria-hidden="true" size={18} />
-              </Link>
+              </RouteLink>
             </div>
           </div>
         </section>
@@ -1477,10 +1399,10 @@ function HomePage() {
               <Heart aria-hidden="true" size={18} strokeWidth={1.7} />
             </p>
             <div className="section-route-action">
-              <Link className="outline-route-button" to="/consultation">
+              <RouteLink className="outline-route-button" to="/consultation">
                 {translate('Prendre rendez-vous')}
                 <ChevronRight aria-hidden="true" size={18} />
-              </Link>
+              </RouteLink>
             </div>
           </div>
         </section>
@@ -1587,10 +1509,10 @@ function HomePage() {
               />
             </div>
             <div className="section-route-action">
-              <Link className="outline-route-button" to="/resultats-patients">
+              <RouteLink className="outline-route-button" to="/resultats-patients">
                 {translate('Voir tous les résultats')}
                 <ChevronRight aria-hidden="true" size={18} />
-              </Link>
+              </RouteLink>
             </div>
           </div>
         </section>
@@ -1624,10 +1546,10 @@ function HomePage() {
               ))}
             </div>
             <div className="section-route-action">
-              <Link className="outline-route-button" to="/faq">
+              <RouteLink className="outline-route-button" to="/faq">
                 {translate('Voir toutes les questions')}
                 <ChevronRight aria-hidden="true" size={18} />
-              </Link>
+              </RouteLink>
             </div>
           </div>
         </section>
@@ -1841,10 +1763,10 @@ function ConsultationPage() {
       />
       <ConsultationDetails
         bookingAction={
-          <Link className="primary-button" to="/contact">
+          <RouteLink className="primary-button" to="/contact">
             {translate('Prendre rendez-vous')}
             <ChevronRight aria-hidden="true" size={18} />
-          </Link>
+          </RouteLink>
         }
         openLabel={translate('Découvrir la consultation')}
         closeLabel={translate('Masquer les détails')}
@@ -1880,10 +1802,10 @@ function ConsultationPage() {
               <Heart aria-hidden="true" size={18} strokeWidth={1.7} />
             </p>
             <div className="section-route-action">
-              <Link className="primary-button" to="/contact">
+              <RouteLink className="primary-button" to="/contact">
                 {translate('Prendre rendez-vous')}
                 <ChevronRight aria-hidden="true" size={18} />
-              </Link>
+              </RouteLink>
             </div>
           </div>
         </section>
@@ -2010,10 +1932,7 @@ function FaqPage() {
           description={seoPages.faq.description}
           breadcrumbs={[{ name: 'Accueil', path: '/' }, { name: 'FAQ', path: '/faq' }]}
         />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(localizedFaqStructuredData) }}
-      />
+      <StructuredData name="faq" data={localizedFaqStructuredData} />
       <InnerPageHeader
         eyebrow="FAQ"
         title="Questions fréquentes sur votre accompagnement à Agadir"
@@ -2093,7 +2012,7 @@ function ContactPage() {
         <div className="container contact-hero-grid">
           <div className="contact-hero-copy" data-contact-reveal>
             <nav className="contact-breadcrumb" aria-label={translate('Fil d’Ariane')}>
-              <Link to="/">{translate('Accueil')}</Link>
+              <RouteLink to="/">{translate('Accueil')}</RouteLink>
               <ChevronRight aria-hidden="true" size={16} />
               <span aria-current="page">{translate('Contact')}</span>
             </nav>
@@ -2300,15 +2219,15 @@ function NotFoundPage() {
       <section className="section-pad" aria-label={translate('Page introuvable')}>
         <div className="container">
           <div className="section-route-action" style={{ gap: 16, flexWrap: 'wrap', marginTop: 0 }}>
-            <Link className="primary-button" to="/">
+            <RouteLink className="primary-button" to="/">
               {translate('Retour à l’accueil')}
-            </Link>
-            <Link className="outline-route-button" to="/services">
+            </RouteLink>
+            <RouteLink className="outline-route-button" to="/services">
               {translate('Voir les services')}
-            </Link>
-            <Link className="outline-route-button" to="/contact">
+            </RouteLink>
+            <RouteLink className="outline-route-button" to="/contact">
               {translate('Contact')}
-            </Link>
+            </RouteLink>
           </div>
         </div>
       </section>

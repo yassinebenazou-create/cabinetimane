@@ -121,3 +121,31 @@ export function getBreadcrumbStructuredData(items) {
     })),
   }
 }
+
+export function getServiceStructuredData(service, breadcrumbNames = {}) {
+  const serviceUrl = getAbsolutePageUrl(`/services/${service.slug}`)
+
+  return {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Service',
+        '@id': `${serviceUrl}#service`,
+        name: service.name,
+        serviceType: service.name,
+        description: service.metaDescription,
+        url: serviceUrl,
+        image: getAbsoluteSiteUrl(service.image),
+        ...(service.slug === 'suivi-nutritionnel-a-distance'
+          ? {}
+          : { areaServed: { '@type': 'City', name: 'Agadir' } }),
+        provider: getCabinetReference(),
+      },
+      getBreadcrumbStructuredData([
+        { name: breadcrumbNames.home ?? 'Accueil', path: '/' },
+        { name: breadcrumbNames.services ?? 'Services', path: '/services' },
+        { name: service.name, path: `/services/${service.slug}` },
+      ]),
+    ],
+  }
+}

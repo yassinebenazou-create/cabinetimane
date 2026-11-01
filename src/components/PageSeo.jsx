@@ -4,6 +4,7 @@ import { getBreadcrumbStructuredData } from '../data/schema.js'
 import { getAbsolutePageUrl, getAbsoluteSiteUrl } from '../data/seo.js'
 import { defaultShareImage, defaultShareImageAlt, siteName } from '../data/seoPages.js'
 import { useLanguage } from '../i18n/language.js'
+import StructuredData from './StructuredData.jsx'
 
 const indexableRobots = 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'
 
@@ -93,10 +94,5 @@ export default function PageSeo({
     ),
   }
 
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbData) }}
-    />
-  )
+  return <StructuredData name="breadcrumbs" data={breadcrumbData} />
 }

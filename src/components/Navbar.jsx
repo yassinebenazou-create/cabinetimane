@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { useLocation } from 'react-router-dom'
 import {
   BriefcaseMedical,
   CalendarCheck,
@@ -16,6 +16,7 @@ import {
 } from 'lucide-react'
 import { useLanguage } from '../i18n/language.js'
 import { getResponsiveWebpSrcSet } from '../data/imageSources.js'
+import RouteLink from './RouteLink.jsx'
 
 const navItems = [
   { label: 'Accueil', href: '/', icon: House },
@@ -166,7 +167,7 @@ export default function Navbar() {
   return (
     <header className={`site-header${scrolled ? ' scrolled' : ''}${menuOpen ? ' menu-open' : ''}`}>
       <div className="nav-container">
-        <Link
+        <RouteLink
           className="brand-link"
           to="/"
           aria-label={translate('Accueil Cabinet Imane Oulhint')}
@@ -180,27 +181,27 @@ export default function Navbar() {
             width="640"
             height="285"
           />
-        </Link>
+        </RouteLink>
 
         <nav className="desktop-nav" aria-label={translate('Navigation principale')}>
           {navItems.map((item) => (
-            <Link
+            <RouteLink
               className={isActive(item, location) ? 'nav-link active' : 'nav-link'}
               to={item.href}
               key={item.href}
               aria-current={isActive(item, location) ? 'page' : undefined}
             >
               {translate(item.label)}
-            </Link>
+            </RouteLink>
           ))}
         </nav>
 
         <div className="nav-actions">
           <LanguageSwitcher className="desktop-language-switcher" />
-          <Link className="nav-cta" to="/contact">
+          <RouteLink className="nav-cta" to="/contact">
             <CalendarCheck aria-hidden="true" size={17} />
             {translate('Prendre rendez-vous')}
-          </Link>
+          </RouteLink>
         </div>
 
         <div className="mobile-nav-actions">
@@ -226,7 +227,7 @@ export default function Navbar() {
               const active = isActive(item, location)
 
               return (
-                <Link
+                <RouteLink
                   className={active ? 'mobile-link active' : 'mobile-link'}
                   to={item.href}
                   key={item.href}
@@ -237,7 +238,7 @@ export default function Navbar() {
                     <Icon aria-hidden="true" size={20} strokeWidth={2} />
                   </span>
                   <span>{translate(item.label)}</span>
-                </Link>
+                </RouteLink>
               )
             })}
           </div>
@@ -254,10 +255,10 @@ export default function Navbar() {
             />
           </section>
 
-          <Link className="mobile-cta" to="/contact" onClick={() => setMenuOpen(false)}>
+          <RouteLink className="mobile-cta" to="/contact" onClick={() => setMenuOpen(false)}>
             <CalendarCheck aria-hidden="true" size={18} />
             {translate('Prendre rendez-vous')}
-          </Link>
+          </RouteLink>
         </nav>
       </div>
     </header>

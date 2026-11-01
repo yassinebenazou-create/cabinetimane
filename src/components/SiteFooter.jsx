@@ -1,5 +1,5 @@
 import { ChevronRight, Mail, MessageCircle, Phone } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import RouteLink from './RouteLink.jsx'
 import ServiceCardIcon from './ServiceCardIcon.jsx'
 import services from '../data/services.js'
 import { cabinet, defaultWhatsAppMessage, getWhatsAppUrl, openingHours } from '../data/site.js'
@@ -88,26 +88,26 @@ export default function SiteFooter() {
         <div className="footer-column">
           <h2>{translate('Liens Utiles')}</h2>
           <nav className="footer-links" aria-label={translate('Liens utiles')}>
-            <Link to="/">
+            <RouteLink to="/">
               <ChevronRight aria-hidden="true" size={18} />
               {translate('À propos')}
-            </Link>
-            <Link to="/services">
+            </RouteLink>
+            <RouteLink to="/services">
               <ChevronRight aria-hidden="true" size={18} />
               {translate('Services')}
-            </Link>
-            <Link to="/consultation">
+            </RouteLink>
+            <RouteLink to="/consultation">
               <ChevronRight aria-hidden="true" size={18} />
               {translate('Consultation')}
-            </Link>
-            <Link to="/faq">
+            </RouteLink>
+            <RouteLink to="/faq">
               <ChevronRight aria-hidden="true" size={18} />
               {translate('FAQ')}
-            </Link>
-            <Link to="/contact">
+            </RouteLink>
+            <RouteLink to="/contact">
               <ChevronRight aria-hidden="true" size={18} />
               {translate('Contact')}
-            </Link>
+            </RouteLink>
           </nav>
         </div>
 
@@ -115,12 +115,12 @@ export default function SiteFooter() {
           <h2>{translate('Services')}</h2>
           <div className="footer-services">
             {footerServiceLinks.map(({ slug, label, service }) => (
-              <Link to={`/services/${slug}`} key={slug}>
+              <RouteLink to={`/services/${slug}`} key={slug}>
                 <span className="footer-service-icon" aria-hidden="true">
                   <ServiceCardIcon name={service.cardIcon} image={service.iconImage} />
                 </span>
                 {translate(label)}
-              </Link>
+              </RouteLink>
             ))}
           </div>
         </div>
