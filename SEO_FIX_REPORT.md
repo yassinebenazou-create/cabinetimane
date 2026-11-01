@@ -4,7 +4,7 @@
 
 Les corrections demandées ont été appliquées au code du projet, sans déploiement. La configuration versionnée prépare la redirection de `www` vers le domaine canonique et active les slashs finaux. Les liens de navigation React suivent désormais la même convention. Les données structurées sont intégrées aux shells HTML générés et réutilisées lors du rendu React.
 
-Le site publié n’a pas été modifié. La production est servie derrière Cloudflare et le dépôt ne contient pas de liaison locale confirmant quel projet Vercel est actif : le comportement effectif des règles doit donc être vérifié après un déploiement autorisé.
+Le déploiement de la phase 2 a depuis été effectué. Un contrôle public confirme que le domaine `www` répond encore en 200, tandis que la normalisation des slashs fonctionne sur l’apex. Les deux hôtes passent par Cloudflare et servent le même bundle. Le dépôt ne contient toutefois pas de liaison locale confirmant le projet d’origine ni l’association des domaines dans les tableaux de bord.
 
 ## Fichiers modifiés
 
@@ -25,7 +25,7 @@ Une modification préexistante de `src/App.css` concernant le logo mobile était
 - La règle `www` est limitée à l’hôte `www.nutritionniste-agadir.com`, cible le domaine sans `www` et conserve le chemin via `/:path*`. La destination ne remplace pas les paramètres de requête.
 - `trailingSlash: true` correspond aux canonicals et aux URL du sitemap.
 - Les liens React créent maintenant des URL avec slash final, y compris les liens de services et les alias client.
-- La redirection réelle, la conservation des paramètres et l’absence de boucle ne peuvent pas être prouvées par un build local.
+- Le contrôle de production du 1er novembre 2026 a montré que `https://www.nutritionniste-agadir.com/` répond encore en 200. La règle `www` présente dans `vercel.json` ne provoque donc pas la redirection observée à l’entrée publique.
 
 ### JSON-LD
 
@@ -51,14 +51,39 @@ Drainage lymphatique et pressothérapie existent comme services et disposent de 
 
 Ces tests sont locaux. Ils ne constituent ni un test PageSpeed/PSI, ni une vérification des en-têtes HTTP effectifs de production.
 
-## Vérifications restantes avant/après déploiement
+## Diagnostic de production — 1er novembre 2026
 
-Après autorisation explicite de déployer, vérifier depuis l’extérieur :
+Vérifications effectuées depuis l’extérieur :
 
-1. `http://www.nutritionniste-agadir.com/` et `https://www.nutritionniste-agadir.com/` redirigent en un seul saut permanent vers le domaine sans `www`.
-2. Les chemins de services, les alias, les paramètres de requête et les fragments ont le comportement attendu, sans boucle.
-3. Les URL sans slash final sont redirigées une seule fois vers leur variante avec slash ; les pages avec slash restent directement accessibles.
-4. Cloudflare applique ou transmet bien la configuration prévue et aucune règle active du projet/hébergeur ne la contredit.
-5. Les canonicals et les scripts JSON-LD de plusieurs pages publiées correspondent aux shells du build.
+- Les serveurs DNS faisant autorité sont ceux de Cloudflare. Les deux noms résolvent vers les mêmes adresses IPv4 Cloudflare (`104.21.17.81` et `172.67.175.79`), ce qui est compatible avec des enregistrements proxifiés.
+- Les réponses HTTP portent `Server: cloudflare` et `CF-RAY`.
+- `https://www.nutritionniste-agadir.com/` répond `200 OK`, sans en-tête `Location`.
+- `http://www.nutritionniste-agadir.com/` est redirigé vers HTTPS en conservant `www`.
+- `https://www.nutritionniste-agadir.com/services` et `https://nutritionniste-agadir.com/services` répondent tous deux `308` vers leur propre URL `/services/`.
+- L’accueil des deux hôtes expose le même titre et la même référence de bundle JavaScript (`/assets/index-MYHorBhq.js`). Cela indique qu’ils servent le même build public, mais ne prouve pas l’identifiant du projet lié dans Vercel ou Cloudflare.
+- Le fichier `vercel.json` de la version GitHub consultée (commit `f90cd3e`) contient bien la règle `www` actuelle. Cela confirme sa présence dans le dépôt, pas que la requête publique est traitée par ce projet Vercel ni que ce commit correspond à la configuration de l’origine active.
+- Aucun en-tête `x-vercel-id` n’a été observé. À lui seul, son absence ne permet pas de déterminer l’origine derrière Cloudflare.
+- Aucun fichier `.vercel/project.json`, configuration Wrangler/Cloudflare ou script de déploiement n’est présent dans le dépôt. Les commandes locales Cloudflare et Vercel ne sont pas disponibles ; aucun accès aux tableaux de bord n’a été utilisé.
 
-Le projet n’a pas été déployé. Aucun résultat de redirection en production ni score PageSpeed après correction n’est revendiqué.
+Les éléments publics établissent le passage par l’edge Cloudflare et montrent que `www` sert le même build, mais ne permettent pas de vérifier dans le tableau de bord si le hostname est attaché au projet Cloudflare Pages/Vercel attendu, ni quelle règle d’origine est active. Le résultat est compatible avec l’absence de règle de canonicalisation `www` à l’edge ; il ne permet pas d’attribuer avec certitude le 200 à une association de domaine incorrecte ou à une configuration Vercel non appliquée.
+
+## Correction de production recommandée
+
+Le correctif le plus sûr est une règle **Cloudflare Single Redirect** dans la zone `nutritionniste-agadir.com`, car les requêtes publiques passent par Cloudflare et les deux enregistrements DNS sont proxifiés. La règle ne touche pas aux redirections de slash ni aux autres chemins :
+
+1. Cloudflare Dashboard → **Rules** → **Redirect Rules** → créer une règle **Single Redirect**.
+2. Condition : `http.host eq "www.nutritionniste-agadir.com"` (ne pas ajouter de condition sur le schéma, afin de couvrir HTTP et HTTPS).
+3. Action : redirection dynamique vers `concat("https://nutritionniste-agadir.com", http.request.uri.path)`.
+4. Choisir le statut **301** (ou **308** si la conservation de méthode est requise) et activer **Preserve query string**.
+5. Placer cette règle avant toute règle de redirection plus générale/conflictuelle. La cible utilise toujours l’hôte apex, ce qui évite une boucle.
+
+Cette modification de règle Cloudflare est une action de production. Elle n’a pas été exécutée : aucun accès au compte Cloudflare n’est disponible et aucune modification/déploiement de production n’a été effectué. Le fichier `vercel.json` n’a pas été modifié, car changer une règle de projet Vercel sans avoir confirmé l’origine active ne garantit pas une correction à l’edge et pourrait dupliquer la règle.
+
+Après activation par une personne autorisée, vérifier avec `curl.exe -I --max-redirs 0` :
+
+- les deux URL `http://www.../` et `https://www.../` renvoient un statut permanent et `Location: https://nutritionniste-agadir.com/` ;
+- un chemin tel que `/services/perte-de-poids/?source=test` conserve le chemin et la query string vers l’apex ;
+- l’URL apex ne redirige pas vers `www` et il n’y a pas de boucle ;
+- `/services` continue ensuite de se normaliser en `/services/` sans modifier les règles existantes.
+
+Ces tests de vérification de la nouvelle règle restent à exécuter après son activation. Aucun résultat positif post-correctif n’est revendiqué.
