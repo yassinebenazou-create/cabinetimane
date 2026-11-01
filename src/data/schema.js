@@ -43,7 +43,7 @@ export function getCabinetEntity() {
     description:
       'Cabinet de diététique et nutrition à Agadir proposant des consultations nutritionnelles personnalisées, des bilans et des soins de bien-être.',
     url: homeUrl,
-    logo: getAbsoluteSiteUrl('/imane-logo-new.png'),
+    logo: getAbsoluteSiteUrl('/imane-logo-new.webp'),
     image: getAbsoluteSiteUrl('/og-default.jpg'),
     telephone: phone,
     email: cabinet.email,

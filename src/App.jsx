@@ -29,6 +29,7 @@ import PageSeo from './components/PageSeo.jsx'
 import ServiceCardIcon from './components/ServiceCardIcon.jsx'
 import SiteFooter, { FloatingContact } from './components/SiteFooter.jsx'
 import { getHomeStructuredData } from './data/schema.js'
+import { getResponsiveWebpSrcSet } from './data/imageSources.js'
 import { notFoundPage, seoPages } from './data/seoPages.js'
 import services, { serviceCardSlugs } from './data/services.js'
 import { cabinet, defaultWhatsAppMessage, getWhatsAppUrl } from './data/site.js'
@@ -45,81 +46,113 @@ const instagramHighlights = [
   {
     title: 'Résultats',
     image: '/instagram-highlight-01.jpg',
+    imageWidth: 640,
+    imageHeight: 1136,
     url: 'https://www.instagram.com/stories/highlights/18035105875901523/?hl=ar',
   },
   {
     title: 'Témoignages',
     image: '/instagram-highlight-02.jpg',
+    imageWidth: 640,
+    imageHeight: 1136,
     url: 'https://www.instagram.com/stories/highlights/18014261108105056/?hl=ar',
   },
   {
     title: 'Résultats',
     image: '/instagram-highlight-03.jpg',
+    imageWidth: 640,
+    imageHeight: 1136,
     url: 'https://www.instagram.com/stories/highlights/17942293193603930/?hl=ar',
   },
   {
     title: 'Résultats',
     image: '/instagram-highlight-04.jpg',
+    imageWidth: 640,
+    imageHeight: 1136,
     url: 'https://www.instagram.com/stories/highlights/17960852024529661/?hl=ar',
   },
   {
     title: 'Résultats',
     image: '/instagram-highlight-05.jpg',
+    imageWidth: 640,
+    imageHeight: 1136,
     url: 'https://www.instagram.com/stories/highlights/17926621049422685/?hl=ar',
   },
   {
     title: 'Quotes',
-    image: '/instagram-highlight-06.webp',
+    image: '/instagram-highlight-06-640w.webp',
+    imageWidth: 640,
+    imageHeight: 1137,
     url: 'https://www.instagram.com/stories/highlights/17897427104563212/?hl=ar',
   },
   {
     title: 'Résultats',
     image: '/instagram-highlight-07.jpg',
+    imageWidth: 640,
+    imageHeight: 1136,
     url: 'https://www.instagram.com/stories/highlights/17923731941310702/?hl=ar',
   },
   {
     title: 'Résultats',
     image: '/instagram-highlight-08.jpg',
+    imageWidth: 640,
+    imageHeight: 1136,
     url: 'https://www.instagram.com/stories/highlights/17943372475928065/?hl=ar',
   },
   {
     title: 'À la une',
     image: '/instagram-highlight-09.webp',
+    imageWidth: 640,
+    imageHeight: 1136,
     url: 'https://www.instagram.com/stories/highlights/18333175978210127/?hl=ar',
   },
   {
     title: 'À la une',
     image: '/instagram-highlight-10.jpg',
+    imageWidth: 640,
+    imageHeight: 1136,
     url: 'https://www.instagram.com/stories/highlights/18035500648788743/?hl=ar',
   },
   {
     title: 'Amincissement',
     image: '/instagram-highlight-11.webp',
+    imageWidth: 640,
+    imageHeight: 1136,
     url: 'https://www.instagram.com/stories/highlights/18085824854131146/?hl=ar',
   },
   {
     title: 'À la une',
-    image: '/instagram-highlight-12.webp',
+    image: '/instagram-highlight-12-640w.webp',
+    imageWidth: 640,
+    imageHeight: 1137,
     url: 'https://www.instagram.com/stories/highlights/17874303045469923/?hl=ar',
   },
   {
     title: 'My patients ❤️',
     image: '/instagram-highlight-13.jpg',
+    imageWidth: 640,
+    imageHeight: 1137,
     url: 'https://www.instagram.com/stories/highlights/17939826025951136/?hl=ar',
   },
   {
     title: '⭐️⭐️⭐️⭐️⭐️',
     image: '/instagram-highlight-14.webp',
+    imageWidth: 640,
+    imageHeight: 1136,
     url: 'https://www.instagram.com/stories/highlights/17897079648082806/?hl=ar',
   },
   {
     title: 'À la une',
-    image: '/imane-logo-new.png',
+    image: '/imane-logo-new.webp',
+    imageWidth: 640,
+    imageHeight: 285,
     url: 'https://www.instagram.com/stories/highlights/18291986620303194/?hl=ar',
   },
   {
     title: 'À la une',
-    image: '/imane-logo-new.png',
+    image: '/imane-logo-new.webp',
+    imageWidth: 640,
+    imageHeight: 285,
     url: 'https://www.instagram.com/stories/highlights/18111509882506675/?hl=ar',
   },
 ]
@@ -306,8 +339,16 @@ const scrollRevealGroups = [
 ]
 
 const heroVideos = [
-  { src: '/hero-nutrition-1.mp4', displayDuration: 6000 },
-  { src: '/hero-nutrition-3.mp4', displayDuration: 7000 },
+  {
+    src: '/hero-nutrition-1.mp4',
+    poster: '/hero-nutrition-1-poster.webp',
+    displayDuration: 6000,
+  },
+  {
+    src: '/hero-nutrition-3.mp4',
+    poster: '/hero-nutrition-3-poster.webp',
+    displayDuration: 7000,
+  },
 ]
 
 const cabinetStatTargets = {
@@ -341,10 +382,54 @@ function useElfsightPlatform() {
       return
     }
 
-    const script = document.createElement('script')
-    script.src = elfsightPlatformSrc
-    script.async = true
-    document.body.appendChild(script)
+    const widget = document.querySelector('.elfsight-app-8d2e4218-00b5-4e1e-9e88-708da47c0c9c')
+    let observer
+    let idleCallbackId
+    let timeoutId
+
+    const loadPlatform = () => {
+      if (document.querySelector(`script[src="${elfsightPlatformSrc}"]`)) {
+        return
+      }
+
+      const script = document.createElement('script')
+      script.src = elfsightPlatformSrc
+      script.async = true
+      document.body.appendChild(script)
+    }
+
+    const schedulePlatform = () => {
+      if ('requestIdleCallback' in window) {
+        idleCallbackId = window.requestIdleCallback(loadPlatform, { timeout: 2000 })
+      } else {
+        timeoutId = window.setTimeout(loadPlatform, 700)
+      }
+    }
+
+    if (widget && 'IntersectionObserver' in window) {
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            observer.disconnect()
+            schedulePlatform()
+          }
+        },
+        { rootMargin: '500px 0px' },
+      )
+      observer.observe(widget)
+    } else {
+      schedulePlatform()
+    }
+
+    return () => {
+      observer?.disconnect()
+      if (idleCallbackId !== undefined) {
+        window.cancelIdleCallback(idleCallbackId)
+      }
+      if (timeoutId !== undefined) {
+        window.clearTimeout(timeoutId)
+      }
+    }
   }, [])
 }
 
@@ -479,6 +564,8 @@ function ServiceCard({
   cardIcon,
   iconImage,
   image,
+  imageWidth,
+  imageHeight,
   imageFit,
   imageAlt,
   cardTitle,
@@ -505,7 +592,11 @@ function ServiceCard({
           <img
             className={imageFit === 'contain' ? 'service-image-contain' : undefined}
             src={image}
+            srcSet={getResponsiveWebpSrcSet(image, imageWidth, [480, 800])}
+            sizes="(max-width: 760px) 88vw, (max-width: 1080px) 45vw, 30vw"
             alt={imageAlt}
+            width={imageWidth}
+            height={imageHeight}
             draggable="false"
             loading="lazy"
             decoding="async"
@@ -587,7 +678,7 @@ function WhyChooseItem({ iconImage, iconAlt, title, text, origin, index }) {
       style={{ '--why-delay': `${index * 95}ms` }}
     >
       <span className="why-choice-icon">
-        <img src={iconImage} alt={iconAlt} loading="lazy" decoding="async" />
+        <img src={iconImage} alt={iconAlt} width="45" height="45" loading="lazy" decoding="async" />
       </span>
       <div>
         <h3>{title}</h3>
@@ -658,6 +749,7 @@ function HomePage() {
   const servicesSectionRef = useRef(null)
   const whySectionRef = useRef(null)
   const processSectionRef = useRef(null)
+  const heroVideoRefs = useRef([])
   const servicesCarouselViewportRef = useRef(null)
   const serviceDragStartXRef = useRef(0)
   const serviceDidDragRef = useRef(false)
@@ -669,6 +761,26 @@ function HomePage() {
     }, heroVideos[activeHeroVideo].displayDuration)
 
     return () => window.clearTimeout(switchTimer)
+  }, [activeHeroVideo])
+
+  useEffect(() => {
+    heroVideoRefs.current.forEach((video, index) => {
+      if (!video) {
+        return
+      }
+
+      if (index !== activeHeroVideo) {
+        video.pause()
+        return
+      }
+
+      const playback = video.play()
+      playback?.catch((error) => {
+        if (error.name !== 'NotAllowedError' && error.name !== 'AbortError') {
+          console.error('Unable to play the active hero video.', error)
+        }
+      })
+    })
   }, [activeHeroVideo])
 
   useEffect(() => {
@@ -1060,13 +1172,24 @@ function HomePage() {
               <video
                 className={index === activeHeroVideo ? 'hero-video active' : 'hero-video'}
                 key={video.src}
-                src={video.src}
-                autoPlay
+                ref={(element) => {
+                  heroVideoRefs.current[index] = element
+                }}
+                src={index === 0 || index === activeHeroVideo ? video.src : undefined}
+                poster={index === 0 || index === activeHeroVideo ? video.poster : undefined}
+                autoPlay={index === activeHeroVideo}
                 muted
                 loop
                 playsInline
-                preload={index === 0 ? 'auto' : 'metadata'}
-              />
+                preload="none"
+              >
+                <img
+                  src={index === 0 || index === activeHeroVideo ? video.poster : undefined}
+                  alt=""
+                  width="960"
+                  height="540"
+                />
+              </video>
             ))}
           </div>
           <div className="hero-content container reveal">
@@ -1140,12 +1263,13 @@ function HomePage() {
             <video
               className="about-image about-video cabinet-media"
               src="/cabinet-ouverture.mp4"
+              poster={isAboutVisible ? '/cabinet-ouverture-poster.webp' : undefined}
               aria-label={translate('Vidéo de présentation du Cabinet Imane Oulhint')}
-              autoPlay
+              autoPlay={isAboutVisible}
               muted
               loop
               playsInline
-              preload="metadata"
+              preload={isAboutVisible ? 'metadata' : 'none'}
             />
           </div>
         </section>
@@ -1245,7 +1369,7 @@ function HomePage() {
 
               <div className="why-choice-brand" aria-hidden="true">
                 <div className="why-choice-brand-mark">
-                  <img src="/imane-logo-new.png" alt="" />
+                  <img src="/imane-logo-new.webp" alt="" width="640" height="285" />
                 </div>
               </div>
 
@@ -1297,6 +1421,8 @@ function HomePage() {
             src="/process-decor-overlay.webp"
             alt=""
             aria-hidden="true"
+            width="1536"
+            height="1024"
             loading="lazy"
           />
           <p className="process-side-note" aria-hidden="true">
@@ -1365,6 +1491,8 @@ function HomePage() {
             src="/reviews-leaf-frame.webp"
             alt=""
             aria-hidden="true"
+            width="1536"
+            height="1024"
             loading="lazy"
           />
 
@@ -1395,16 +1523,25 @@ function HomePage() {
                           key={`${copyIndex}-${highlight.url}`}
                         >
                           <span className="instagram-highlight-cover">
-                            <img
-                              src={highlight.image}
-                              alt={
-                                copyIndex === 0
-                                  ? `${translate('Aperçu du Highlight Instagram')} « ${highlight.title} »`
-                                  : ''
-                              }
-                              loading="lazy"
-                              decoding="async"
-                            />
+                            <picture>
+                              <source
+                                type="image/webp"
+                                srcSet={getResponsiveWebpSrcSet(highlight.image, highlight.imageWidth, 320)}
+                                sizes="96px"
+                              />
+                              <img
+                                src={highlight.image}
+                                alt={
+                                  copyIndex === 0
+                                    ? `${translate('Aperçu du Highlight Instagram')} « ${highlight.title} »`
+                                    : ''
+                                }
+                                width={highlight.imageWidth}
+                                height={highlight.imageHeight}
+                                loading="lazy"
+                                decoding="async"
+                              />
+                            </picture>
                             <span className="instagram-highlight-external" aria-hidden="true">
                               <ExternalLink size={11} strokeWidth={2} />
                             </span>
@@ -1780,6 +1917,8 @@ function ResultsPage() {
           src="/reviews-leaf-frame.webp"
           alt=""
           aria-hidden="true"
+          width="1536"
+          height="1024"
           loading="lazy"
         />
         <div className="container reviews-shell">
@@ -1808,12 +1947,21 @@ function ResultsPage() {
                         key={`${copyIndex}-${highlight.url}`}
                       >
                         <span className="instagram-highlight-cover">
-                          <img
-                            src={highlight.image}
-                            alt={copyIndex === 0 ? `${translate('Aperçu du Highlight Instagram')} « ${highlight.title} »` : ''}
-                            loading="lazy"
-                            decoding="async"
-                          />
+                          <picture>
+                            <source
+                              type="image/webp"
+                              srcSet={getResponsiveWebpSrcSet(highlight.image, highlight.imageWidth, 320)}
+                              sizes="96px"
+                            />
+                            <img
+                              src={highlight.image}
+                              alt={copyIndex === 0 ? `${translate('Aperçu du Highlight Instagram')} « ${highlight.title} »` : ''}
+                              width={highlight.imageWidth}
+                              height={highlight.imageHeight}
+                              loading="lazy"
+                              decoding="async"
+                            />
+                          </picture>
                           <span className="instagram-highlight-external" aria-hidden="true">
                             <ExternalLink size={11} strokeWidth={2} />
                           </span>
@@ -1966,7 +2114,11 @@ function ContactPage() {
           <div className="contact-hero-media" data-contact-reveal>
             <img
               src="/images/contact-office.webp"
+              srcSet={getResponsiveWebpSrcSet('/images/contact-office.webp', 1536, 768)}
+              sizes="(max-width: 760px) calc(100vw - 48px), 680px"
               alt={translate('Bureau d’accueil lumineux du Cabinet Imane Oulhint')}
+              width="1536"
+              height="1024"
               decoding="async"
             />
           </div>
@@ -1986,7 +2138,7 @@ function ContactPage() {
 
           <article className="contact-info-card" data-contact-reveal>
             <span className="contact-info-icon">
-              <img src="/whatsapp-icon.png" alt="" aria-hidden="true" />
+              <img src="/whatsapp-icon.webp" alt="" aria-hidden="true" width="128" height="128" />
             </span>
             <div>
               <h2>WhatsApp</h2>
@@ -2076,7 +2228,7 @@ function ContactPage() {
                 allowFullScreen
               />
               <div className="contact-map-brand-marker" aria-hidden="true">
-                <img src="/imane-logo-new.png" alt="" />
+                <img src="/imane-logo-new.webp" alt="" width="640" height="285" />
               </div>
             </div>
             <div className="contact-location-card">
@@ -2102,7 +2254,7 @@ function ContactPage() {
             <p>{translate('Vous pouvez aussi nous contacter directement via WhatsApp.')}</p>
           </div>
           <a href={whatsappHref} target="_blank" rel="noopener noreferrer">
-            <img src="/whatsapp-icon.png" alt="" aria-hidden="true" />
+            <img src="/whatsapp-icon.webp" alt="" aria-hidden="true" width="128" height="128" />
             {translate('Discuter sur WhatsApp')}
           </a>
         </div>

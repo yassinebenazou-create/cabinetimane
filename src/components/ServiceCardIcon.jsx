@@ -27,15 +27,15 @@ function StomachIcon() {
 
 export default function ServiceCardIcon({ name, image }) {
   if (name === 'amincissement') {
-    return <img src={image ?? '/service-icon-amincissement.png'} alt="" draggable="false" />
+    return <img src={image ?? '/service-icon-amincissement.webp'} alt="" width="128" height="128" draggable="false" />
   }
 
   if (name === 'apple-measuring-tape') {
-    return <img src={image ?? '/service-icon-gestion-poids.png'} alt="" draggable="false" />
+    return <img src={image ?? '/service-icon-gestion-poids.webp'} alt="" width="128" height="128" draggable="false" />
   }
 
   if (!name && image) {
-    return <img src={image} alt="" draggable="false" />
+    return <img src={image} alt="" width="45" height="45" draggable="false" />
   }
 
   if (name === 'clipboard-apple') {

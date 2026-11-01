@@ -71,6 +71,13 @@ function pageUrl(urlPath) {
   return absoluteUrl(canonicalPath(urlPath))
 }
 
+function removeHomeHeroPreload(html) {
+  return html.replace(
+    /\s*<link\b(?=[^>]*\brel=["']preload["'])(?=[^>]*\bhref=["']\/hero-nutrition-1-poster\.webp["'])[^>]*\/?>/i,
+    '',
+  )
+}
+
 function upsertMeta(html, attribute, key, content) {
   const pattern = new RegExp(`<meta\\s+[^>]*${attribute}=["']${escapeRegExp(key)}["'][^>]*>`, 'i')
   const tag = `<meta ${attribute}="${escapeHtml(key)}" content="${escapeHtml(content)}" />`
@@ -107,6 +114,10 @@ function buildHtml(route) {
   const imageUrl = absoluteUrl(route.image)
   let html = sourceHtml.replace(/<title>[^<]*<\/title>/i, `<title>${escapeHtml(route.title)}</title>`)
 
+  if (route.path !== '/') {
+    html = removeHomeHeroPreload(html)
+  }
+
   html = upsertMeta(html, 'name', 'description', route.description)
   html = upsertMeta(html, 'name', 'robots', indexableRobots)
   html = upsertMeta(html, 'property', 'og:type', 'website')
@@ -137,6 +148,7 @@ function buildHtml(route) {
 function build404Html() {
   let html = sourceHtml.replace(/<title>[^<]*<\/title>/i, `<title>${escapeHtml(notFoundPage.title)}</title>`)
 
+  html = removeHomeHeroPreload(html)
   html = upsertMeta(html, 'name', 'description', notFoundPage.description)
   html = upsertMeta(html, 'name', 'robots', 'noindex, follow')
   html = html.replace(/\s*<link\s+[^>]*rel=["']canonical["'][^>]*>/i, '')

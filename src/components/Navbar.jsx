@@ -15,6 +15,7 @@ import {
   X,
 } from 'lucide-react'
 import { useLanguage } from '../i18n/language.js'
+import { getResponsiveWebpSrcSet } from '../data/imageSources.js'
 
 const navItems = [
   { label: 'Accueil', href: '/', icon: House },
@@ -172,8 +173,12 @@ export default function Navbar() {
           onClick={() => setMenuOpen(false)}
         >
           <img
-            src="/imane-logo-new.png"
+            src="/imane-logo-new.webp"
+            srcSet={getResponsiveWebpSrcSet('/imane-logo-new.webp', 640, 320)}
+            sizes="(max-width: 640px) 180px, 300px"
             alt={translate('Imane Oulhint, Diététicienne Nutritionniste')}
+            width="640"
+            height="285"
           />
         </Link>
 

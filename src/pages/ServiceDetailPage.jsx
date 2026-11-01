@@ -24,6 +24,7 @@ import { getServiceSeoTitle } from '../data/seoPages.js'
 import services, { serviceAliases } from '../data/services.js'
 import { useLanguage } from '../i18n/language.js'
 import { localizeService } from '../i18n/services.ar.js'
+import { getResponsiveWebpSrcSet } from '../data/imageSources.js'
 
 function Reveal({ as: Tag = 'div', delay = 0, className = '', children, ...props }) {
   return (
@@ -227,7 +228,11 @@ export default function ServiceDetailPage() {
               <img
                 className={service.imageFit === 'contain' ? 'is-contain' : undefined}
                 src={service.image}
+                srcSet={getResponsiveWebpSrcSet(service.image, service.imageWidth, [480, 800])}
+                sizes="(max-width: 760px) 100vw, (max-width: 1080px) 45vw, 50vw"
                 alt={service.imageAlt}
+                width={service.imageWidth}
+                height={service.imageHeight}
               />
             </figure>
           </div>
@@ -333,7 +338,11 @@ export default function ServiceDetailPage() {
                       <img
                         className={related.imageFit === 'contain' ? 'is-contain' : undefined}
                         src={related.image}
+                        srcSet={getResponsiveWebpSrcSet(related.image, related.imageWidth, [480, 800])}
+                        sizes="(max-width: 760px) 88vw, (max-width: 1080px) 45vw, 30vw"
                         alt={related.imageAlt}
+                        width={related.imageWidth}
+                        height={related.imageHeight}
                         loading="lazy"
                       />
                     </span>

@@ -4,6 +4,7 @@ import ServiceCardIcon from './ServiceCardIcon.jsx'
 import services from '../data/services.js'
 import { cabinet, defaultWhatsAppMessage, getWhatsAppUrl, openingHours } from '../data/site.js'
 import { useLanguage } from '../i18n/language.js'
+import { getResponsiveWebpSrcSet } from '../data/imageSources.js'
 
 const footerServiceLinks = [
   { slug: 'perte-de-poids', label: 'Gestion du poids' },
@@ -61,8 +62,12 @@ export default function SiteFooter() {
       <div className="container footer-grid">
         <div className="footer-brand">
           <img
-            src="/imane-logo-footer.png"
+            src="/imane-logo-footer.webp"
+            srcSet={getResponsiveWebpSrcSet('/imane-logo-footer.webp', 640, 320)}
+            sizes="(max-width: 640px) 280px, 310px"
             alt={translate('Imane Oulhint, Diététicienne Nutritionniste')}
+            width="640"
+            height="285"
           />
           <p>
             {translate(
@@ -211,7 +216,7 @@ export function FloatingContact() {
       rel="noopener noreferrer"
       aria-label={translate('Contacter le cabinet sur WhatsApp')}
     >
-      <img src="/whatsapp-icon.png" alt="" aria-hidden="true" />
+      <img src="/whatsapp-icon.webp" alt="" aria-hidden="true" width="128" height="128" />
     </a>
   )
 }
