@@ -1,7 +1,19 @@
+
 {
   "cleanUrls": true,
   "trailingSlash": true,
   "redirects": [
+    {
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "cabinetimane.vercel.app"
+        }
+      ],
+      "destination": "https://nutritionniste-agadir.com/:path*",
+      "statusCode": 301
+    },
     {
       "source": "/:path*",
       "has": [
