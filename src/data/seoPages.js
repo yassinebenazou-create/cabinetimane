@@ -14,6 +14,12 @@ export const seoPages = {
     description:
       'Découvrez le cabinet d’Imane Oulhint, diététicienne nutritionniste à Agadir. Gestion du poids, nutrition clinique et bilans personnalisés. Contactez le cabinet.',
   },
+  about: {
+    path: '/a-propos',
+    title: 'À propos d’Imane Oulhint | Diététicienne Nutritionniste à Agadir',
+    description:
+      'Découvrez le parcours d’Imane Oulhint, diététicienne nutritionniste à Agadir, sa formation en nutrition clinique et son approche personnalisée au Cabinet Oulhint.',
+  },
   services: {
     path: '/services',
     title: 'Services de Nutrition à Agadir | Cabinet Imane Oulhint',
@@ -57,6 +63,7 @@ export const notFoundPage = {
 const serviceSeoTitles = {
   'perte-de-poids': 'Gestion du Poids à Agadir | Imane Oulhint',
   'nutrition-maladies-chroniques': 'Nutrition Clinique à Agadir | Imane Oulhint',
+  'nutrition-digestive': 'Nutrition digestive à Agadir | Diététicienne Imane Oulhint',
   'bilan-corporel-tanita': 'Bilan Corporel TANITA à Agadir | Imane Oulhint',
   'bilan-oligoscan': 'Bilan Oligoscan à Agadir | Imane Oulhint',
   // A remote follow-up is not tied to the Agadir premises, so the title does not claim it is.
@@ -66,4 +73,3 @@ const serviceSeoTitles = {
 export function getServiceSeoTitle(service) {
   return serviceSeoTitles[service.slug] ?? `${service.name} à Agadir | Imane Oulhint`
 }
-

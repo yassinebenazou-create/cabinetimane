@@ -3078,6 +3078,10 @@ details p {
     color: #fff;
   }
 
+  .hero-section {
+    margin-top: 84px;
+  }
+
   .footer-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -4922,6 +4926,63 @@ html[dir='rtl'] .contact-location-card a svg {
   margin-top: 12px;
 }
 
+.service-digestive-faq {
+  border-block: 1px solid var(--border);
+  background: var(--background);
+}
+
+.service-digestive-faq-heading {
+  margin-bottom: 36px;
+}
+
+.service-digestive-faq-heading > p {
+  max-width: 700px;
+}
+
+.service-digestive-faq-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 18px;
+  color: var(--brand-blue);
+  font-weight: 750;
+  text-decoration-color: rgba(4, 44, 136, 0.35);
+  text-underline-offset: 4px;
+}
+
+.service-digestive-faq-link:hover {
+  color: var(--green-dark);
+}
+
+.service-digestive-faq-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  max-width: 1040px;
+  margin: 0 auto;
+}
+
+.service-digestive-faq-item {
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--white);
+}
+
+.service-digestive-faq-item h3 {
+  margin: 0;
+  color: var(--brand-blue);
+  font-size: 1.08rem;
+  line-height: 1.45;
+}
+
+.service-digestive-faq-item p {
+  margin: 12px 0 0;
+  color: var(--text-muted);
+  line-height: 1.75;
+}
+
 .service-detail-heading {
   max-width: 760px;
   margin: 0 auto 48px;
@@ -5333,6 +5394,10 @@ html[dir='rtl'] .contact-location-card a svg {
 
   .service-related-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .service-digestive-faq-list {
+    grid-template-columns: 1fr;
   }
 
   .service-guidance-grid {

@@ -267,6 +267,35 @@ export default function ServiceDetailPage() {
           </div>
         </section>
 
+        {service.faqs?.length ? (
+          <section className="service-detail-section service-digestive-faq" aria-labelledby="service-faq-title">
+            <div className="container">
+              <Reveal className="service-detail-heading service-digestive-faq-heading">
+                <span className="service-detail-kicker">{translate('FAQ')}</span>
+                <h2 id="service-faq-title">{service.faqTitle}</h2>
+                <p>{service.faqIntro}</p>
+                <RouteLink className="service-digestive-faq-link" to="/consultation">
+                  {service.faqLinkLabel}
+                  <ChevronRight aria-hidden="true" size={17} />
+                </RouteLink>
+              </Reveal>
+              <div className="service-digestive-faq-list">
+                {service.faqs.map((faq, index) => (
+                  <Reveal
+                    as="article"
+                    className="service-digestive-faq-item"
+                    delay={index * 70}
+                    key={faq.question}
+                  >
+                    <h3>{faq.question}</h3>
+                    <p>{faq.answer}</p>
+                  </Reveal>
+                ))}
+              </div>
+            </div>
+          </section>
+        ) : null}
+
         <section className="service-detail-appointment">
           <Reveal className="container service-detail-appointment-inner">
             <div>

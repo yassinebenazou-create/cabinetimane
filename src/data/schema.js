@@ -124,6 +124,17 @@ export function getBreadcrumbStructuredData(items) {
 
 export function getServiceStructuredData(service, breadcrumbNames = {}) {
   const serviceUrl = getAbsolutePageUrl(`/services/${service.slug}`)
+  const faqSchema = service.faqs?.length
+    ? [{
+        '@type': 'FAQPage',
+        '@id': `${serviceUrl}#faq`,
+        mainEntity: service.faqs.map(({ question, answer }) => ({
+          '@type': 'Question',
+          name: question,
+          acceptedAnswer: { '@type': 'Answer', text: answer },
+        })),
+      }]
+    : []
 
   return {
     '@context': 'https://schema.org',
@@ -146,6 +157,7 @@ export function getServiceStructuredData(service, breadcrumbNames = {}) {
         { name: breadcrumbNames.services ?? 'Services', path: '/services' },
         { name: service.name, path: `/services/${service.slug}` },
       ]),
+      ...faqSchema,
     ],
   }
 }
