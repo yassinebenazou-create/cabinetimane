@@ -18,7 +18,6 @@
 - The production origin is fixed to `https://nutritionniste-agadir.com`; build environment variables cannot change canonical or sitemap hosts.
 - `npm run build` generates route-specific HTML shells, canonical URLs, `sitemap.xml`, and `robots.txt`. Directory routes use trailing slashes to match Cloudflare Pages responses.
 - Submit `https://nutritionniste-agadir.com/sitemap.xml` in Google Search Console.
-- Redirecting `cabinetimane.vercel.app` requires a domain-level redirect on the old Vercel deployment. Cloudflare Pages files for the new domain cannot redirect requests received by Vercel.
 - French and Arabic are language-toggle variants at the same URL, with Arabic `lang="ar"` and `dir="rtl"` set at runtime. There are no separate locale URLs, so do not add `hreflang` links until distinct indexable locale URLs exist.
 
 ## Adding a page or a service

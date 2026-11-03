@@ -2,13 +2,13 @@
 
 ## Résumé
 
-Les corrections demandées ont été appliquées au code du projet, sans déploiement. La configuration versionnée prépare la redirection de `www` vers le domaine canonique et active les slashs finaux. Les liens de navigation React suivent désormais la même convention. Les données structurées sont intégrées aux shells HTML générés et réutilisées lors du rendu React.
+Les corrections demandées ont été appliquées au code du projet, sans déploiement. La configuration de déploiement présente à cette date préparait la redirection de `www` vers le domaine canonique et activait les slashs finaux. Les liens de navigation React suivent désormais la même convention. Les données structurées sont intégrées aux shells HTML générés et réutilisées lors du rendu React.
 
 Le déploiement de la phase 2 a depuis été effectué. Un contrôle public confirme que le domaine `www` répond encore en 200, tandis que la normalisation des slashs fonctionne sur l’apex. Les deux hôtes passent par Cloudflare et servent le même bundle. Le dépôt ne contient toutefois pas de liaison locale confirmant le projet d’origine ni l’association des domaines dans les tableaux de bord.
 
 ## Fichiers modifiés
 
-- `vercel.json` — `trailingSlash: true` et redirection permanente configurée de l’hôte `www.nutritionniste-agadir.com` vers `https://nutritionniste-agadir.com/:path*`. Les redirections d’alias existantes sont conservées.
+- Configuration de déploiement présente à cette date — `trailingSlash: true` et redirection permanente configurée de l’hôte `www.nutritionniste-agadir.com` vers `https://nutritionniste-agadir.com/:path*`. Les redirections d’alias existantes étaient conservées.
 - `src/components/RouteLink.jsx` — nouveau composant qui ajoute le slash final aux destinations internes React en préservant les éventuels paramètres et fragments.
 - `src/App.jsx`, `src/components/Navbar.jsx`, `src/components/SiteFooter.jsx`, `src/pages/ServiceDetailPage.jsx` — liens internes et destinations d’alias alignés sur cette convention.
 - `scripts/generate-seo-files.mjs` — génération des JSON-LD dans le HTML initial de chaque route, sans canonical pour la page 404.
@@ -25,7 +25,7 @@ Une modification préexistante de `src/App.css` concernant le logo mobile était
 - La règle `www` est limitée à l’hôte `www.nutritionniste-agadir.com`, cible le domaine sans `www` et conserve le chemin via `/:path*`. La destination ne remplace pas les paramètres de requête.
 - `trailingSlash: true` correspond aux canonicals et aux URL du sitemap.
 - Les liens React créent maintenant des URL avec slash final, y compris les liens de services et les alias client.
-- Le contrôle de production du 1er novembre 2026 a montré que `https://www.nutritionniste-agadir.com/` répond encore en 200. La règle `www` présente dans `vercel.json` ne provoque donc pas la redirection observée à l’entrée publique.
+- Le contrôle de production du 1er novembre 2026 a montré que `https://www.nutritionniste-agadir.com/` répond encore en 200. La règle `www` présente dans la configuration de déploiement de l’époque ne provoquait donc pas la redirection observée à l’entrée publique.
 
 ### JSON-LD
 
@@ -47,7 +47,7 @@ Drainage lymphatique et pressothérapie existent comme services et disposent de 
 - Vérification des shells générés : 18 shells, aucun nom de script JSON-LD dupliqué. Le shell 404 contient `noindex, follow` et aucun canonical.
 - Navigation React testée de l’accueil vers `/services/`, puis `/services/perte-de-poids/` : les URL et canonicals ont le slash final et le schéma Service reste unique.
 - FAQ vers une page service, puis changement de langue vers l’arabe : canonical et schéma Service mis à jour, sans doublon observé.
-- Le JSON de `vercel.json` a été lu par le parseur JSON de PowerShell.
+- Le JSON de la configuration de déploiement de l’époque a été lu par le parseur JSON de PowerShell.
 
 Ces tests sont locaux. Ils ne constituent ni un test PageSpeed/PSI, ni une vérification des en-têtes HTTP effectifs de production.
 
@@ -60,12 +60,11 @@ Vérifications effectuées depuis l’extérieur :
 - `https://www.nutritionniste-agadir.com/` répond `200 OK`, sans en-tête `Location`.
 - `http://www.nutritionniste-agadir.com/` est redirigé vers HTTPS en conservant `www`.
 - `https://www.nutritionniste-agadir.com/services` et `https://nutritionniste-agadir.com/services` répondent tous deux `308` vers leur propre URL `/services/`.
-- L’accueil des deux hôtes expose le même titre et la même référence de bundle JavaScript (`/assets/index-MYHorBhq.js`). Cela indique qu’ils servent le même build public, mais ne prouve pas l’identifiant du projet lié dans Vercel ou Cloudflare.
-- Le fichier `vercel.json` de la version GitHub consultée (commit `f90cd3e`) contient bien la règle `www` actuelle. Cela confirme sa présence dans le dépôt, pas que la requête publique est traitée par ce projet Vercel ni que ce commit correspond à la configuration de l’origine active.
-- Aucun en-tête `x-vercel-id` n’a été observé. À lui seul, son absence ne permet pas de déterminer l’origine derrière Cloudflare.
-- Aucun fichier `.vercel/project.json`, configuration Wrangler/Cloudflare ou script de déploiement n’est présent dans le dépôt. Les commandes locales Cloudflare et Vercel ne sont pas disponibles ; aucun accès aux tableaux de bord n’a été utilisé.
+- L’accueil des deux hôtes expose le même titre et la même référence de bundle JavaScript (`/assets/index-MYHorBhq.js`). Cela indique qu’ils servent le même build public, mais ne prouve pas l’identifiant du projet lié dans Cloudflare.
+- La configuration de déploiement du dépôt consultée à cette date (commit `f90cd3e`) contenait bien la règle `www`. Cela confirme sa présence dans le dépôt, pas que la requête publique est traitée par cette configuration ni que ce commit correspond à l’origine active.
+- Aucun fichier de liaison de projet, configuration Wrangler/Cloudflare ou script de déploiement n’est présent dans le dépôt. Aucun accès aux tableaux de bord n’a été utilisé.
 
-Les éléments publics établissent le passage par l’edge Cloudflare et montrent que `www` sert le même build, mais ne permettent pas de vérifier dans le tableau de bord si le hostname est attaché au projet Cloudflare Pages/Vercel attendu, ni quelle règle d’origine est active. Le résultat est compatible avec l’absence de règle de canonicalisation `www` à l’edge ; il ne permet pas d’attribuer avec certitude le 200 à une association de domaine incorrecte ou à une configuration Vercel non appliquée.
+Les éléments publics établissent le passage par l’edge Cloudflare et montrent que `www` sert le même build, mais ne permettent pas de vérifier dans le tableau de bord si le hostname est attaché au projet Cloudflare Pages attendu, ni quelle règle d’origine est active. Le résultat est compatible avec l’absence de règle de canonicalisation `www` à l’edge ; il ne permet pas d’attribuer avec certitude le 200 à une association de domaine incorrecte ou à une configuration non appliquée.
 
 ## Correction de production recommandée
 
@@ -77,7 +76,7 @@ Le correctif le plus sûr est une règle **Cloudflare Single Redirect** dans la 
 4. Choisir le statut **301** (ou **308** si la conservation de méthode est requise) et activer **Preserve query string**.
 5. Placer cette règle avant toute règle de redirection plus générale/conflictuelle. La cible utilise toujours l’hôte apex, ce qui évite une boucle.
 
-Cette modification de règle Cloudflare est une action de production. Elle n’a pas été exécutée : aucun accès au compte Cloudflare n’est disponible et aucune modification/déploiement de production n’a été effectué. Le fichier `vercel.json` n’a pas été modifié, car changer une règle de projet Vercel sans avoir confirmé l’origine active ne garantit pas une correction à l’edge et pourrait dupliquer la règle.
+Cette modification de règle Cloudflare est une action de production. Elle n’a pas été exécutée : aucun accès au compte Cloudflare n’est disponible et aucune modification/déploiement de production n’a été effectué. La configuration de déploiement présente à cette date n’a pas été modifiée, car changer une règle d’hébergement sans avoir confirmé l’origine active ne garantit pas une correction à l’edge et pourrait dupliquer la règle.
 
 Après activation par une personne autorisée, vérifier avec `curl.exe -I --max-redirs 0` :
 
