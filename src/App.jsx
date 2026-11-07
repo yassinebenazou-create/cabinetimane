@@ -38,6 +38,7 @@ import services, { serviceCardSlugs } from './data/services.js'
 import { cabinet, defaultWhatsAppMessage, getWhatsAppUrl } from './data/site.js'
 import { useLanguage } from './i18n/language.js'
 import { localizeServices } from './i18n/services.ar.js'
+import AboutPage from './pages/AboutPage.jsx'
 import ServiceDetailPage from './pages/ServiceDetailPage.jsx'
 import './App.css'
 
@@ -2242,6 +2243,7 @@ function App() {
       <Routes>
         <Route element={<SiteLayout />}>
           <Route path="/" element={<HomePage />} />
+          <Route path="/a-propos" element={<AboutPage />} />
           <Route path="/services" element={<ServicesPage />} />
           <Route path="/services/:serviceSlug" element={<ServiceDetailPage />} />
           <Route path="/consultation" element={<ConsultationPage />} />

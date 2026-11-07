@@ -30,6 +30,11 @@ const indexableRobots = 'index, follow, max-image-preview:large, max-snippet:-1,
 const staticRoutes = [
   { ...seoPages.home, heading: 'Nutrition personnalisée pour retrouver l’équilibre' },
   {
+    ...seoPages.about,
+    heading: 'Imane Oulhint, Diététicienne Nutritionniste',
+    breadcrumbs: [{ name: 'Accueil', path: '/' }, { name: 'À propos', path: '/a-propos' }],
+  },
+  {
     ...seoPages.services,
     heading: 'Services de nutrition et bilans à Agadir',
     breadcrumbs: [{ name: 'Accueil', path: '/' }, { name: 'Services', path: '/services' }],

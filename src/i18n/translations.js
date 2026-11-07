@@ -2,6 +2,46 @@ import { defaultShareImageAlt, notFoundPage, seoPages } from '../data/seoPages.j
 
 export const arabicTranslations = {
   Accueil: 'الرئيسية',
+  'À propos de votre diététicienne': 'تعرفوا على أخصائية التغذية',
+  'Imane Oulhint': 'إيمان أولهينت',
+  'Le Cabinet Oulhint, espace de consultation à Agadir': 'عيادة أولهينت، فضاء للاستشارة في أكادير',
+  'Salle d’attente du Cabinet Oulhint à Agadir, avec son logo et ses sièges.':
+    'قاعة انتظار عيادة أولهينت بأكادير، مع شعارها ومقاعدها.',
+  'Cabinet Oulhint': 'عيادة أولهينت',
+  'À Agadir depuis 2022': 'في أكادير منذ 2022',
+  'Un espace accueillant à Agadir': 'فضاء مرحب في أكادير',
+  'Formation et expérience': 'التكوين والخبرة',
+  'Université Mohammed VI': 'جامعة محمد السادس',
+  'Des Sciences et de la Santé - Casablanca': 'لعلوم الصحة - الدار البيضاء',
+  'Diplôme international': 'دبلوم دولي',
+  'En nutrition clinique': 'في التغذية السريرية',
+  'Depuis 2022': 'منذ 2022',
+  'Au service de votre bien-être': 'في خدمة رفاهكم',
+  'Mon parcours': 'مساري المهني',
+  'Un accompagnement fondé sur l’écoute et la confiance': 'مواكبة قائمة على الإنصات والثقة',
+  'Depuis 2022, j’exerce au sein de mon cabinet, Cabinet Oulhint à Agadir, où j’accompagne chaque patient avec une approche personnalisée, fondée sur l’écoute, la bienveillance et le professionnalisme.':
+    'منذ عام 2022، أزاول مهنتي في عيادة أولهينت بأكادير، حيث أرافق كل مريض بمقاربة مخصصة قائمة على الإنصات والاهتمام والاحترافية.',
+  'Ma vision de la nutrition va au-delà des régimes alimentaires : je privilégie une approche individualisée et durable, qui tient compte du mode de vie, des besoins et de l’évolution de chaque patient.':
+    'تتجاوز رؤيتي للتغذية الحميات الغذائية؛ إذ أفضّل مقاربة فردية ومستدامة تراعي نمط حياة كل مريض واحتياجاته وتطوره.',
+  'Une approche personnalisée, bienveillante et professionnelle.': 'مقاربة مخصصة، داعمة واحترافية.',
+  'Mon accompagnement': 'مواكبتي',
+  'Une prise en charge adaptée à vos besoins': 'رعاية ملائمة لاحتياجاتكم',
+  'Mon activité couvre différents domaines de la prise en charge nutritionnelle, avec un accompagnement adapté aux objectifs de santé de chacun.':
+    'يشمل عملي مجالات مختلفة من الرعاية الغذائية، مع مواكبة ملائمة للأهداف الصحية لكل شخص.',
+  'Perte de poids, amincissement et prise de poids selon vos besoins.': 'إنقاص الوزن والتنحيف وزيادة الوزن حسب احتياجاتكم.',
+  'Un accompagnement ciblé pour les zones du corps qui vous dérangent.':
+    'مواكبة موجهة لمناطق الجسم التي تزعجكم.',
+  'Équilibre alimentaire': 'التوازن الغذائي',
+  'Rééquilibrage alimentaire et accompagnement adapté à vos objectifs de santé.':
+    'إعادة التوازن الغذائي ومواكبة ملائمة لأهدافكم الصحية.',
+  'Bilan OligoScan': 'فحص OligoScan',
+  'Un bilan proposé pour compléter votre accompagnement selon vos besoins.':
+    'فحص يُقترح لاستكمال مواكبتكم وفق احتياجاتكم.',
+  'Mon objectif': 'هدفي',
+  'Vous accompagner vers un meilleur équilibre alimentaire et vous aider à atteindre vos objectifs tout en préservant votre santé et votre bien-être.':
+    'مرافقتكم نحو توازن غذائي أفضل ومساعدتكم على تحقيق أهدافكم مع الحفاظ على صحتكم ورفاهكم.',
+  'Votre bien-être commence ici ! Bienvenue dans un espace où votre santé, vos besoins et vos objectifs sont au cœur de notre accompagnement.':
+    'رفاهكم يبدأ هنا! مرحبا بكم في فضاء تكون فيه صحتكم واحتياجاتكم وأهدافكم محور مواكبتنا.',
   Services: 'الخدمات',
   Consultation: 'الاستشارة',
   'Résultats Patients': 'نتائج المرضى',

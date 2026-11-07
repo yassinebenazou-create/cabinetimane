@@ -12,6 +12,7 @@ import {
   House,
   Mail,
   Menu,
+  UserRound,
   X,
 } from 'lucide-react'
 import { useLanguage } from '../i18n/language.js'
@@ -20,6 +21,7 @@ import RouteLink from './RouteLink.jsx'
 
 const navItems = [
   { label: 'Accueil', href: '/', icon: House },
+  { label: 'À propos', href: '/a-propos', icon: UserRound },
   { label: 'Services', href: '/services', icon: BriefcaseMedical },
   { label: 'Consultation', href: '/consultation', icon: ClipboardPlus },
   {

@@ -3,7 +3,7 @@ const services = [
     slug: 'perte-de-poids', name: 'Gestion du poids', cardTitle: 'Gestion du poids',
     cardText: 'Un suivi personnalisé pour l’obésité, l’amincissement ou le manque d’appétit.',
     typeLabel: 'Service nutritionnel', cardIcon: 'scale', iconAlt: 'Icône gestion du poids',
-    image: '/service-gestion-poids-1280w.webp', imageWidth: 1280, imageHeight: 1920, imageAlt: 'Accompagnement nutritionnel personnalisé pour la gestion du poids',
+    image: '/service-gestion-poids.webp', imageWidth: 682, imageHeight: 1024, imageAlt: 'Accompagnement nutritionnel personnalisé pour la gestion du poids',
     heroIntro: 'Un accompagnement nutritionnel à Agadir adapté à vos besoins, à vos habitudes et à votre rythme de vie.',
     introTitle: 'En quoi consiste l’accompagnement en gestion du poids ?',
     metaDescription: 'Gestion du poids à Agadir avec un accompagnement nutritionnel personnalisé pour l’obésité, l’amincissement ou le manque d’appétit.',

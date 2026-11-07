@@ -88,7 +88,7 @@ export default function SiteFooter() {
         <div className="footer-column">
           <h2>{translate('Liens Utiles')}</h2>
           <nav className="footer-links" aria-label={translate('Liens utiles')}>
-            <RouteLink to="/">
+            <RouteLink to="/a-propos">
               <ChevronRight aria-hidden="true" size={18} />
               {translate('À propos')}
             </RouteLink>
